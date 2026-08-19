@@ -9,6 +9,13 @@ public class Clover {
                 + "| |       | |      | |  | |    \\ \\/ /    |  __|    |  _  /\n"
                 + "| |____   | |____  | |  | |     \\  /     | |____   | | \\ \\\n"
                 + " \\_____|  |______|  \\____/       \\/      |______|  |_|  \\_\\\n";
+        System.out.println("____________________________________________________________");
         System.out.println(banner);
+
+        System.out.println("Hello! I'm Clover.");
+        System.out.println("What can I do for you?\n");
+        System.out.println("____________________________________________________________");
+        System.out.println("Bye. Hope to see you again soon!");
+        System.out.println("____________________________________________________________");
     }
 }
