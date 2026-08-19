@@ -13,9 +13,7 @@ public class Clover {
                 + "| |____   | |____  | |  | |     \\  /     | |____   | | \\ \\\n"
                 + " \\_____|  |______|  \\____/       \\/      |______|  |_|  \\_\\\n";
         Scanner scanner = new Scanner(System.in);
-        String[] tasks = new String[100];
-        boolean[] isDone = new boolean[100];
-
+        Task[] tasks = new Task[100];
         int taskIndex = 0;
         System.out.println("____________________________________________________________");
         System.out.println(banner);
@@ -36,24 +34,24 @@ public class Clover {
                     if (tasks[taskCount] == null) {
                         break;
                     }
-                    System.out.println( (taskCount + 1) + "." + getCheckBox(isDone[taskCount]) + " " + tasks[taskCount]);
+                    System.out.println((taskCount + 1)+ "." + tasks[taskCount]);
                 }
                 System.out.println("____________________________________________________________");
             } else if (input.startsWith("unmark ")) {
                 int index = Integer.parseInt(input.substring(7).trim()) - 1;
-                isDone[index] = false;
+                tasks[index].markAsUndone();
                 System.out.println("""
                         ____________________________________________________________
                         OK, I've marked this task as not done yet:""");
-                System.out.println(" " + getCheckBox(isDone[index]) + " " + tasks[index]);
+                System.out.println(" " + tasks[index]);
                 System.out.println("____________________________________________________________");
             } else if (input.startsWith("mark ")) {
                 int index = Integer.parseInt(input.substring(5).trim()) - 1;
-                isDone[index] = true;
+                tasks[index].markAsDone();
                 System.out.println("""
                         ____________________________________________________________
                         Nice! I've marked this task as done:""");
-                System.out.println(" " + getCheckBox(isDone[index]) + " " + tasks[index]);
+                System.out.println(" " + tasks[index]);
                 System.out.println("____________________________________________________________");
             } else if (input.equals("bye")) { // "bye" command - exits program
                 System.out.println("""
@@ -62,15 +60,12 @@ public class Clover {
                 break;
             } else { // add to list
                 System.out.println("____________________________________________________________");
-                tasks[taskIndex] = input;
+                Task t = new Task(input);
+                tasks[taskIndex] = t;
+                System.out.println(tasks[taskIndex]);
                 taskIndex++;
-                System.out.println("added: " + input);
                 System.out.println("____________________________________________________________");
             }
         }
-    }
-
-    private static String getCheckBox(boolean done) {
-        return done ? "[X]" : "[ ]";
     }
 }
