@@ -13,6 +13,8 @@ public class Clover {
                 + "| |____   | |____  | |  | |     \\  /     | |____   | | \\ \\\n"
                 + " \\_____|  |______|  \\____/       \\/      |______|  |_|  \\_\\\n";
         Scanner scanner = new Scanner(System.in);
+        String[] tasks = new String[100];
+        int taskIndex = 0;
         System.out.println("____________________________________________________________");
         System.out.println(banner);
 
@@ -21,14 +23,27 @@ public class Clover {
         System.out.println("____________________________________________________________");
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
-            System.out.println("____________________________________________________________");
-            System.out.println(input);
-            System.out.println("____________________________________________________________");
 
-            if (input.equals("bye")) {
+            // "list" command - outputs the list
+            if (input.equals("list")) {
+                System.out.println("____________________________________________________________");
+                for (int taskCount = 0; taskCount < 100; taskCount++) {
+                    if (tasks[taskCount] == null) {
+                        break;
+                    }
+                    System.out.println( (taskCount + 1) + ". " + tasks[taskCount]);
+                }
+                System.out.println("____________________________________________________________");
+            } else if (input.equals("bye")) { // "bye" command - exits program
                 System.out.println("Bye. Hope to see you again soon!");
                 System.out.println("____________________________________________________________");
                 break;
+            } else { // add to list
+                System.out.println("____________________________________________________________");
+                tasks[taskIndex] = input;
+                taskIndex++;
+                System.out.println("added: " + input);
+                System.out.println("____________________________________________________________");
             }
         }
     }
