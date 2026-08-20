@@ -53,6 +53,50 @@ public class Clover {
                         Nice! I've marked this task as done:""");
                 System.out.println(" " + tasks[index]);
                 System.out.println("____________________________________________________________");
+            } else if (input.startsWith("todo ")) {
+                tasks[taskIndex] = new ToDo(input.substring(5).trim());
+                System.out.println("""
+                        ____________________________________________________________
+                        Got it. I've added this task:""");
+                System.out.println(" " + tasks[taskIndex]);
+                System.out.println("Now you have " + (taskIndex + 1) + " in the list.");
+                System.out.println("____________________________________________________________");
+                taskIndex++;
+            } else if (input.startsWith("deadline ")) {
+                String target = "/by";
+                int index = input.indexOf(target);
+                if (index == -1) {
+                    System.out.println("Please use the format: deadline DESCRIPTION /by DUE DATE");
+                    continue;
+                }
+                String endBy = input.substring(index + target.length());
+                String desc = input.substring(9, index).trim();
+                tasks[taskIndex] = new Deadline(desc, endBy);
+                System.out.println("""
+                        ____________________________________________________________
+                        Got it. I've added this task:""");
+                System.out.println(" " + tasks[taskIndex]);
+                System.out.println("Now you have " + (taskIndex + 1) + " in the list.");
+                System.out.println("____________________________________________________________");
+                taskIndex++;
+            } else if (input.startsWith("event ")) {
+                int fromIndex = input.indexOf("/from");
+                int toIndex = input.indexOf("/to");
+                if (fromIndex == -1 || toIndex == -1 || fromIndex > toIndex) {
+                    System.out.println("Please use the format: event DESCRIPTION /from START /to END");
+                    continue;
+                }
+                String fromDesc = input.substring(fromIndex + 5, toIndex).trim();
+                String toDesc = input.substring(toIndex + 3).trim();
+                String desc = input.substring(6, fromIndex).trim();
+                tasks[taskIndex] = new Event(desc, fromDesc, toDesc);
+                System.out.println("""
+                        ____________________________________________________________
+                        Got it. I've added this task:""");
+                System.out.println(" " + tasks[taskIndex]);
+                System.out.println("Now you have " + (taskIndex + 1) + " in the list.");
+                System.out.println("____________________________________________________________");
+                taskIndex++;
             } else if (input.equals("bye")) { // "bye" command - exits program
                 System.out.println("""
                                 Bye. Hope to see you again soon!
