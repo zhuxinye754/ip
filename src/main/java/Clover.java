@@ -61,7 +61,7 @@ public class Clover {
                     System.out.println("""
                             ____________________________________________________________
                             OK, I've marked this task as not done yet:""");
-                    System.out.println(" r" + tasks.get(index));
+                    System.out.println(" " + tasks.get(index));
                     System.out.println("____________________________________________________________");
                 } else if (input.equals("mark") || input.startsWith("mark ")) {
                     if (!isValidTaskNumber(input.substring(4), tasks.size())) {
@@ -122,6 +122,19 @@ public class Clover {
                             Got it. I've added this task:""");
                     System.out.println(" " + tasks.getLast());
                     System.out.println("Now you have " + tasks.size() + " in the list.");
+                    System.out.println("____________________________________________________________");
+                } else if (input.equals("delete") || input.startsWith("delete ")) { // "bye" command - exits program
+                    if (!isValidTaskNumber(input.substring(6), tasks.size())) {
+                        throw new CloverException("Please enter a valid task number to delete.");
+                    }
+
+                    int index = Integer.parseInt(input.substring(7).trim()) - 1;
+                    Task deletedTask = tasks.remove(index);
+                    System.out.println("""
+                                    ____________________________________________________________
+                                    Noted. I've removed this task:""");
+                    System.out.println(" " + deletedTask);
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     System.out.println("____________________________________________________________");
                 } else if (input.equals("bye")) { // "bye" command - exits program
                     System.out.println("""
