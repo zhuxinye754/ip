@@ -3,23 +3,25 @@
  */
 public class Task {
     protected String description;
-    protected boolean isDone;
+    protected TaskStatus status;
 
     public Task(String description) {
         this.description = description;
-        this.isDone = false;
+        this.status = TaskStatus.NOT_DONE;
     }
 
     private String getStatusIcon() {
-        return (isDone ? "X" : " ");
+        return ( status == TaskStatus.DONE ? "X" : " ");
     }
 
     public void markAsDone() {
-        isDone = true;
+
+        status = TaskStatus.DONE;
     }
 
     public void markAsUndone() {
-        isDone = false;
+
+        status = TaskStatus.NOT_DONE;
     }
 
     @Override
