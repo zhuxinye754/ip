@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Clover {
@@ -30,8 +31,7 @@ public class Clover {
                 + "| |____   | |____  | |  | |     \\  /     | |____   | | \\ \\\n"
                 + " \\_____|  |______|  \\____/       \\/      |______|  |_|  \\_\\\n";
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[100];
-        int taskIndex = 0;
+        ArrayList<Task> tasks = new ArrayList<>();
         System.out.println("____________________________________________________________");
         System.out.println(banner);
 
@@ -48,51 +48,44 @@ public class Clover {
                     System.out.println("""
                             ____________________________________________________________
                             Here are the tasks in your list:""");
-                    for (int taskCount = 0; taskCount < 100; taskCount++) {
-                        if (tasks[taskCount] == null) {
-                            break;
-                        }
-                        System.out.println((taskCount + 1)+ "." + tasks[taskCount]);
+                    for (int taskCount = 0; taskCount < tasks.size(); taskCount++) {
+                        System.out.println((taskCount + 1)+ "." + tasks.get(taskCount));
                     }
                     System.out.println("____________________________________________________________");
                 } else if (input.equals("unmark") || input.startsWith("unmark ")) {
-                    if (!isValidTaskNumber(input.substring(6), taskIndex)) {
+                    if (!isValidTaskNumber(input.substring(6), tasks.size())) {
                         throw new CloverException("Please enter a valid task number to unmark.");
                     }
                     int index = Integer.parseInt(input.substring(7).trim()) - 1;
-                    tasks[index].markAsUndone();
+                    tasks.get(index).markAsUndone();
                     System.out.println("""
                             ____________________________________________________________
                             OK, I've marked this task as not done yet:""");
-                    System.out.println(" " + tasks[index]);
+                    System.out.println(" r" + tasks.get(index));
                     System.out.println("____________________________________________________________");
                 } else if (input.equals("mark") || input.startsWith("mark ")) {
-                    if (!isValidTaskNumber(input.substring(4), taskIndex)) {
+                    if (!isValidTaskNumber(input.substring(4), tasks.size())) {
                         throw new CloverException("Please enter a valid task number to mark.");
                     }
                     int index = Integer.parseInt(input.substring(5).trim()) - 1;
-                    tasks[index].markAsDone();
+                    tasks.get(index).markAsDone();
                     System.out.println("""
                             ____________________________________________________________
                             Nice! I've marked this task as done:""");
-                    System.out.println(" " + tasks[index]);
+                    System.out.println(" " + tasks.get(index));
                     System.out.println("____________________________________________________________");
                 } else if (input.equals("todo") || input.startsWith("todo ")) {
                     String description = input.substring(4).trim();
                     if (description.isEmpty()) {
                         throw new CloverException("The description of a todo cannot be empty.");
                     }
-                    if (taskIndex == tasks.length) {
-                        throw new CloverException("Your task list is full.");
-                    }
-                    tasks[taskIndex] = new ToDo(description);
+                    tasks.add(new ToDo(description));
                     System.out.println("""
                             ____________________________________________________________
                             Got it. I've added this task:""");
-                    System.out.println(" " + tasks[taskIndex]);
-                    System.out.println("Now you have " + (taskIndex + 1) + " in the list.");
+                    System.out.println(" " + tasks.getLast());
+                    System.out.println("Now you have " + tasks.size() + " in the list.");
                     System.out.println("____________________________________________________________");
-                    taskIndex++;
                 } else if (input.equals("deadline") || input.startsWith("deadline ")) {
                     String target = "/by";
                     int index = input.indexOf(target);
@@ -104,17 +97,13 @@ public class Clover {
                     if (endBy.isEmpty()) {
                         throw new CloverException("Please use the format: deadline DESCRIPTION /by DUE DATE");
                     }
-                    if (taskIndex == tasks.length) {
-                        throw new CloverException("Your task list is full.");
-                    }
-                    tasks[taskIndex] = new Deadline(desc, endBy);
+                    tasks.add(new Deadline(desc, endBy));
                     System.out.println("""
                             ____________________________________________________________
                             Got it. I've added this task:""");
-                    System.out.println(" " + tasks[taskIndex]);
-                    System.out.println("Now you have " + (taskIndex + 1) + " in the list.");
+                    System.out.println(" " + tasks.getLast());
+                    System.out.println("Now you have " + tasks.size() + " in the list.");
                     System.out.println("____________________________________________________________");
-                    taskIndex++;
                 } else if (input.equals("event") || input.startsWith("event ")) {
                     int fromIndex = input.indexOf("/from");
                     int toIndex = input.indexOf("/to");
@@ -127,17 +116,13 @@ public class Clover {
                     if (fromDesc.isEmpty() || toDesc.isEmpty()) {
                         throw new CloverException("Please use the format: event DESCRIPTION /from START /to END");
                     }
-                    if (taskIndex == tasks.length) {
-                        throw new CloverException("Your task list is full.");
-                    }
-                    tasks[taskIndex] = new Event(desc, fromDesc, toDesc);
+                    tasks.add(new Event(desc, fromDesc, toDesc));
                     System.out.println("""
                             ____________________________________________________________
                             Got it. I've added this task:""");
-                    System.out.println(" " + tasks[taskIndex]);
-                    System.out.println("Now you have " + (taskIndex + 1) + " in the list.");
+                    System.out.println(" " + tasks.getLast());
+                    System.out.println("Now you have " + tasks.size() + " in the list.");
                     System.out.println("____________________________________________________________");
-                    taskIndex++;
                 } else if (input.equals("bye")) { // "bye" command - exits program
                     System.out.println("""
                                     Bye. Hope to see you again soon!
@@ -147,14 +132,10 @@ public class Clover {
                     if (input.isBlank()) {
                         throw new CloverException("Please enter a command or task description.");
                     }
-                    if (taskIndex == tasks.length) {
-                        throw new CloverException("Your task list is full.");
-                    }
                     System.out.println("____________________________________________________________");
                     Task t = new Task(input);
-                    tasks[taskIndex] = t;
-                    System.out.println(tasks[taskIndex]);
-                    taskIndex++;
+                    tasks.add(t);
+                    System.out.println(tasks.getLast());
                     System.out.println("____________________________________________________________");
                 }
             } catch (CloverException e) {
