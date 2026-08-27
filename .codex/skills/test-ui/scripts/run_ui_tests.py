@@ -15,6 +15,7 @@ PLAN = ROOT / "test" / "ui-test-plan.md"
 CASE_PATTERN = re.compile(
     r"^## Test case: (?P<name>.+?)\n"
     r"\*\*Aim:\*\* (?P<aim>.+?)\n\n"
+    r"(?:\*\*Saved data:\*\*\n```text\n(?P<saved_data>.*?)\n```\n\n)?"
     r"\*\*Input:\*\*\n```text\n(?P<input>.*?)\n```\n\n"
     r"\*\*Expected output:\*\*\n```text\n(?P<expected>.*?)\n```",
     re.MULTILINE | re.DOTALL,
@@ -66,13 +67,20 @@ def main() -> int:
             name = case["name"]
             console_input = case["input"] + "\n"
             expected = normalise(case["expected"])
-            run = subprocess.run(
-                ["java", "-cp", classes, "Clover"],
-                input=console_input,
-                text=True,
-                capture_output=True,
-                check=False,
-            )
+            with tempfile.TemporaryDirectory(prefix="clover-ui-case-") as case_directory:
+                saved_data = case["saved_data"]
+                if saved_data is not None:
+                    data_directory = Path(case_directory) / "data"
+                    data_directory.mkdir()
+                    (data_directory / "duke.txt").write_text(saved_data + "\n")
+                run = subprocess.run(
+                    ["java", "-cp", classes, "Clover"],
+                    input=console_input,
+                    text=True,
+                    capture_output=True,
+                    check=False,
+                    cwd=case_directory,
+                )
             actual = normalise(run.stdout + run.stderr)
 
             if run.returncode or actual != expected:

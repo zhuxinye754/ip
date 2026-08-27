@@ -24,6 +24,16 @@ public class Task {
         status = TaskStatus.NOT_DONE;
     }
 
+    /** Returns this task's description for saving it to the data file. */
+    public String getDescription() {
+        return description;
+    }
+
+    /** Returns whether this task has been completed. */
+    public boolean isDone() {
+        return status == TaskStatus.DONE;
+    }
+
     @Override
     public String toString() {
         return "[" + getStatusIcon() + "] " + this.description;

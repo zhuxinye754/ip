@@ -9,6 +9,11 @@ public class Deadline extends Task{
         this.endBy = endBy;
     }
 
+    /** Returns the deadline text for saving it to the data file. */
+    public String getEndBy() {
+        return endBy;
+    }
+
     @Override
     public String toString() {
         return "[D] " + super.toString() + " (by: " + this.endBy + ")";
