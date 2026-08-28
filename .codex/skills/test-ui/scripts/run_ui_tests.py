@@ -17,7 +17,8 @@ CASE_PATTERN = re.compile(
     r"\*\*Aim:\*\* (?P<aim>.+?)\n\n"
     r"(?:\*\*Saved data:\*\*\n```text\n(?P<saved_data>.*?)\n```\n\n)?"
     r"\*\*Input:\*\*\n```text\n(?P<input>.*?)\n```\n\n"
-    r"\*\*Expected output:\*\*\n```text\n(?P<expected>.*?)\n```",
+    r"\*\*Expected output:\*\*\n```text\n(?P<expected>.*?)\n```"
+    r"(?:\n\n\*\*Expected saved data:\*\*\n```text\n(?P<expected_saved_data>.*?)\n```)?",
     re.MULTILINE | re.DOTALL,
 )
 
@@ -72,7 +73,7 @@ def main() -> int:
                 if saved_data is not None:
                     data_directory = Path(case_directory) / "data"
                     data_directory.mkdir()
-                    (data_directory / "duke.txt").write_text(saved_data + "\n")
+                    (data_directory / "clover.txt").write_text(saved_data + "\n")
                 run = subprocess.run(
                     ["java", "-cp", classes, "Clover"],
                     input=console_input,
@@ -81,13 +82,22 @@ def main() -> int:
                     check=False,
                     cwd=case_directory,
                 )
+                actual_saved_data = ""
+                if case["expected_saved_data"] is not None:
+                    data_file = Path(case_directory) / "data" / "clover.txt"
+                    if data_file.is_file():
+                        actual_saved_data = normalise(data_file.read_text())
             actual = normalise(run.stdout + run.stderr)
+            expected_saved_data = case["expected_saved_data"]
 
-            if run.returncode or actual != expected:
+            if run.returncode or actual != expected or actual_saved_data != (expected_saved_data or ""):
                 print(f"FAIL: Test case {number} — {name}")
                 show_block("Console input", console_input.rstrip("\n"))
                 show_block("Expected output", expected)
                 show_block("Actual output", actual)
+                if expected_saved_data is not None:
+                    show_block("Expected saved data", expected_saved_data)
+                    show_block("Actual saved data", actual_saved_data)
                 return 1
 
             print(f"PASS: Test case {number} — {name}")

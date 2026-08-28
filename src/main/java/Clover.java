@@ -49,7 +49,7 @@ public class Clover {
     private static void saveTasks(Storage storage, ArrayList<Task> tasks) {
         try {
             storage.save(tasks);
-        } catch (IOException e) {
+        } catch (IOException | SecurityException e) {
             printError("I could not save your tasks to the data file.");
         }
     }
@@ -66,7 +66,7 @@ public class Clover {
         ArrayList<Task> tasks;
         try {
             tasks = storage.load();
-        } catch (IOException e) {
+        } catch (IOException | SecurityException e) {
             printError("I could not load your saved tasks. Starting with an empty list.");
             tasks = new ArrayList<>();
         }
