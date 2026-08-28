@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.IOException;
 
 public class Clover {
     /**
@@ -44,6 +45,15 @@ public class Clover {
         }
     }
 
+    /** Saves tasks after a successful change, while keeping Clover usable if saving fails. */
+    private static void saveTasks(Storage storage, ArrayList<Task> tasks) {
+        try {
+            storage.save(tasks);
+        } catch (IOException | SecurityException e) {
+            printError("I could not save your tasks to the data file.");
+        }
+    }
+
     public static void main(String[] args) {
         String banner = "  _____    _         ____    __      __   ______    _____\n"
                 + " / ____|  | |       / __ \\   \\ \\    / /  |  ____|  |  __ \\\n"
@@ -51,8 +61,15 @@ public class Clover {
                 + "| |       | |      | |  | |    \\ \\/ /    |  __|    |  _  /\n"
                 + "| |____   | |____  | |  | |     \\  /     | |____   | | \\ \\\n"
                 + " \\_____|  |______|  \\____/       \\/      |______|  |_|  \\_\\\n";
+        Storage storage = new Storage();
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Task> tasks;
+        try {
+            tasks = storage.load();
+        } catch (IOException | SecurityException e) {
+            printError("I could not load your saved tasks. Starting with an empty list.");
+            tasks = new ArrayList<>();
+        }
         System.out.println("____________________________________________________________");
         System.out.println(banner);
 
@@ -71,6 +88,7 @@ public class Clover {
 
                 if (command == null) {
                     tasks.add(new Task(input));
+                    saveTasks(storage, tasks);
                     System.out.println(tasks.getLast());
                     continue;
                 }
@@ -92,6 +110,7 @@ public class Clover {
                         }
                         int index = Integer.parseInt(input.substring(5).trim()) - 1;
                         tasks.get(index).markAsDone();
+                        saveTasks(storage, tasks);
                         System.out.println("""
                             ____________________________________________________________
                             Nice! I've marked this task as done:""");
@@ -104,6 +123,7 @@ public class Clover {
                         }
                         int unmarkIndex = Integer.parseInt(input.substring(7).trim()) - 1;
                         tasks.get(unmarkIndex).markAsUndone();
+                        saveTasks(storage, tasks);
                         System.out.println("""
                             ____________________________________________________________
                             OK, I've marked this task as not done yet:""");
@@ -116,6 +136,7 @@ public class Clover {
                             throw new CloverException("The description of a todo cannot be empty.");
                         }
                         tasks.add(new ToDo(description));
+                        saveTasks(storage, tasks);
                         System.out.println("""
                             ____________________________________________________________
                             Got it. I've added this task:""");
@@ -135,6 +156,7 @@ public class Clover {
                             throw new CloverException("Please use the format: deadline DESCRIPTION /by DUE DATE");
                         }
                         tasks.add(new Deadline(desc, endBy));
+                        saveTasks(storage, tasks);
                         System.out.println("""
                             ____________________________________________________________
                             Got it. I've added this task:""");
@@ -155,6 +177,7 @@ public class Clover {
                             throw new CloverException("Please use the format: event DESCRIPTION /from START /to END");
                         }
                         tasks.add(new Event(eventDesc, fromDesc, toDesc));
+                        saveTasks(storage, tasks);
                         System.out.println("""
                             ____________________________________________________________
                             Got it. I've added this task:""");
@@ -169,6 +192,7 @@ public class Clover {
 
                         int delIndex = Integer.parseInt(input.substring(7).trim()) - 1;
                         Task deletedTask = tasks.remove(delIndex);
+                        saveTasks(storage, tasks);
                         System.out.println("""
                                     ____________________________________________________________
                                     Noted. I've removed this task:""");
@@ -188,6 +212,7 @@ public class Clover {
                         System.out.println("____________________________________________________________");
                         Task t = new Task(input);
                         tasks.add(t);
+                        saveTasks(storage, tasks);
                         System.out.println(tasks.getLast());
                         System.out.println("____________________________________________________________");
                 }
