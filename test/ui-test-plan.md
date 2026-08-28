@@ -11,8 +11,8 @@ Each case uses an isolated working directory. A case can include an optional **S
 **Saved data:**
 ```text
 T | 1 | read \| annotate book
-D | 0 | return book | June 6th
-E | 0 | project meeting | Aug 6th 2-4pm | Aug 6th 4-6pm
+D | 0 | return book | 2019-12-02
+E | 0 | project meeting | 2019-08-06 | 2019-08-07
 ```
 
 **Input:**
@@ -38,8 +38,8 @@ ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T] [X] read | annotate book
-2.[D] [ ] return book (by: June 6th)
-3.[E] [ ] project meeting (from: Aug 6th 2-4pm to: Aug 6th 4-6pm)
+2.[D] [ ] return book (by: Dec 2 2019)
+3.[E] [ ] project meeting (from: Aug 6 2019 to: Aug 7 2019)
 ____________________________________________________________
 Bye. Hope to see you again soon!
 ____________________________________________________________
@@ -90,7 +90,7 @@ ____________________________________________________________
 
 **Input:**
 ```text
-event tutorial /from Monday 2pm /to Monday 4pm
+event tutorial /from 2019-12-02 /to 2019-12-04
 bye
 ```
 
@@ -110,7 +110,7 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
- [E] [ ] tutorial (from: Monday 2pm to: Monday 4pm)
+ [E] [ ] tutorial (from: Dec 2 2019 to: Dec 4 2019)
 Now you have 1 in the list.
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -119,7 +119,7 @@ ____________________________________________________________
 
 **Expected saved data:**
 ```text
-E | 0 | tutorial | Monday 2pm | Monday 4pm
+E | 0 | tutorial | 2019-12-02 | 2019-12-04
 ```
 
 ## Test case: Reject an event without times
@@ -163,7 +163,9 @@ todo
 mark one
 unmark 1
 deadline submit
-event tutorial /from Monday
+event tutorial /from 2019-12-02
+deadline return book /by tomorrow
+event tutorial /from 2019-12-02 /to tomorrow
 
 bye
 ```
@@ -196,6 +198,12 @@ Please use the format: deadline DESCRIPTION /by DUE DATE
 ____________________________________________________________
 ____________________________________________________________
 Please use the format: event DESCRIPTION /from START /to END
+____________________________________________________________
+____________________________________________________________
+Please enter dates in the format yyyy-MM-dd.
+____________________________________________________________
+____________________________________________________________
+Please enter dates in the format yyyy-MM-dd.
 ____________________________________________________________
 ____________________________________________________________
 Please enter a command or task description.

@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 public class Clover {
     /**
@@ -42,6 +44,15 @@ public class Clover {
             return taskNumber >= 1 && taskNumber <= taskCount;
         } catch (NumberFormatException e) {
             return false;
+        }
+    }
+
+    /** Parses a date entered by the user in ISO format. */
+    private static LocalDate parseDate(String text) throws CloverException {
+        try {
+            return LocalDate.parse(text);
+        } catch (DateTimeParseException e) {
+            throw new CloverException("Please enter dates in the format yyyy-MM-dd.");
         }
     }
 
@@ -151,11 +162,12 @@ public class Clover {
                             throw new CloverException("Please use the format: deadline DESCRIPTION /by DUE DATE");
                         }
                         String endBy = input.substring(targetIndex + target.length()).trim();
-                        String desc = input.substring(9, targetIndex).trim();
                         if (endBy.isEmpty()) {
                             throw new CloverException("Please use the format: deadline DESCRIPTION /by DUE DATE");
                         }
-                        tasks.add(new Deadline(desc, endBy));
+                        LocalDate date = parseDate(endBy);
+                        String desc = input.substring(9, targetIndex).trim();
+                        tasks.add(new Deadline(desc, date));
                         saveTasks(storage, tasks);
                         System.out.println("""
                             ____________________________________________________________
@@ -176,7 +188,9 @@ public class Clover {
                         if (fromDesc.isEmpty() || toDesc.isEmpty()) {
                             throw new CloverException("Please use the format: event DESCRIPTION /from START /to END");
                         }
-                        tasks.add(new Event(eventDesc, fromDesc, toDesc));
+                        LocalDate fromDate = parseDate(fromDesc);
+                        LocalDate toDate = parseDate(toDesc);
+                        tasks.add(new Event(eventDesc, fromDate, toDate));
                         saveTasks(storage, tasks);
                         System.out.println("""
                             ____________________________________________________________

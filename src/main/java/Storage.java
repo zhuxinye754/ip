@@ -4,6 +4,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,16 +59,27 @@ public class Storage {
         String completed = task.isDone() ? "1" : "0";
         if (task instanceof Deadline deadline) {
             return "D | " + completed + " | " + escape(deadline.getDescription())
-                    + " | " + escape(deadline.getEndBy());
+                    + " | " + escape(deadline.getEndBy().toString());
         }
         if (task instanceof Event event) {
             return "E | " + completed + " | " + escape(event.getDescription())
-                    + " | " + escape(event.getStart()) + " | " + escape(event.getEnd());
+                    + " | " + escape(event.getStart().toString()) + " | " + escape(event.getEnd().toString());
         }
         if (task instanceof ToDo) {
             return "T | " + completed + " | " + escape(task.getDescription());
         }
         return "N | " + completed + " | " + escape(task.getDescription());
+    }
+
+    /**
+     * Parses an ISO date stored in the data file.
+     */
+    private LocalDate parseDate(String text, int lineNumber) throws IOException {
+        try {
+            return LocalDate.parse(text);
+        } catch (DateTimeParseException e) {
+            throw invalidData(lineNumber, "invalid date");
+        }
     }
 
     /** Recreates one task from a pipe-separated file line. */
@@ -75,24 +88,26 @@ public class Storage {
 
         Task task;
         switch (parts.get(0)) {
-        case "N":
-            requirePartCount(parts, 3, lineNumber);
-            task = new Task(parts.get(2));
-            break;
-        case "T":
-            requirePartCount(parts, 3, lineNumber);
-            task = new ToDo(parts.get(2));
-            break;
-        case "D":
-            requirePartCount(parts, 4, lineNumber);
-            task = new Deadline(parts.get(2), parts.get(3));
-            break;
-        case "E":
-            requirePartCount(parts, 5, lineNumber);
-            task = new Event(parts.get(2), parts.get(3), parts.get(4));
-            break;
-        default:
-            throw invalidData(lineNumber, "unknown task type");
+            case "N":
+                requirePartCount(parts, 3, lineNumber);
+                task = new Task(parts.get(2));
+                break;
+            case "T":
+                requirePartCount(parts, 3, lineNumber);
+                task = new ToDo(parts.get(2));
+                break;
+            case "D":
+                requirePartCount(parts, 4, lineNumber);
+                task = new Deadline(parts.get(2), parseDate(parts.get(3), lineNumber));
+                break;
+            case "E":
+                requirePartCount(parts, 5, lineNumber);
+                task = new Event(parts.get(2),
+                        parseDate(parts.get(3), lineNumber),
+                        parseDate(parts.get(4), lineNumber));
+                break;
+            default:
+                throw invalidData(lineNumber, "unknown task type");
         }
 
         if ("1".equals(parts.get(1))) {
