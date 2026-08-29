@@ -1,3 +1,12 @@
+package clover.command;
+
+import clover.exception.CloverException;
+import clover.parser.Parser;
+import clover.storage.Storage;
+import clover.task.Event;
+import clover.task.TaskList;
+import clover.ui.Ui;
+
 import java.time.LocalDate;
 
 /** Adds an event task with a description, start date, and end date. */

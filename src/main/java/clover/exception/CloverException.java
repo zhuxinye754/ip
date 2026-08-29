@@ -1,3 +1,4 @@
+package clover.exception;
 /**
  * Represents an error caused by an invalid Clover command or task input.
  */

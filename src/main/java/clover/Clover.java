@@ -1,3 +1,12 @@
+package clover;
+
+import clover.command.Command;
+import clover.exception.CloverException;
+import clover.parser.Parser;
+import clover.storage.Storage;
+import clover.task.TaskList;
+import clover.ui.Ui;
+
 import java.io.IOException;
 
 /** Coordinates Clover's user interface, task list, command parser, and storage. */

@@ -1,3 +1,10 @@
+package clover.storage;
+
+import clover.task.Deadline;
+import clover.task.Event;
+import clover.task.Task;
+import clover.task.ToDo;
+
 import java.io.IOException;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.charset.StandardCharsets;

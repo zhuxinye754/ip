@@ -1,3 +1,10 @@
+package clover.command;
+
+import clover.storage.Storage;
+import clover.task.Task;
+import clover.task.TaskList;
+import clover.ui.Ui;
+
 /** Adds a task created from text that does not start with a known command. */
 public class PlainTaskCommand extends Command {
     private final String description;

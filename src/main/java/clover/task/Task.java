@@ -1,3 +1,5 @@
+package clover.task;
+
 /**
  * Represents one task in the task list.
  */

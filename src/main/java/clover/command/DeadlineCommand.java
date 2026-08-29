@@ -1,3 +1,13 @@
+package clover.command;
+
+import clover.exception.CloverException;
+import clover.parser.Parser;
+import clover.storage.Storage;
+import clover.task.Deadline;
+import clover.task.Event;
+import clover.task.TaskList;
+import clover.ui.Ui;
+
 import java.time.LocalDate;
 
 /** Adds a deadline task with a description and due date. */
@@ -35,4 +45,5 @@ public class DeadlineCommand extends Command {
     private CloverException invalidFormat() {
         return new CloverException("Please use the format: deadline DESCRIPTION /by DUE DATE");
     }
+
 }
