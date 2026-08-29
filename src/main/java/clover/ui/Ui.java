@@ -1,3 +1,7 @@
+package clover.ui;
+
+import clover.task.Task;
+
 import java.util.List;
 import java.util.Scanner;
 

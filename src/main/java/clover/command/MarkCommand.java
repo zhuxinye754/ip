@@ -1,3 +1,12 @@
+package clover.command;
+
+import clover.exception.CloverException;
+import clover.parser.Parser;
+import clover.storage.Storage;
+import clover.task.Task;
+import clover.task.TaskList;
+import clover.ui.Ui;
+
 /** Marks an existing task as complete. */
 public class MarkCommand extends Command {
     private final String taskNumber;

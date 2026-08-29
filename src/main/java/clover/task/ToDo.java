@@ -1,3 +1,5 @@
+package clover.task;
+
 /**
  * Represents one task  without any date/time attached to them
  * format for adding a new todo tasks: todo DESCRIPTION
