@@ -1,21 +1,29 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
-/** Converts raw user input into command and value information for Clover. */
+/** Converts raw user input into executable Clover commands. */
 public class Parser {
-    /** Commands that Clover accepts from the user. */
-    public enum Command {
-        LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, BYE
-    }
-
-    /** Identifies the command at the start of an input line, or returns null for a plain task. */
-    public static Command parseCommand(String input) {
-        String firstWord = input.trim().split("\\s+", 2)[0].toUpperCase();
-        try {
-            return Command.valueOf(firstWord);
-        } catch (IllegalArgumentException e) {
-            return null;
+    /** Creates the command represented by one complete line of user input. */
+    public static Command parse(String input) throws CloverException {
+        if (input.isBlank()) {
+            throw new CloverException("Please enter a command or task description.");
         }
+
+        String[] parts = input.trim().split("\\s+", 2);
+        String commandWord = parts[0].toLowerCase();
+        String arguments = parts.length == 2 ? parts[1] : "";
+
+        return switch (commandWord) {
+        case "list" -> new ListCommand();
+        case "mark" -> new MarkCommand(arguments);
+        case "unmark" -> new UnmarkCommand(arguments);
+        case "todo" -> new TodoCommand(arguments);
+        case "deadline" -> new DeadlineCommand(arguments);
+        case "event" -> new EventCommand(arguments);
+        case "delete" -> new DeleteCommand(arguments);
+        case "bye" -> new ExitCommand();
+        default -> new PlainTaskCommand(input);
+        };
     }
 
     /** Returns whether the input is a valid one-based task number in the current list. */

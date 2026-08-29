@@ -33,51 +33,44 @@ public class Ui {
         System.out.println(DIVIDER);
     }
 
-    /** Displays an error message between divider lines. */
+    /** Displays the standard divider line. */
+    public void showLine() {
+        System.out.println(DIVIDER);
+    }
+
+    /** Displays an error message. */
     public void showError(String message) {
-        System.out.println(DIVIDER);
         System.out.println(message);
-        System.out.println(DIVIDER);
     }
 
     /** Displays every task currently in the list. */
     public void showTaskList(List<Task> tasks) {
-        System.out.println(DIVIDER);
         System.out.println("Here are the tasks in your list:");
         for (int taskIndex = 0; taskIndex < tasks.size(); taskIndex++) {
             System.out.println((taskIndex + 1) + "." + tasks.get(taskIndex));
         }
-        System.out.println(DIVIDER);
     }
 
     /** Confirms that a task was added and shows the updated task count. */
     public void showTaskAdded(Task task, int taskCount) {
-        System.out.println(DIVIDER);
         System.out.println("Got it. I've added this task: " + task);
         System.out.println("Now you have " + taskCount + " tasks in the list.");
-        System.out.println(DIVIDER);
     }
 
     /** Confirms that a task was marked as done. */
     public void showTaskMarked(Task task) {
-        System.out.println(DIVIDER);
         System.out.println("Nice! I've marked this task as done: " + task);
-        System.out.println(DIVIDER);
     }
 
     /** Confirms that a task was marked as not done. */
     public void showTaskUnmarked(Task task) {
-        System.out.println(DIVIDER);
         System.out.println("OK, I've marked this task as not done yet: " + task);
-        System.out.println(DIVIDER);
     }
 
     /** Confirms that a task was deleted and shows the updated task count. */
     public void showTaskDeleted(Task task, int taskCount) {
-        System.out.println(DIVIDER);
         System.out.println("Noted. I've removed this task: " + task);
         System.out.println("Now you have " + taskCount + " tasks in the list.");
-        System.out.println(DIVIDER);
     }
 
     /** Displays a task created from a plain task description. */
@@ -88,7 +81,6 @@ public class Ui {
     /** Displays the closing message. */
     public void showGoodbye() {
         System.out.println("Bye. Hope to see you again soon!");
-        System.out.println(DIVIDER);
     }
 
     /** Releases resources held by this UI. */
