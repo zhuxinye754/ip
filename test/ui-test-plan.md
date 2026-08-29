@@ -1,4 +1,4 @@
-# Clover UI test plan
+ # Clover UI test plan
 
 The runner compiles the Java files in `src/main/java` and launches `Clover` for every case. Expected output is compared exactly, excluding only a final newline.
 

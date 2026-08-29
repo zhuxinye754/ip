@@ -55,7 +55,7 @@ def main() -> int:
 
     with tempfile.TemporaryDirectory(prefix="clover-ui-tests-") as classes:
         compilation = subprocess.run(
-            ["javac", "-d", classes, *map(str, (ROOT / "src/main/java").glob("*.java"))],
+            ["javac", "-d", classes, *map(str, (ROOT / "src/main/java").rglob("*.java"))],
             text=True,
             capture_output=True,
             check=False,
@@ -75,7 +75,7 @@ def main() -> int:
                     data_directory.mkdir()
                     (data_directory / "clover.txt").write_text(saved_data + "\n")
                 run = subprocess.run(
-                    ["java", "-cp", classes, "Clover"],
+                    ["java", "-cp", classes, "clover.Clover"],
                     input=console_input,
                     text=True,
                     capture_output=True,
