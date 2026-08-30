@@ -11,18 +11,22 @@ public class Ui {
 
     private final Scanner scanner;
 
+    /** Creates a UI that reads commands from standard input. */
     public Ui() {
         scanner = new Scanner(System.in);
     }
 
+    /** Returns whether another command line can be read from the console. */
     public boolean hasNextCommand() {
         return scanner.hasNextLine();
     }
 
+    /** Reads the next complete command line from the console. */
     public String readCommand() {
         return scanner.nextLine();
     }
 
+    /** Displays Clover's welcome banner and prompt. */
     public void showWelcome() {
         String banner = "  _____    _         ____    __      __   ______    _____\n"
                 + " / ____|  | |       / __ \\   \\ \\    / /  |  ____|  |  __ \\\n"

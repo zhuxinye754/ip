@@ -5,6 +5,7 @@ package clover.exception;
 public class CloverException extends Exception {
     private static final long serialVersionUID = 1L;
 
+    /** Creates an exception with a message that can be shown to the user. */
     public CloverException(String message) {
         super(message);
     }

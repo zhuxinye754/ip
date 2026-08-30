@@ -21,12 +21,16 @@ public class Storage {
     private static final Path FILE_PATH = Path.of("data", "clover.txt");
     private final Path filePath;
 
+    /** Creates storage using Clover's default data-file location. */
     public Storage() {
         this(FILE_PATH);
     }
+
+    /** Creates storage that reads from and writes to the given data file. */
     public Storage(Path filePath) {
         this.filePath = filePath;
     }
+
     /** Writes the current task list to the data file. */
     public void save(List<Task> tasks) throws IOException {
         Files.createDirectories(filePath.getParent());
