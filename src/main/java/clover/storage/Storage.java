@@ -19,11 +19,18 @@ import java.util.List;
 /** Saves Clover tasks to, and loads them from, a file on the hard disk. */
 public class Storage {
     private static final Path FILE_PATH = Path.of("data", "clover.txt");
+    private final Path filePath;
 
+    public Storage() {
+        this(FILE_PATH);
+    }
+    public Storage(Path filePath) {
+        this.filePath = filePath;
+    }
     /** Writes the current task list to the data file. */
     public void save(List<Task> tasks) throws IOException {
-        Files.createDirectories(FILE_PATH.getParent());
-        if (Files.isDirectory(FILE_PATH)) {
+        Files.createDirectories(filePath.getParent());
+        if (Files.isDirectory(filePath)) {
             throw new IOException("The task data path is a directory.");
         }
 
@@ -32,7 +39,7 @@ public class Storage {
             taskLines.add(toFileLine(task));
         }
 
-        Path temporaryFile = Files.createTempFile(FILE_PATH.getParent(), "clover-", ".tmp");
+        Path temporaryFile = Files.createTempFile(filePath.getParent(), "clover-", ".tmp");
         try {
             Files.write(temporaryFile, taskLines, StandardCharsets.UTF_8);
             moveIntoPlace(temporaryFile);
@@ -44,14 +51,14 @@ public class Storage {
     /** Loads saved tasks, or returns an empty list when Clover is run for the first time. */
     public ArrayList<Task> load() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
-        if (Files.notExists(FILE_PATH)) {
+        if (Files.notExists(filePath)) {
             return tasks;
         }
-        if (!Files.isRegularFile(FILE_PATH)) {
+        if (!Files.isRegularFile(filePath)) {
             throw new IOException("The task data path is not a regular file.");
         }
 
-        List<String> lines = Files.readAllLines(FILE_PATH, StandardCharsets.UTF_8);
+        List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
         for (int lineNumber = 0; lineNumber < lines.size(); lineNumber++) {
             String line = lines.get(lineNumber);
             if (!line.isBlank()) {
@@ -158,10 +165,10 @@ public class Storage {
     /** Replaces the old data file only after the temporary file is fully written. */
     private void moveIntoPlace(Path temporaryFile) throws IOException {
         try {
-            Files.move(temporaryFile, FILE_PATH, StandardCopyOption.ATOMIC_MOVE,
+            Files.move(temporaryFile, filePath, StandardCopyOption.ATOMIC_MOVE,
                     StandardCopyOption.REPLACE_EXISTING);
         } catch (AtomicMoveNotSupportedException e) {
-            Files.move(temporaryFile, FILE_PATH, StandardCopyOption.REPLACE_EXISTING);
+            Files.move(temporaryFile, filePath, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
