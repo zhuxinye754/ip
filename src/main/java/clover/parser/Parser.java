@@ -56,7 +56,7 @@ public class Parser {
         return Integer.parseInt(input.trim()) - 1;
     }
 
-    /** Parses a date entered by the user in ISO yyyy-MM-dd format. */
+    /** Parses a date entered by the user in ISO yyyy-MM-dd format, else throw an exception */
     public static LocalDate parseDate(String text) throws CloverException {
         try {
             return LocalDate.parse(text);

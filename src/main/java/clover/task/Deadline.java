@@ -6,11 +6,12 @@ import java.time.format.DateTimeFormatter;
  * Represents one task that need to be done before a specific date/time
  * format for adding a new deadline tasks: deadline DESCRIPTION /by DEADLINE
  */
-public class Deadline extends Task{
+public class Deadline extends Task {
     private final LocalDate endBy;
     private static final DateTimeFormatter DISPLAY_FORMAT =
             DateTimeFormatter.ofPattern("MMM d yyyy");
 
+    /** Creates a deadline task with its description and due date. */
     public Deadline(String description, LocalDate endBy) {
         super(description);
         this.endBy = endBy;
@@ -21,6 +22,7 @@ public class Deadline extends Task{
         return endBy;
     }
 
+    /** Returns this deadline in Clover's display format. */
     @Override
     public String toString() {
         return "[D] " + super.toString()

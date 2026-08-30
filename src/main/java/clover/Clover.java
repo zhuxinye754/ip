@@ -15,6 +15,7 @@ public class Clover {
     private final Ui ui;
     private TaskList tasks;
 
+    /** Creates Clover and loads any tasks saved from an earlier session. */
     public Clover() {
         storage = new Storage();
         ui = new Ui();
@@ -26,6 +27,7 @@ public class Clover {
             tasks = new TaskList();
         }
     }
+
     /** Runs the command loop until the user enters {@code bye} or input ends. */
     public void run() {
         ui.showWelcome();

@@ -44,7 +44,7 @@ public class EventCommand extends Command {
         ui.showTaskAdded(tasks.getLast(), tasks.size());
     }
 
-    /** Creates the shared guidance message for malformed event commands. */
+    /** Creates the shared message for malformed event commands. */
     private CloverException invalidFormat() {
         return new CloverException("Please use the format: event DESCRIPTION /from START /to END");
     }

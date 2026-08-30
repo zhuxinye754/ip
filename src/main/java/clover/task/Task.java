@@ -7,6 +7,7 @@ public class Task {
     protected String description;
     protected TaskStatus status;
 
+    /** Creates an incomplete task with the given description. */
     public Task(String description) {
         this.description = description;
         this.status = TaskStatus.NOT_DONE;
@@ -16,13 +17,13 @@ public class Task {
         return ( status == TaskStatus.DONE ? "X" : " ");
     }
 
+    /** Marks this task as complete. */
     public void markAsDone() {
-
         status = TaskStatus.DONE;
     }
 
+    /** Marks this task as incomplete. */
     public void markAsUndone() {
-
         status = TaskStatus.NOT_DONE;
     }
 
@@ -36,6 +37,7 @@ public class Task {
         return status == TaskStatus.DONE;
     }
 
+    /** Returns this task in Clover's display format. */
     @Override
     public String toString() {
         return "[" + getStatusIcon() + "] " + this.description;
