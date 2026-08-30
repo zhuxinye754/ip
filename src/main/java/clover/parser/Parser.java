@@ -1,10 +1,10 @@
 package clover.parser;
 
-
 import clover.command.Command;
 import clover.command.ListCommand;
 import clover.exception.CloverException;
 import clover.command.EventCommand;
+import clover.command.FindCommand;
 import clover.command.MarkCommand;
 import clover.command.TodoCommand;
 import clover.command.UnmarkCommand;
@@ -36,6 +36,7 @@ public class Parser {
         case "deadline" -> new DeadlineCommand(arguments);
         case "event" -> new EventCommand(arguments);
         case "delete" -> new DeleteCommand(arguments);
+        case "find" -> new FindCommand(arguments);
         case "bye" -> new ExitCommand();
         default -> new PlainTaskCommand(input);
         };

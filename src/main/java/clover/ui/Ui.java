@@ -2,6 +2,7 @@ package clover.ui;
 
 import clover.task.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -75,6 +76,16 @@ public class Ui {
     public void showTaskDeleted(Task task, int taskCount) {
         System.out.println("Noted. I've removed this task: " + task);
         System.out.println("Now you have " + taskCount + " tasks in the list.");
+    }
+
+    /**
+     * Displays all the tasks whose description contains a given keyword.
+     */
+    public void showFindResults(ArrayList<Task> result) {
+        System.out.println("Here are the matching tasks in your list:");
+        for (int taskIndex = 0; taskIndex < result.size(); taskIndex++) {
+            System.out.println((taskIndex + 1) + "." + result.get(taskIndex));
+        }
     }
 
     /** Displays a task created from a plain task description. */
