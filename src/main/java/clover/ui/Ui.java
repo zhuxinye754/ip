@@ -2,7 +2,6 @@ package clover.ui;
 
 import clover.task.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -81,7 +80,7 @@ public class Ui {
     /**
      * Displays all the tasks whose description contains a given keyword.
      */
-    public void showFindResults(ArrayList<Task> result) {
+    public void showFindResults(List<Task> result) {
         System.out.println("Here are the matching tasks in your list:");
         for (int taskIndex = 0; taskIndex < result.size(); taskIndex++) {
             System.out.println((taskIndex + 1) + "." + result.get(taskIndex));

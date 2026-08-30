@@ -3,7 +3,6 @@ package clover.command;
 import java.util.ArrayList;
 
 import clover.exception.CloverException;
-import clover.parser.Parser;
 import clover.storage.Storage;
 import clover.task.Task;
 import clover.task.TaskList;
@@ -18,7 +17,7 @@ public class FindCommand extends Command {
     /**
      * Creates a FindCommand for the supplied search keyword.
      */
-    public FindCommand(String argument) throws CloverException{
+    public FindCommand(String argument) throws CloverException {
         String trimmed = argument.trim();
         if (trimmed.isEmpty()) {
             throw new CloverException("Please enter a keyword to search for.");
@@ -27,7 +26,7 @@ public class FindCommand extends Command {
     }
 
     /**
-     * Adds tasks whose description contains the keyword and displays them via the UI.
+     * Displays tasks whose descriptions contain the keyword.
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws CloverException {

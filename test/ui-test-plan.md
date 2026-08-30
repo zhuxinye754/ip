@@ -71,6 +71,47 @@ D | 0 | submit report | 2026-09-01
 N | 0 | plain reminder
 ```
 
+## Test case: Find tasks by keyword
+
+**Aim:** Verify that Clover finds matching task descriptions regardless of letter case and keeps their original order.
+
+**Saved data:**
+```text
+T | 1 | read book
+D | 1 | return book | 2026-06-06
+N | 0 | buy groceries
+```
+
+**Input:**
+```text
+find BOOK
+bye
+```
+
+**Expected output:**
+```text
+____________________________________________________________
+  _____    _         ____    __      __   ______    _____
+ / ____|  | |       / __ \   \ \    / /  |  ____|  |  __ \
+| |       | |      | |  | |   \ \  / /   | |__     | |__) |
+| |       | |      | |  | |    \ \/ /    |  __|    |  _  /
+| |____   | |____  | |  | |     \  /     | |____   | | \ \
+ \_____|  |______|  \____/       \/      |______|  |_|  \_\
+
+Hello! I'm Clover.
+What can I do for you?
+
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T] [X] read book
+2.[D] [X] return book (by: Jun 6 2026)
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
 ## Test case: Load saved tasks
 
 **Aim:** Verify that Clover restores saved tasks, including their task type and completion status, when it starts.

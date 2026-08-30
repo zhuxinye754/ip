@@ -14,6 +14,7 @@ import clover.command.DeadlineCommand;
 import clover.command.DeleteCommand;
 import clover.command.EventCommand;
 import clover.command.ExitCommand;
+import clover.command.FindCommand;
 import clover.command.ListCommand;
 import clover.command.MarkCommand;
 import clover.command.PlainTaskCommand;
@@ -33,6 +34,7 @@ class ParserTest {
         assertInstanceOf(DeadlineCommand.class, Parser.parse("deadline submit /by 2026-09-01"));
         assertInstanceOf(EventCommand.class, Parser.parse("event meeting /from 2026-09-01 /to 2026-09-02"));
         assertInstanceOf(DeleteCommand.class, Parser.parse("delete 1"));
+        assertInstanceOf(FindCommand.class, Parser.parse("find book"));
         assertInstanceOf(ExitCommand.class, Parser.parse("bye"));
     }
 
