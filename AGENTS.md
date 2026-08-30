@@ -44,6 +44,10 @@ Maintain JUnit tests for approximately the top 50% highest-value methods: priori
 
 ## Git
 
+All future branch names and commit messages must follow the project skill
+[`seedu-git-standard`](.codex/skills/seedu-git-standard/SKILL.md). Load and
+apply that skill before preparing or creating a commit.
+
 Use lightweight tags unless the user requests an annotated tag.
 When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.
