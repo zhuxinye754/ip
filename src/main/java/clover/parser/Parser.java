@@ -8,11 +8,13 @@ import clover.command.DeadlineCommand;
 import clover.command.DeleteCommand;
 import clover.command.EventCommand;
 import clover.command.ExitCommand;
+import clover.command.FindCommand;
 import clover.command.ListCommand;
 import clover.command.MarkCommand;
 import clover.command.PlainTaskCommand;
 import clover.command.ToDoCommand;
 import clover.command.UnmarkCommand;
+
 import clover.exception.CloverException;
 
 /**
@@ -39,6 +41,7 @@ public class Parser {
         case "deadline" -> new DeadlineCommand(arguments);
         case "event" -> new EventCommand(arguments);
         case "delete" -> new DeleteCommand(arguments);
+        case "find" -> new FindCommand(arguments);
         case "bye" -> new ExitCommand();
         default -> new PlainTaskCommand(input);
         };
