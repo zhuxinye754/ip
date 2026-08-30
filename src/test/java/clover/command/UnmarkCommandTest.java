@@ -46,7 +46,8 @@ class UnmarkCommandTest {
         tasks.add(task);
 
         CloverException exception = assertThrows(CloverException.class,
-                () -> new UnmarkCommand(taskNumber).execute(tasks, new Ui(), new Storage(tempDir.resolve("clover.txt"))));
+                () -> new UnmarkCommand(taskNumber).execute(tasks, new Ui(),
+                        new Storage(tempDir.resolve("clover.txt"))));
 
         assertEquals("Please enter a valid task number to unmark.", exception.getMessage());
         assertTrue(task.isDone());

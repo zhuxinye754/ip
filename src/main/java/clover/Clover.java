@@ -1,5 +1,7 @@
 package clover;
 
+import java.io.IOException;
+
 import clover.command.Command;
 import clover.exception.CloverException;
 import clover.parser.Parser;
@@ -7,15 +9,17 @@ import clover.storage.Storage;
 import clover.task.TaskList;
 import clover.ui.Ui;
 
-import java.io.IOException;
-
-/** Coordinates Clover's user interface, task list, command parser, and storage. */
+/**
+ * Coordinates Clover's user interface, task list, command parser, and storage.
+ */
 public class Clover {
     private final Storage storage;
     private final Ui ui;
     private TaskList tasks;
 
-    /** Creates Clover and loads any tasks saved from an earlier session. */
+    /**
+     * Creates Clover and loads its previously saved task list.
+     */
     public Clover() {
         storage = new Storage();
         ui = new Ui();
@@ -28,7 +32,9 @@ public class Clover {
         }
     }
 
-    /** Runs the command loop until the user enters {@code bye} or input ends. */
+    /**
+     * Runs the command loop until the user enters {@code bye} or input ends.
+     */
     public void run() {
         ui.showWelcome();
         boolean isExit = false;
@@ -48,7 +54,9 @@ public class Clover {
         }
     }
 
-    /** Starts the Clover application. */
+    /**
+     * Starts the Clover application.
+     */
     public static void main(String[] args) {
         new Clover().run();
     }

@@ -17,7 +17,7 @@ import clover.command.ExitCommand;
 import clover.command.ListCommand;
 import clover.command.MarkCommand;
 import clover.command.PlainTaskCommand;
-import clover.command.TodoCommand;
+import clover.command.ToDoCommand;
 import clover.command.UnmarkCommand;
 import clover.exception.CloverException;
 
@@ -29,7 +29,7 @@ class ParserTest {
         assertInstanceOf(ListCommand.class, Parser.parse("list"));
         assertInstanceOf(MarkCommand.class, Parser.parse("mark 1"));
         assertInstanceOf(UnmarkCommand.class, Parser.parse("unmark 1"));
-        assertInstanceOf(TodoCommand.class, Parser.parse("todo read book"));
+        assertInstanceOf(ToDoCommand.class, Parser.parse("todo read book"));
         assertInstanceOf(DeadlineCommand.class, Parser.parse("deadline submit /by 2026-09-01"));
         assertInstanceOf(EventCommand.class, Parser.parse("event meeting /from 2026-09-01 /to 2026-09-02"));
         assertInstanceOf(DeleteCommand.class, Parser.parse("delete 1"));
@@ -38,7 +38,7 @@ class ParserTest {
 
     @Test
     void parse_commandWordWithDifferentCapitalisation_correctCommandTypeReturned() throws CloverException {
-        assertInstanceOf(TodoCommand.class, Parser.parse("TODO read book"));
+        assertInstanceOf(ToDoCommand.class, Parser.parse("TODO read book"));
     }
 
     @Test

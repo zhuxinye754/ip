@@ -1,12 +1,11 @@
 package clover.command;
 
-import clover.exception.CloverException;
-import clover.parser.Parser;
-import clover.storage.Storage;
-import clover.task.Event;
-import clover.task.Task;
-import clover.task.TaskList;
-import clover.ui.Ui;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -17,13 +16,14 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import clover.exception.CloverException;
+import clover.parser.Parser;
+import clover.storage.Storage;
+import clover.task.Event;
+import clover.task.Task;
+import clover.task.TaskList;
+import clover.ui.Ui;
 
-/** Tests validation and execution of event commands. */
 class EventCommandTest {
     @TempDir
     Path tempDir;

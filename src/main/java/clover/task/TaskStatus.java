@@ -1,7 +1,7 @@
 package clover.task;
 
 /**
- * The possible completion states for a task.
+ * Defines the possible completion states for a task.
  */
 public enum TaskStatus {
     NOT_DONE,

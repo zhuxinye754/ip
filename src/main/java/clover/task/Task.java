@@ -7,39 +7,48 @@ public class Task {
     protected String description;
     protected TaskStatus status;
 
-    /** Creates an incomplete task with the given description. */
+    /**
+     * Creates an incomplete task with the supplied description.
+     */
     public Task(String description) {
         this.description = description;
         this.status = TaskStatus.NOT_DONE;
     }
 
     private String getStatusIcon() {
-        return ( status == TaskStatus.DONE ? "X" : " ");
+        return status == TaskStatus.DONE ? "X" : " ";
     }
 
-    /** Marks this task as complete. */
+    /**
+     * Marks this task as complete.
+     */
     public void markAsDone() {
         status = TaskStatus.DONE;
     }
 
-    /** Marks this task as incomplete. */
+    /**
+     * Marks this task as incomplete.
+     */
     public void markAsUndone() {
         status = TaskStatus.NOT_DONE;
     }
 
-    /** Returns this task's description for saving it to the data file. */
     public String getDescription() {
         return description;
     }
 
-    /** Returns whether this task has been completed. */
+    /**
+     * Returns whether this task has been completed.
+     */
     public boolean isDone() {
         return status == TaskStatus.DONE;
     }
 
-    /** Returns this task in Clover's display format. */
+    /**
+     * Returns this task in Clover's display format.
+     */
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + this.description;
+        return "[" + getStatusIcon() + "] " + description;
     }
 }

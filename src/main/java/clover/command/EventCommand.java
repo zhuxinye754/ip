@@ -1,5 +1,7 @@
 package clover.command;
 
+import java.time.LocalDate;
+
 import clover.exception.CloverException;
 import clover.parser.Parser;
 import clover.storage.Storage;
@@ -7,21 +9,25 @@ import clover.task.Event;
 import clover.task.TaskList;
 import clover.ui.Ui;
 
-import java.time.LocalDate;
-
-/** Adds an event task with a description, start date, and end date. */
+/**
+ * Adds an event task with a description, start date, and end date.
+ */
 public class EventCommand extends Command {
     private static final String FROM_MARKER = "/from";
     private static final String TO_MARKER = "/to";
 
     private final String arguments;
 
-    /** Creates a command from the text after the {@code event} keyword. */
+    /**
+     * Creates a command from the text after the {@code event} keyword.
+     */
     public EventCommand(String arguments) {
         this.arguments = arguments;
     }
 
-    /** Validates, adds, and saves the event task. */
+    /**
+     * Validates, adds, and saves the event task.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws CloverException {
         int fromIndex = arguments.indexOf(FROM_MARKER);
@@ -44,7 +50,9 @@ public class EventCommand extends Command {
         ui.showTaskAdded(tasks.getLast(), tasks.size());
     }
 
-    /** Creates the shared message for malformed event commands. */
+    /**
+     * Creates the shared guidance message for malformed event commands.
+     */
     private CloverException invalidFormat() {
         return new CloverException("Please use the format: event DESCRIPTION /from START /to END");
     }
