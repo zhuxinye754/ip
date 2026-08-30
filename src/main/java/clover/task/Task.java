@@ -7,26 +7,33 @@ public class Task {
     protected String description;
     protected TaskStatus status;
 
+    /**
+     * Creates an incomplete task with the supplied description.
+     */
     public Task(String description) {
         this.description = description;
         this.status = TaskStatus.NOT_DONE;
     }
 
     private String getStatusIcon() {
-        return ( status == TaskStatus.DONE ? "X" : " ");
+        return status == TaskStatus.DONE ? "X" : " ";
     }
 
+    /**
+     * Marks this task as complete.
+     */
     public void markAsDone() {
-
         status = TaskStatus.DONE;
     }
 
+    /**
+     * Marks this task as incomplete.
+     */
     public void markAsUndone() {
-
         status = TaskStatus.NOT_DONE;
     }
 
-    /** Returns this task's description for saving it to the data file. */
+    /** Returns this task's description. */
     public String getDescription() {
         return description;
     }
@@ -38,6 +45,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + this.description;
+        return "[" + getStatusIcon() + "] " + description;
     }
 }

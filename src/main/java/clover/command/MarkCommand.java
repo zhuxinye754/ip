@@ -7,16 +7,22 @@ import clover.task.Task;
 import clover.task.TaskList;
 import clover.ui.Ui;
 
-/** Marks an existing task as complete. */
+/**
+ * Marks an existing task as complete.
+ */
 public class MarkCommand extends Command {
     private final String taskNumber;
 
-    /** Creates a command for the supplied one-based task number. */
+    /**
+     * Creates a command for the supplied one-based task number.
+     */
     public MarkCommand(String taskNumber) {
         this.taskNumber = taskNumber;
     }
 
-    /** Marks and saves the selected task. */
+    /**
+     * Marks and saves the selected task.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws CloverException {
         if (!Parser.isValidTaskNumber(taskNumber, tasks.size())) {

@@ -1,28 +1,28 @@
 package clover.command;
 
-import clover.exception.CloverException;
-import clover.parser.Parser;
-import clover.storage.Storage;
-import clover.task.Event;
-import clover.task.TaskList;
-import clover.task.ToDo;
-import clover.ui.Ui;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-public class TodoCommandTest {
+import clover.exception.CloverException;
+import clover.parser.Parser;
+import clover.storage.Storage;
+import clover.task.TaskList;
+import clover.task.ToDo;
+import clover.ui.Ui;
+
+class ToDoCommandTest {
     @TempDir
     Path tempDir;
 
     @Test
-    public void inValidFormat_wrongFormat_exceptionThrown() throws CloverException {
+    void execute_blankDescription_exceptionThrown() throws CloverException {
         String command = "todo ";
         Command cmd = Parser.parse(command);
         Ui ui = new Ui();
@@ -36,7 +36,7 @@ public class TodoCommandTest {
     }
 
     @Test
-    public void validFormat_correctFormat_taskAdded() throws CloverException {
+    void execute_validDescription_taskAdded() throws CloverException {
         String command = "todo do cooking";
         Command cmd = Parser.parse(command);
         Ui ui = new Ui();
@@ -45,8 +45,8 @@ public class TodoCommandTest {
         cmd.execute(taskList, ui, storage);
 
         assertEquals(1, taskList.size());
-        ToDo toDo = assertInstanceOf(ToDo.class, taskList.get(0));
-        assertEquals("do cooking", toDo.getDescription());
-        assertFalse(toDo.isDone());
+        ToDo todo = assertInstanceOf(ToDo.class, taskList.get(0));
+        assertEquals("do cooking", todo.getDescription());
+        assertFalse(todo.isDone());
     }
 }

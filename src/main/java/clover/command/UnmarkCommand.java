@@ -7,16 +7,22 @@ import clover.task.Task;
 import clover.task.TaskList;
 import clover.ui.Ui;
 
-/** Marks an existing task as incomplete. */
+/**
+ * Marks an existing task as incomplete.
+ */
 public class UnmarkCommand extends Command {
     private final String taskNumber;
 
-    /** Creates a command for the supplied one-based task number. */
+    /**
+     * Creates a command for the supplied one-based task number.
+     */
     public UnmarkCommand(String taskNumber) {
         this.taskNumber = taskNumber;
     }
 
-    /** Unmarks and saves the selected task. */
+    /**
+     * Unmarks and saves the selected task.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws CloverException {
         if (!Parser.isValidTaskNumber(taskNumber, tasks.size())) {

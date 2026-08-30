@@ -1,5 +1,16 @@
 package clover.command;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.nio.file.Path;
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
 import clover.exception.CloverException;
 import clover.parser.Parser;
 import clover.storage.Storage;
@@ -8,24 +19,13 @@ import clover.task.Event;
 import clover.task.TaskList;
 import clover.task.ToDo;
 import clover.ui.Ui;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
-import java.nio.file.Path;
-import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 public class DeleteCommandTest {
     @TempDir
     Path tempDir;
 
     @Test
-    public void inValidTaskNumber_taskNumberMoreThanTaskSize_exceptionThrown() throws CloverException {
+    public void delete_invalidTaskNumber_exceptionThrown() throws CloverException {
         String command = "delete 3";
         Command cmd = Parser.parse(command);
         Ui ui = new Ui();
@@ -54,11 +54,11 @@ public class DeleteCommandTest {
         cmd.execute(taskList, ui, storage);
 
         assertEquals(2, taskList.size());
-        ToDo toDo = assertInstanceOf(ToDo.class, taskList.get(0));
+        ToDo todo = assertInstanceOf(ToDo.class, taskList.get(0));
         Deadline deadline = assertInstanceOf(Deadline.class, taskList.get(1));
-        assertEquals("do cooking", toDo.getDescription());
+        assertEquals("do cooking", todo.getDescription());
         assertEquals("read book", deadline.getDescription());
         assertEquals(LocalDate.of(2021, 12, 21), deadline.getEndBy());
-        assertFalse(toDo.isDone());
+        assertFalse(todo.isDone());
     }
 }

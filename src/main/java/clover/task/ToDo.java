@@ -1,10 +1,12 @@
 package clover.task;
 
 /**
- * Represents one task  without any date/time attached to them
- * format for adding a new todo tasks: todo DESCRIPTION
+ * Represents a task without an associated date.
  */
-public class ToDo extends Task{
+public class ToDo extends Task {
+    /**
+     * Creates a todo task with the supplied description.
+     */
     public ToDo(String description) {
         super(description);
     }

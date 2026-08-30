@@ -1,13 +1,8 @@
 package clover.storage;
 
-import clover.task.Deadline;
-import clover.task.Event;
-import clover.task.Task;
-import clover.task.ToDo;
-
 import java.io.IOException;
-import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -16,18 +11,35 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Saves Clover tasks to, and loads them from, a file on the hard disk. */
+import clover.task.Deadline;
+import clover.task.Event;
+import clover.task.Task;
+import clover.task.ToDo;
+
+/**
+ * Saves Clover tasks to, and loads them from, a file on the hard disk.
+ */
 public class Storage {
     private static final Path FILE_PATH = Path.of("data", "clover.txt");
     private final Path filePath;
 
+    /**
+     * Creates storage that uses Clover's default data-file location.
+     */
     public Storage() {
         this(FILE_PATH);
     }
+
+    /**
+     * Creates storage that uses the supplied data-file location.
+     */
     public Storage(Path filePath) {
         this.filePath = filePath;
     }
-    /** Writes the current task list to the data file. */
+
+    /**
+     * Writes the current task list to the data file.
+     */
     public void save(List<Task> tasks) throws IOException {
         Files.createDirectories(filePath.getParent());
         if (Files.isDirectory(filePath)) {
@@ -48,7 +60,9 @@ public class Storage {
         }
     }
 
-    /** Loads saved tasks, or returns an empty list when Clover is run for the first time. */
+    /**
+     * Loads saved tasks, or returns an empty list when Clover is run for the first time.
+     */
     public ArrayList<Task> load() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
         if (Files.notExists(filePath)) {
@@ -77,7 +91,8 @@ public class Storage {
         }
         if (task instanceof Event event) {
             return "E | " + completed + " | " + escape(event.getDescription())
-                    + " | " + escape(event.getStart().toString()) + " | " + escape(event.getEnd().toString());
+                    + " | " + escape(event.getStart().toString())
+                    + " | " + escape(event.getEnd().toString());
         }
         if (task instanceof ToDo) {
             return "T | " + completed + " | " + escape(task.getDescription());
@@ -85,9 +100,7 @@ public class Storage {
         return "N | " + completed + " | " + escape(task.getDescription());
     }
 
-    /**
-     * Parses an ISO date stored in the data file.
-     */
+    /** Parses an ISO date stored in the data file. */
     private LocalDate parseDate(String text, int lineNumber) throws IOException {
         try {
             return LocalDate.parse(text);
@@ -173,7 +186,8 @@ public class Storage {
     }
 
     /** Verifies that a task line includes all fields required by its task type. */
-    private void requirePartCount(List<String> parts, int expectedCount, int lineNumber) throws IOException {
+    private void requirePartCount(List<String> parts, int expectedCount, int lineNumber)
+            throws IOException {
         if (parts.size() != expectedCount) {
             throw invalidData(lineNumber, "wrong number of fields");
         }

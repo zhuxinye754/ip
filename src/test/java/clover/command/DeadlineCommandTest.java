@@ -1,24 +1,24 @@
 package clover.command;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.nio.file.Path;
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
 import clover.exception.CloverException;
 import clover.parser.Parser;
 import clover.storage.Storage;
 import clover.task.Deadline;
 import clover.task.TaskList;
 import clover.ui.Ui;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-
-import java.nio.file.Path;
-import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 public class DeadlineCommandTest {
     @TempDir
@@ -30,7 +30,7 @@ public class DeadlineCommandTest {
             "deadline do art /by",
             "deadline /by 2021-10-21",
     })
-    public void inValidFormat_wrongFormat_exceptionThrown(String command) throws CloverException {
+    public void execute_invalidFormat_exceptionThrown(String command) throws CloverException {
         Command cmd = Parser.parse(command);
         Ui ui = new Ui();
         Storage storage = new Storage(tempDir.resolve("clover.txt"));
@@ -59,7 +59,7 @@ public class DeadlineCommandTest {
     }
 
     @Test
-    public void inValidFormat_invalidDate_exceptionThrown() throws CloverException {
+    public void execute_invalidDate_exceptionThrown() throws CloverException {
         String command = "deadline do art /by tomorrow ";
         Command cmd = Parser.parse(command);
         Ui ui = new Ui();

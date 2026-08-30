@@ -2,21 +2,24 @@ package clover.task;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
 /**
- * Represents one task that need to be done before a specific date/time
- * format for adding a new deadline tasks: deadline DESCRIPTION /by DEADLINE
+ * Represents a task that must be completed by a specific date.
  */
-public class Deadline extends Task{
+public class Deadline extends Task {
     private final LocalDate endBy;
     private static final DateTimeFormatter DISPLAY_FORMAT =
             DateTimeFormatter.ofPattern("MMM d yyyy");
 
+    /**
+     * Creates a deadline with a description and due date.
+     */
     public Deadline(String description, LocalDate endBy) {
         super(description);
         this.endBy = endBy;
     }
 
-    /** Returns the deadline text for saving it to the data file. */
+    /** Returns the deadline text. */
     public LocalDate getEndBy() {
         return endBy;
     }
