@@ -1,8 +1,20 @@
  # Clover UI test plan
 
-The runner compiles the Java files in `src/main/java` and launches `Clover` for every case. Expected output is compared exactly, excluding only a final newline.
+The runner compiles the Java files in `src/main/java` and launches `Clover` for every command-line case. Expected output is compared exactly, excluding only a final newline.
 
 Each case uses an isolated working directory. A case can include an optional **Saved data** block to provide the contents of `data/clover.txt` before Clover starts.
+
+## Test case: Launch the JavaFX window
+
+**Aim:** Verify that Gradle starts the JavaFX application through `clover.Launcher`.
+
+**Steps:**
+
+1. Run `./gradlew run` with JDK 25 selected.
+2. Confirm that a window appears containing the text `Hello World!`.
+3. Close the window.
+
+**Expected behaviour:** Clover opens a JavaFX window and exits cleanly when the window is closed.
 
 ## Test case: Run the extracted task commands
 
