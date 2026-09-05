@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
- * Displays Clover's JavaFX user interface using the Part 2 tutorial layout.
+ * Displays Clover's JavaFX user interface using the Part 3 tutorial layout.
  */
 public class Main extends Application {
     private ScrollPane scrollPane;
@@ -21,7 +21,8 @@ public class Main extends Application {
     private Button sendButton;
     private Scene scene;
     private Image userImage = new Image(getClass().getResourceAsStream("/images/curiousKitty.jpeg"));
-    private Image dukeImage = new Image(getClass().getResourceAsStream("/images/gentlemenCat.jpeg"));
+    private Image cloverImage = new Image(getClass().getResourceAsStream("/images/gentlemenCat.jpeg"));
+    private Clover clover = new Clover();
 
     /**
      * Configures and displays the primary application window.
@@ -36,8 +37,6 @@ public class Main extends Application {
 
         userInput = new TextField();
         sendButton = new Button("Send");
-        DialogBox dialogBox = new DialogBox("Hello!", userImage);
-        dialogContainer.getChildren().addAll(dialogBox);
 
         AnchorPane mainLayout = new AnchorPane();
         mainLayout.getChildren().addAll(scrollPane, userInput, sendButton);
@@ -67,5 +66,26 @@ public class Main extends Application {
         AnchorPane.setRightAnchor(sendButton, 1.0);
         AnchorPane.setLeftAnchor(userInput, 1.0);
         AnchorPane.setBottomAnchor(userInput, 1.0);
+
+        sendButton.setOnMouseClicked((event) -> {
+            handleUserInput();
+        });
+        userInput.setOnAction((event) -> {
+            handleUserInput();
+        });
+        dialogContainer.heightProperty().addListener((observable) -> scrollPane.setVvalue(1.0));
+    }
+
+    /**
+     * Adds the user's message and Clover's response to the dialog container.
+     */
+    private void handleUserInput() {
+        String userText = userInput.getText();
+        String cloverText = clover.getResponse(userInput.getText());
+        dialogContainer.getChildren().addAll(
+                DialogBox.getUserDialog(userText, userImage),
+                DialogBox.getCloverDialog(cloverText, cloverImage)
+        );
+        userInput.clear();
     }
 }

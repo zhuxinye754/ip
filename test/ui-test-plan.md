@@ -12,10 +12,12 @@ Each case uses an isolated working directory. A case can include an optional **S
 
 1. Run `./gradlew run` with JDK 25 selected.
 2. Confirm that a non-resizable window titled `Clover` appears.
-3. Confirm that it contains a scrollable greeting dialog with an avatar, a text field, and a `Send` button.
-4. Close the window.
+3. Enter `hello` and press Enter. Confirm that a user dialog and the left-aligned response `Clover heard: hello` appear.
+4. Enter `again` and select `Send`. Confirm that the matching pair of dialogs appears and the input field clears.
+5. Add enough messages to exceed the visible area and confirm that it scrolls to the latest response.
+6. Close the window.
 
-**Expected behaviour:** Clover opens a 400 by 600 JavaFX window with the Part 2 chat layout and exits cleanly when the window is closed.
+**Expected behaviour:** Clover opens a 400 by 600 JavaFX window with the Part 3 interactive chat layout and exits cleanly when the window is closed.
 
 ## Test case: Run the extracted task commands
 

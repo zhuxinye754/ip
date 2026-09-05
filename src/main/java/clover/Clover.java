@@ -55,6 +55,16 @@ public class Clover {
     }
 
     /**
+     * Generates a response for a user's chat message.
+     *
+     * @param input the message entered by the user
+     * @return Clover's response to the message
+     */
+    public String getResponse(String input) {
+        return "Clover heard: " + input;
+    }
+
+    /**
      * Starts the Clover application.
      */
     public static void main(String[] args) {
