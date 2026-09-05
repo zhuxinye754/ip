@@ -36,10 +36,10 @@ public class MainWindow extends AnchorPane {
     /**
      * Injects the Clover instance.
      *
-     * @param c the Clover instance that generates responses
+     * @param cloverInstance the Clover instance that generates responses
      */
-    public void setClover(Clover c) {
-        clover = c;
+    public void setClover(Clover cloverInstance) {
+        clover = cloverInstance;
     }
 
     /**
@@ -49,9 +49,10 @@ public class MainWindow extends AnchorPane {
     private void handleUserInput() {
         String input = userInput.getText();
         String response = clover.getResponse(input);
+        String commandType = clover.getCommandType();
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getCloverDialog(response, cloverImage)
+                DialogBox.getCloverDialog(response, cloverImage, commandType)
         );
         userInput.clear();
     }

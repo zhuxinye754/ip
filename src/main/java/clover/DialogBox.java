@@ -26,21 +26,21 @@ public class DialogBox extends HBox {
     /**
      * Creates a dialog box with the supplied text and avatar image.
      *
-     * @param s the message to display
-     * @param i the avatar image to display beside the message
+     * @param dialogText the message to display
+     * @param avatarImage the avatar image to display beside the message
      */
-    private DialogBox(String s, Image i) {
+    private DialogBox(String dialogText, Image avatarImage) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/DialogBox.fxml"));
             fxmlLoader.setController(this);
             fxmlLoader.setRoot(this);
             fxmlLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
 
-        dialog.setText(s);
-        displayPicture.setImage(i);
+        dialog.setText(dialogText);
+        displayPicture.setImage(avatarImage);
     }
 
     /**
@@ -51,29 +51,68 @@ public class DialogBox extends HBox {
         Collections.reverse(temporaryChildren);
         getChildren().setAll(temporaryChildren);
         setAlignment(Pos.TOP_LEFT);
+        dialog.getStyleClass().add("reply-label");
     }
 
     /**
      * Creates a right-aligned dialog box for a user message.
      *
-     * @param s the user's message
-     * @param i the user's avatar image
+     * @param dialogText the user's message
+     * @param avatarImage the user's avatar image
      * @return the dialog box to display
      */
-    public static DialogBox getUserDialog(String s, Image i) {
-        return new DialogBox(s, i);
+    public static DialogBox getUserDialog(String dialogText, Image avatarImage) {
+        return new DialogBox(dialogText, avatarImage);
     }
 
     /**
      * Creates a left-aligned dialog box for a Clover response.
      *
-     * @param s Clover's response
-     * @param i Clover's avatar image
+     * @param dialogText Clover's response
+     * @param avatarImage Clover's avatar image
      * @return the flipped dialog box to display
      */
-    public static DialogBox getCloverDialog(String s, Image i) {
-        var dialogBox = new DialogBox(s, i);
+    public static DialogBox getCloverDialog(String dialogText, Image avatarImage) {
+        return getCloverDialog(dialogText, avatarImage, null);
+    }
+
+    /**
+     * Creates a left-aligned Clover dialog with styling for the command that produced it.
+     *
+     * @param dialogText Clover's response
+     * @param avatarImage Clover's avatar image
+     * @param commandType the type of command that produced the response
+     * @return the styled, flipped dialog box to display
+     */
+    public static DialogBox getCloverDialog(String dialogText, Image avatarImage, String commandType) {
+        var dialogBox = new DialogBox(dialogText, avatarImage);
         dialogBox.flip();
+        dialogBox.changeDialogStyle(commandType);
         return dialogBox;
+    }
+
+    /**
+     * Applies a CSS class for command types that have a dedicated reply style.
+     */
+    private void changeDialogStyle(String commandType) {
+        if (commandType == null) {
+            return;
+        }
+
+        switch (commandType) {
+            case "ToDoCommand":
+            case "DeadlineCommand":
+            case "EventCommand":
+                dialog.getStyleClass().add("add-label");
+                break;
+            case "MarkCommand":
+                dialog.getStyleClass().add("marked-label");
+                break;
+            case "DeleteCommand":
+                dialog.getStyleClass().add("delete-label");
+                break;
+            default:
+                break;
+        }
     }
 }

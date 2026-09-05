@@ -53,7 +53,7 @@ public class Parser {
         try {
             int taskNumber = Integer.parseInt(input.trim());
             return taskNumber >= 1 && taskNumber <= taskCount;
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException exception) {
             return false;
         }
     }
@@ -71,7 +71,7 @@ public class Parser {
     public static LocalDate parseDate(String text) throws CloverException {
         try {
             return LocalDate.parse(text);
-        } catch (DateTimeParseException e) {
+        } catch (DateTimeParseException exception) {
             throw new CloverException("Please enter dates in the format yyyy-MM-dd.");
         }
     }

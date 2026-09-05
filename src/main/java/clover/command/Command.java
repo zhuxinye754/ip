@@ -27,7 +27,7 @@ public abstract class Command {
     protected void saveTasks(TaskList tasks, Ui ui, Storage storage) {
         try {
             storage.save(tasks.asList());
-        } catch (IOException | SecurityException e) {
+        } catch (IOException | SecurityException exception) {
             ui.showError("I could not save your tasks to the data file.");
         }
     }

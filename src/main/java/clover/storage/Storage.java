@@ -104,7 +104,7 @@ public class Storage {
     private LocalDate parseDate(String text, int lineNumber) throws IOException {
         try {
             return LocalDate.parse(text);
-        } catch (DateTimeParseException e) {
+        } catch (DateTimeParseException exception) {
             throw invalidData(lineNumber, "invalid date");
         }
     }
@@ -180,7 +180,7 @@ public class Storage {
         try {
             Files.move(temporaryFile, filePath, StandardCopyOption.ATOMIC_MOVE,
                     StandardCopyOption.REPLACE_EXISTING);
-        } catch (AtomicMoveNotSupportedException e) {
+        } catch (AtomicMoveNotSupportedException exception) {
             Files.move(temporaryFile, filePath, StandardCopyOption.REPLACE_EXISTING);
         }
     }
