@@ -11,10 +11,11 @@ Each case uses an isolated working directory. A case can include an optional **S
 **Steps:**
 
 1. Run `./gradlew run` with JDK 25 selected.
-2. Confirm that a window appears containing the text `Hello World!`.
-3. Close the window.
+2. Confirm that a non-resizable window titled `Clover` appears.
+3. Confirm that it contains a scrollable greeting dialog with an avatar, a text field, and a `Send` button.
+4. Close the window.
 
-**Expected behaviour:** Clover opens a JavaFX window and exits cleanly when the window is closed.
+**Expected behaviour:** Clover opens a 400 by 600 JavaFX window with the Part 2 chat layout and exits cleanly when the window is closed.
 
 ## Test case: Run the extracted task commands
 
