@@ -28,8 +28,7 @@ class ToDoCommandTest {
         Ui ui = new Ui();
         Storage storage = new Storage(tempDir.resolve("clover.txt"));
         TaskList taskList = new TaskList();
-        CloverException exception = assertThrows(CloverException.class,
-                () -> cmd.execute(taskList, ui, storage));
+        CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(taskList, ui, storage));
 
         assertEquals("The description of a todo cannot be empty.", exception.getMessage());
 
