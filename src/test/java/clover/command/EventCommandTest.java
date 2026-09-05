@@ -30,10 +30,10 @@ class EventCommandTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
-            "event do homework",
-            "event do art /from /to 2021-12-21",
-            "event do coding /from 2021-12-21 /to",
-            "event /from 2021-12-21 /to 2022-12-21"
+        "event do homework",
+        "event do art /from /to 2021-12-21",
+        "event do coding /from 2021-12-21 /to",
+        "event /from 2021-12-21 /to 2022-12-21"
     })
     void execute_invalidStructure_exceptionThrownWithoutAddingTask(String command) throws CloverException {
 
@@ -41,8 +41,7 @@ class EventCommandTest {
         Ui ui = new Ui();
         Storage storage = new Storage(tempDir.resolve("clover.txt"));
         TaskList taskList = new TaskList();
-        CloverException exception = assertThrows(CloverException.class,
-                () -> cmd.execute(taskList, ui, storage));
+        CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(taskList, ui, storage));
 
         assertEquals("Please use the format: event DESCRIPTION /from START /to END", exception.getMessage());
         assertTrue(taskList.asList().isEmpty());
@@ -78,8 +77,7 @@ class EventCommandTest {
         Ui ui = new Ui();
         Storage storage = new Storage(tempDir.resolve("clover.txt"));
         TaskList taskList = new TaskList();
-        CloverException exception = assertThrows(CloverException.class,
-                () -> cmd.execute(taskList, ui, storage));
+        CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(taskList, ui, storage));
 
         assertEquals("Please enter dates in the format yyyy-MM-dd.", exception.getMessage());
         assertTrue(taskList.asList().isEmpty());
@@ -92,8 +90,7 @@ class EventCommandTest {
         Ui ui = new Ui();
         Storage storage = new Storage(tempDir.resolve("clover.txt"));
         TaskList taskList = new TaskList();
-        CloverException exception = assertThrows(CloverException.class,
-                () -> cmd.execute(taskList, ui, storage));
+        CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(taskList, ui, storage));
 
         assertEquals("Please enter dates in the format yyyy-MM-dd.", exception.getMessage());
         assertTrue(taskList.asList().isEmpty());

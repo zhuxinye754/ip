@@ -14,7 +14,6 @@ import clover.command.MarkCommand;
 import clover.command.PlainTaskCommand;
 import clover.command.ToDoCommand;
 import clover.command.UnmarkCommand;
-
 import clover.exception.CloverException;
 
 /**
@@ -34,16 +33,16 @@ public class Parser {
         String arguments = parts.length == 2 ? parts[1] : "";
 
         return switch (commandWord) {
-        case "list" -> new ListCommand();
-        case "mark" -> new MarkCommand(arguments);
-        case "unmark" -> new UnmarkCommand(arguments);
-        case "todo" -> new ToDoCommand(arguments);
-        case "deadline" -> new DeadlineCommand(arguments);
-        case "event" -> new EventCommand(arguments);
-        case "delete" -> new DeleteCommand(arguments);
-        case "find" -> new FindCommand(arguments);
-        case "bye" -> new ExitCommand();
-        default -> new PlainTaskCommand(input);
+            case "list" -> new ListCommand();
+            case "mark" -> new MarkCommand(arguments);
+            case "unmark" -> new UnmarkCommand(arguments);
+            case "todo" -> new ToDoCommand(arguments);
+            case "deadline" -> new DeadlineCommand(arguments);
+            case "event" -> new EventCommand(arguments);
+            case "delete" -> new DeleteCommand(arguments);
+            case "find" -> new FindCommand(arguments);
+            case "bye" -> new ExitCommand();
+            default -> new PlainTaskCommand(input);
         };
     }
 

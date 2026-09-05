@@ -31,8 +31,7 @@ public class DeleteCommandTest {
         Ui ui = new Ui();
         Storage storage = new Storage(tempDir.resolve("clover.txt"));
         TaskList taskList = new TaskList();
-        CloverException exception = assertThrows(CloverException.class,
-                () -> cmd.execute(taskList, ui, storage));
+        CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(taskList, ui, storage));
 
         assertEquals("Please enter a valid task number to delete.", exception.getMessage());
 

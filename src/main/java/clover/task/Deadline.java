@@ -7,9 +7,9 @@ import java.time.format.DateTimeFormatter;
  * Represents a task that must be completed by a specific date.
  */
 public class Deadline extends Task {
-    private final LocalDate endBy;
     private static final DateTimeFormatter DISPLAY_FORMAT =
             DateTimeFormatter.ofPattern("MMM d yyyy");
+    private final LocalDate endBy;
 
     /**
      * Creates a deadline with a description and due date.
