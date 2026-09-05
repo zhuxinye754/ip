@@ -46,11 +46,12 @@ public class Ui {
                 + "| |       | |      | |  | |    \\ \\/ /    |  __|    |  _  /\n"
                 + "| |____   | |____  | |  | |     \\  /     | |____   | | \\ \\\n"
                 + " \\_____|  |______|  \\____/       \\/      |______|  |_|  \\_\\\n";
-        showMessage(DIVIDER);
-        showMessage(banner);
-        showMessage("Hello! I'm Clover.");
-        showMessage("What can I do for you?\n");
-        showMessage(DIVIDER);
+        showMessages(
+                DIVIDER,
+                banner,
+                "Hello! I'm Clover.",
+                "What can I do for you?\n",
+                DIVIDER);
     }
 
     /**
@@ -81,8 +82,9 @@ public class Ui {
      * Confirms that a task was added and shows the updated task count.
      */
     public void showTaskAdded(Task task, int taskCount) {
-        showMessage("Got it. I've added this task: " + task);
-        showMessage("Now you have " + taskCount + " tasks in the list.");
+        showMessages(
+                "Got it. I've added this task: " + task,
+                "Now you have " + taskCount + " tasks in the list.");
     }
 
     /**
@@ -103,8 +105,9 @@ public class Ui {
      * Confirms that a task was deleted and shows the updated task count.
      */
     public void showTaskDeleted(Task task, int taskCount) {
-        showMessage("Noted. I've removed this task: " + task);
-        showMessage("Now you have " + taskCount + " tasks in the list.");
+        showMessages(
+                "Noted. I've removed this task: " + task,
+                "Now you have " + taskCount + " tasks in the list.");
     }
 
     /**
@@ -151,6 +154,17 @@ public class Ui {
     private void showMessage(String message) {
         System.out.println(message);
         response.append(message).append(System.lineSeparator());
+    }
+
+    /**
+     * Displays a sequence of related messages in their supplied order.
+     *
+     * @param messages the messages to display
+     */
+    private void showMessages(String... messages) {
+        for (String message : messages) {
+            showMessage(message);
+        }
     }
 
     /**
