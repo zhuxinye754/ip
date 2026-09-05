@@ -54,7 +54,7 @@ test {
 }
 
 application {
-    mainClass = 'clover.Clover'
+    mainClass.set("clover.Launcher")
 }
 
 jar {

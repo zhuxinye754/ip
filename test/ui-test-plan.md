@@ -1,8 +1,26 @@
  # Clover UI test plan
 
-The runner compiles the Java files in `src/main/java` and launches `Clover` for every case. Expected output is compared exactly, excluding only a final newline.
+The runner compiles the Java files in `src/main/java` and launches `Clover` for every command-line case. Expected output is compared exactly, excluding only a final newline.
 
 Each case uses an isolated working directory. A case can include an optional **Saved data** block to provide the contents of `data/clover.txt` before Clover starts.
+
+## Test case: Launch the JavaFX window
+
+**Aim:** Verify that Gradle starts the JavaFX application through `clover.Launcher`.
+
+**Steps:**
+
+1. Run `./gradlew run` with JDK 25 selected.
+2. Confirm that an FXML-based JavaFX window appears.
+3. Enter `todo read book` and press Enter. Confirm that the left-aligned reply confirms that the task was added.
+4. Enter `list` and select `Send`. Confirm that the reply lists `read book`, showing that chat commands use Clover's task list.
+5. Add enough messages to exceed the visible area and confirm that it scrolls to the latest response.
+6. Enter `mark 1` and confirm that Clover's reply bubble uses the marked-task style. Enter `delete 1` and confirm it uses the delete-task style.
+7. Resize the window. Confirm that the input field, Send button, and scroll pane remain anchored to their respective edges.
+8. Confirm that the background image, styled message bubbles, and button hover/pressed states appear.
+9. Close the window.
+
+**Expected behaviour:** Clover opens an FXML-based JavaFX window with the Part 5 responsive, styled chat layout and exits cleanly when the window is closed.
 
 ## Test case: Run the extracted task commands
 

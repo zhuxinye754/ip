@@ -30,12 +30,12 @@ public class FindCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws CloverException {
-        ArrayList<Task> result = new ArrayList<>();
-        for (Task t : tasks.asList()) {
-            if (t.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
-                result.add(t);
+        ArrayList<Task> matchingTasks = new ArrayList<>();
+        for (Task task : tasks.asList()) {
+            if (task.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
+                matchingTasks.add(task);
             }
         }
-        ui.showFindResults(result);
+        ui.showFindResults(matchingTasks);
     }
 }

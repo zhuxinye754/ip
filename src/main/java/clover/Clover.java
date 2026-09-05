@@ -16,6 +16,7 @@ public class Clover {
     private final Storage storage;
     private final Ui ui;
     private TaskList tasks;
+    private String commandType;
 
     /**
      * Creates Clover and loads its previously saved task list.
@@ -26,7 +27,7 @@ public class Clover {
 
         try {
             tasks = new TaskList(storage.load());
-        } catch (IOException | SecurityException e) {
+        } catch (IOException | SecurityException exception) {
             ui.showError("I could not load your saved tasks. Starting with an empty list.");
             tasks = new TaskList();
         }
@@ -46,12 +47,40 @@ public class Clover {
                 Command command = Parser.parse(fullCommand);
                 command.execute(tasks, ui, storage);
                 isExit = command.isExit();
-            } catch (CloverException e) {
-                ui.showError(e.getMessage());
+            } catch (CloverException exception) {
+                ui.showError(exception.getMessage());
             } finally {
                 ui.showLine();
             }
         }
+    }
+
+    /**
+     * Generates a response for a user's chat message.
+     *
+     * @param input the message entered by the user
+     * @return Clover's response to the message
+     */
+    public String getResponse(String input) {
+        ui.clearResponse();
+        commandType = null;
+        try {
+            Command command = Parser.parse(input);
+            commandType = command.getClass().getSimpleName();
+            command.execute(tasks, ui, storage);
+        } catch (CloverException exception) {
+            ui.showError(exception.getMessage());
+        }
+        return ui.getResponse();
+    }
+
+    /**
+     * Returns the type of command that produced the latest response.
+     *
+     * @return the latest command type, or {@code null} when parsing failed
+     */
+    public String getCommandType() {
+        return commandType;
     }
 
     /**
