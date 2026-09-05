@@ -1,7 +1,12 @@
 package clover;
 
+import java.io.IOException;
+import java.util.Collections;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -10,10 +15,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
 /**
- * A chat message containing text and an accompanying avatar image.
+ * Represents a dialog box containing a speaker's image and message.
  */
 public class DialogBox extends HBox {
-    private Label text;
+    @FXML
+    private Label dialog;
+    @FXML
     private ImageView displayPicture;
 
     /**
@@ -22,25 +29,28 @@ public class DialogBox extends HBox {
      * @param s the message to display
      * @param i the avatar image to display beside the message
      */
-    public DialogBox(String s, Image i) {
-        text = new Label(s);
-        displayPicture = new ImageView(i);
+    private DialogBox(String s, Image i) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/DialogBox.fxml"));
+            fxmlLoader.setController(this);
+            fxmlLoader.setRoot(this);
+            fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        text.setWrapText(true);
-        displayPicture.setFitWidth(100.0);
-        displayPicture.setFitHeight(100.0);
-        this.setAlignment(Pos.TOP_RIGHT);
-        this.getChildren().addAll(text, displayPicture);
+        dialog.setText(s);
+        displayPicture.setImage(i);
     }
 
     /**
      * Flips the dialog box so its image is on the left and text is on the right.
      */
     private void flip() {
-        this.setAlignment(Pos.TOP_LEFT);
         ObservableList<Node> temporaryChildren = FXCollections.observableArrayList(this.getChildren());
-        FXCollections.reverse(temporaryChildren);
-        this.getChildren().setAll(temporaryChildren);
+        Collections.reverse(temporaryChildren);
+        getChildren().setAll(temporaryChildren);
+        setAlignment(Pos.TOP_LEFT);
     }
 
     /**
