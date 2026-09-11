@@ -23,6 +23,13 @@ public abstract class Command {
         return false;
     }
 
+    /**
+     * Returns the visual style to apply to this command's response.
+     */
+    public CommandResponseStyle getResponseStyle() {
+        return CommandResponseStyle.STANDARD;
+    }
+
     /** Saves the task list and reports an error without stopping the command loop. */
     protected void saveTasks(TaskList tasks, Ui ui, Storage storage) {
         try {

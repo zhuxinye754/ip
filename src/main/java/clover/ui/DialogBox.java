@@ -3,6 +3,7 @@ package clover.ui;
 import java.io.IOException;
 import java.util.Collections;
 
+import clover.command.CommandResponseStyle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -73,46 +74,42 @@ public class DialogBox extends HBox {
      * @return the flipped dialog box to display
      */
     public static DialogBox getCloverDialog(String dialogText, Image avatarImage) {
-        return getCloverDialog(dialogText, avatarImage, null);
+        return getCloverDialog(dialogText, avatarImage, CommandResponseStyle.STANDARD);
     }
 
     /**
-     * Creates a left-aligned Clover dialog with styling for the command that produced it.
+     * Creates a left-aligned Clover dialog with the supplied response styling.
      *
      * @param dialogText Clover's response
      * @param avatarImage Clover's avatar image
-     * @param commandType the type of command that produced the response
+     * @param responseStyle the visual style for the response
      * @return the styled, flipped dialog box to display
      */
-    public static DialogBox getCloverDialog(String dialogText, Image avatarImage, String commandType) {
+    public static DialogBox getCloverDialog(String dialogText, Image avatarImage, CommandResponseStyle responseStyle) {
         var dialogBox = new DialogBox(dialogText, avatarImage);
         dialogBox.flip();
-        dialogBox.changeDialogStyle(commandType);
+        dialogBox.changeDialogStyle(responseStyle);
         return dialogBox;
     }
 
     /**
-     * Applies a CSS class for command types that have a dedicated reply style.
+     * Applies a CSS class for response styles that have a dedicated reply style.
      */
-    private void changeDialogStyle(String commandType) {
-        if (commandType == null) {
-            return;
-        }
-
-        switch (commandType) {
-            case "ToDoCommand":
-            case "DeadlineCommand":
-            case "EventCommand":
+    private void changeDialogStyle(CommandResponseStyle responseStyle) {
+        switch (responseStyle) {
+            case TASK_ADDED:
                 dialog.getStyleClass().add("add-label");
                 break;
-            case "MarkCommand":
+            case TASK_MARKED:
                 dialog.getStyleClass().add("marked-label");
                 break;
-            case "DeleteCommand":
+            case TASK_DELETED:
                 dialog.getStyleClass().add("delete-label");
                 break;
-            default:
+            case STANDARD:
                 break;
+            default:
+                throw new IllegalArgumentException("Unsupported response style: " + responseStyle);
         }
     }
 }

@@ -3,6 +3,7 @@ package clover;
 import java.io.IOException;
 
 import clover.command.Command;
+import clover.command.CommandResponseStyle;
 import clover.exception.CloverException;
 import clover.parser.Parser;
 import clover.storage.Storage;
@@ -16,7 +17,7 @@ public class Clover {
     private final Storage storage;
     private final Ui ui;
     private TaskList tasks;
-    private String commandType;
+    private CommandResponseStyle responseStyle;
 
     /**
      * Creates Clover and loads its previously saved task list.
@@ -63,10 +64,10 @@ public class Clover {
      */
     public String getResponse(String input) {
         ui.clearResponse();
-        commandType = null;
+        responseStyle = CommandResponseStyle.STANDARD;
         try {
             Command command = Parser.parse(input);
-            commandType = command.getClass().getSimpleName();
+            responseStyle = command.getResponseStyle();
             command.execute(tasks, ui, storage);
         } catch (CloverException exception) {
             ui.showError(exception.getMessage());
@@ -75,12 +76,12 @@ public class Clover {
     }
 
     /**
-     * Returns the type of command that produced the latest response.
+     * Returns the visual style for the latest response.
      *
-     * @return the latest command type, or {@code null} when parsing failed
+     * @return the visual style associated with the latest response
      */
-    public String getCommandType() {
-        return commandType;
+    public CommandResponseStyle getResponseStyle() {
+        return responseStyle;
     }
 
     /**

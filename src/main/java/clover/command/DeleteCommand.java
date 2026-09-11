@@ -35,4 +35,9 @@ public class DeleteCommand extends Command {
         saveTasks(tasks, ui, storage);
         ui.showTaskDeleted(deletedTask, tasks.size());
     }
+
+    @Override
+    public CommandResponseStyle getResponseStyle() {
+        return CommandResponseStyle.TASK_DELETED;
+    }
 }

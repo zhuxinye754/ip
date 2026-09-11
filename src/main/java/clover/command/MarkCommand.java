@@ -36,4 +36,9 @@ public class MarkCommand extends Command {
         saveTasks(tasks, ui, storage);
         ui.showTaskMarked(task);
     }
+
+    @Override
+    public CommandResponseStyle getResponseStyle() {
+        return CommandResponseStyle.TASK_MARKED;
+    }
 }

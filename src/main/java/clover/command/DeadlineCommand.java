@@ -46,6 +46,11 @@ public class DeadlineCommand extends Command {
         ui.showTaskAdded(tasks.getLast(), tasks.size());
     }
 
+    @Override
+    public CommandResponseStyle getResponseStyle() {
+        return CommandResponseStyle.TASK_ADDED;
+    }
+
     /** Creates the shared message for malformed deadline commands. */
     private CloverException invalidFormat() {
         return new CloverException("Please use the format: deadline DESCRIPTION /by DUE DATE");
