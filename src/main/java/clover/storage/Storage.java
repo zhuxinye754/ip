@@ -41,6 +41,7 @@ public class Storage {
      * Writes the current task list to the data file.
      */
     public void save(List<Task> tasks) throws IOException {
+        assert tasks != null : "Storage saves a task collection supplied by TaskList.";
         Files.createDirectories(filePath.getParent());
         if (Files.isDirectory(filePath)) {
             throw new IOException("The task data path is a directory.");
@@ -48,6 +49,7 @@ public class Storage {
 
         List<String> taskLines = new ArrayList<>();
         for (Task task : tasks) {
+            assert task != null : "TaskList must not pass null tasks to storage.";
             taskLines.add(toFileLine(task));
         }
 
@@ -112,6 +114,7 @@ public class Storage {
     /** Recreates one task from a pipe-separated file line. */
     private Task fromFileLine(String line, int lineNumber) throws IOException {
         List<String> parts = splitFields(line, lineNumber);
+        assert !parts.isEmpty() : "Splitting a task-data line always produces its first field.";
 
         Task task;
         switch (parts.get(0)) {

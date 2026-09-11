@@ -28,7 +28,10 @@ public class MarkCommand extends Command {
         if (!Parser.isValidTaskNumber(taskNumber, tasks.size())) {
             throw new CloverException("Please enter a valid task number to mark.");
         }
-        Task task = tasks.get(Parser.parseTaskIndex(taskNumber));
+        int taskIndex = Parser.parseTaskIndex(taskNumber);
+        assert taskIndex >= 0 && taskIndex < tasks.size()
+                : "A validated one-based task number must map to an existing list index.";
+        Task task = tasks.get(taskIndex);
         task.markAsDone();
         saveTasks(tasks, ui, storage);
         ui.showTaskMarked(task);

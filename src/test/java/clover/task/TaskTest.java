@@ -2,6 +2,7 @@ package clover.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -28,5 +29,10 @@ class TaskTest {
 
         assertFalse(task.isDone());
         assertEquals("[ ] read book", task.toString());
+    }
+
+    @Test
+    void constructor_nullDescription_assertionErrorThrown() {
+        assertThrows(AssertionError.class, () -> new Task(null));
     }
 }
