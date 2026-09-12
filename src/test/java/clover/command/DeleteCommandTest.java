@@ -18,6 +18,7 @@ import clover.task.Deadline;
 import clover.task.Event;
 import clover.task.TaskList;
 import clover.task.ToDo;
+import clover.tutoree.TutoreeList;
 import clover.ui.Ui;
 
 public class DeleteCommandTest {
@@ -31,7 +32,8 @@ public class DeleteCommandTest {
         Ui ui = new Ui();
         Storage storage = new Storage(tempDir.resolve("clover.txt"));
         TaskList taskList = new TaskList();
-        CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(taskList, ui, storage));
+        CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(
+                taskList, new TutoreeList(), ui, storage));
 
         assertEquals("Please enter a valid task number to delete.", exception.getMessage());
 
@@ -50,7 +52,7 @@ public class DeleteCommandTest {
                 LocalDate.of(2022, 12, 21)));
         taskList.add(new Deadline("read book",
                 LocalDate.of(2021, 12, 21)));
-        cmd.execute(taskList, ui, storage);
+        cmd.execute(taskList, new TutoreeList(), ui, storage);
 
         assertEquals(2, taskList.size());
         ToDo todo = assertInstanceOf(ToDo.class, taskList.get(0));

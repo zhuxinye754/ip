@@ -19,7 +19,7 @@ class UiTest {
 
         ui.showError("Invalid command");
 
-        assertEquals("Invalid command", ui.getResponse());
+        assertEquals("Invalid command", ui.buildResponse());
     }
 
     @Test
@@ -29,7 +29,7 @@ class UiTest {
 
         ui.clearResponse();
 
-        assertEquals("", ui.getResponse());
+        assertEquals("", ui.buildResponse());
     }
 
     @Test
@@ -39,7 +39,7 @@ class UiTest {
         ui.showTaskAdded(new ToDo("read book"), 1);
 
         assertEquals("Got it. I've added this task: [T] [ ] read book\n"
-                + "Now you have 1 tasks in the list.", ui.getResponse());
+                + "Now you have 1 tasks in the list.", ui.buildResponse());
     }
 
     @Test
@@ -50,7 +50,7 @@ class UiTest {
 
         assertEquals("Here are the tasks in your list:\n"
                 + "1.[T] [ ] read book\n"
-                + "2.[T] [ ] buy groceries", ui.getResponse());
+                + "2.[T] [ ] buy groceries", ui.buildResponse());
     }
 
     @Test
@@ -61,6 +61,6 @@ class UiTest {
 
         assertEquals("Here are the matching tasks in your list:\n"
                 + "1.[T] [ ] read book\n"
-                + "2.[T] [ ] buy bookcase", ui.getResponse());
+                + "2.[T] [ ] buy bookcase", ui.buildResponse());
     }
 }

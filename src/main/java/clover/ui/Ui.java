@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import clover.task.Task;
+import clover.tutoree.Tutoree;
 
 /**
  * Handles Clover's console input and output.
@@ -116,6 +117,29 @@ public class Ui {
         showNumberedTasks(result);
     }
 
+    /** Confirms that a tutoree was added and shows the updated tutoree count. */
+    public void showTutoreeAdded(Tutoree tutoree, int tutoreeCount) {
+        showMessages(
+                "Got it. I've added this tutoree:",
+                tutoree.getName(),
+                "Address: " + tutoree.getAddress(),
+                "Fee: " + tutoree.getFee(),
+                "Now you have " + tutoreeCount + " tutoree"
+                        + (tutoreeCount == 1 ? "" : "s") + " in the list.");
+    }
+
+    /** Displays every tutoree currently in the directory. */
+    public void showTutoreeList(List<Tutoree> tutorees) {
+        showMessage("Here are the tutorees in your list:");
+        showNumberedTutorees(tutorees);
+    }
+
+    /** Displays tutorees whose names match the user's search keyword. */
+    public void showTutoreeFindResults(List<Tutoree> tutorees) {
+        showMessage("Here are the matching tutorees in your list:");
+        showNumberedTutorees(tutorees);
+    }
+
     /**
      * Displays the closing message.
      */
@@ -133,7 +157,7 @@ public class Ui {
     /**
      * Returns the messages produced since the response was last cleared.
      */
-    public String getResponse() {
+    public String buildResponse() {
         return response.toString().stripTrailing();
     }
 
@@ -160,6 +184,16 @@ public class Ui {
     private void showNumberedTasks(List<Task> tasks) {
         for (int taskIndex = 0; taskIndex < tasks.size(); taskIndex++) {
             showMessage((taskIndex + 1) + "." + tasks.get(taskIndex));
+        }
+    }
+
+    /** Displays supplied tutorees in one-based numbered order with all stored details. */
+    private void showNumberedTutorees(List<Tutoree> tutorees) {
+        for (int tutoreeIndex = 0; tutoreeIndex < tutorees.size(); tutoreeIndex++) {
+            Tutoree tutoree = tutorees.get(tutoreeIndex);
+            showMessages((tutoreeIndex + 1) + ". " + tutoree.getName(),
+                    "   Address: " + tutoree.getAddress(),
+                    "   Fee: " + tutoree.getFee());
         }
     }
 

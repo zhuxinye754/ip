@@ -2,6 +2,7 @@ package clover.command;
 
 import clover.storage.Storage;
 import clover.task.TaskList;
+import clover.tutoree.TutoreeList;
 import clover.ui.Ui;
 
 /**
@@ -12,7 +13,7 @@ public class ExitCommand extends Command {
      * Displays the farewell message and closes console input.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public void execute(TaskList tasks, TutoreeList tutorees, Ui ui, Storage storage) {
         ui.showGoodbye();
         ui.close();
     }

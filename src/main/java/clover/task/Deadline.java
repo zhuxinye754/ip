@@ -20,6 +20,14 @@ public class Deadline extends Task {
     }
 
     /**
+     * Creates a deadline that is optionally linked to a tutoree.
+     */
+    public Deadline(String description, LocalDate endBy, String tutoreeName) {
+        super(description, tutoreeName);
+        this.endBy = endBy;
+    }
+
+    /**
      * Returns the deadline text.
      */
     public LocalDate getEndBy() {
@@ -31,7 +39,7 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return "[D] " + super.toString()
-                + " (by: " + endBy.format(DISPLAY_FORMAT) + ")";
+        return "[D] " + formatTaskDisplay()
+                + " (by: " + endBy.format(DISPLAY_FORMAT) + ")" + formatTutoreeSuffix();
     }
 }

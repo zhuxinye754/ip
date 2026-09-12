@@ -4,9 +4,11 @@ import java.time.LocalDate;
 
 import clover.exception.CloverException;
 import clover.parser.Parser;
+import clover.parser.TaskArguments;
 import clover.storage.Storage;
 import clover.task.Deadline;
 import clover.task.TaskList;
+import clover.tutoree.TutoreeList;
 import clover.ui.Ui;
 
 /**
@@ -28,20 +30,23 @@ public class DeadlineCommand extends Command {
      * Validates, adds, and saves the deadline task.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws CloverException {
-        int markerIndex = arguments.indexOf(DEADLINE_MARKER);
+    public void execute(TaskList tasks, TutoreeList tutorees, Ui ui, Storage storage) throws CloverException {
+        TaskArguments parsedArguments = Parser.parseTaskArguments(arguments);
+        String taskArguments = parsedArguments.getTaskArguments();
+        int markerIndex = taskArguments.indexOf(DEADLINE_MARKER);
         if (markerIndex <= 0) {
             throw invalidFormat();
         }
 
-        String description = arguments.substring(0, markerIndex).trim();
-        String dueDate = arguments.substring(markerIndex + DEADLINE_MARKER.length()).trim();
+        String description = taskArguments.substring(0, markerIndex).trim();
+        String dueDate = taskArguments.substring(markerIndex + DEADLINE_MARKER.length()).trim();
         if (description.isEmpty() || dueDate.isEmpty()) {
             throw invalidFormat();
         }
 
         LocalDate date = Parser.parseDate(dueDate);
-        tasks.add(new Deadline(description, date));
+        String tutoreeName = validateTutoreeName(parsedArguments.getTutoreeName(), tutorees);
+        tasks.add(new Deadline(description, date, tutoreeName));
         saveTasks(tasks, ui, storage);
         ui.showTaskAdded(tasks.getLast(), tasks.size());
     }

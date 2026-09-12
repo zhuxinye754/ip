@@ -18,6 +18,7 @@ import clover.parser.Parser;
 import clover.storage.Storage;
 import clover.task.Deadline;
 import clover.task.TaskList;
+import clover.tutoree.TutoreeList;
 import clover.ui.Ui;
 
 public class DeadlineCommandTest {
@@ -35,7 +36,8 @@ public class DeadlineCommandTest {
         Ui ui = new Ui();
         Storage storage = new Storage(tempDir.resolve("clover.txt"));
         TaskList taskList = new TaskList();
-        CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(taskList, ui, storage));
+        CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(
+                taskList, new TutoreeList(), ui, storage));
 
         assertEquals("Please use the format: deadline DESCRIPTION /by DUE DATE", exception.getMessage());
 
@@ -48,7 +50,7 @@ public class DeadlineCommandTest {
         Ui ui = new Ui();
         Storage storage = new Storage(tempDir.resolve("clover.txt"));
         TaskList taskList = new TaskList();
-        cmd.execute(taskList, ui, storage);
+        cmd.execute(taskList, new TutoreeList(), ui, storage);
 
         assertEquals(1, taskList.size());
         Deadline deadline = assertInstanceOf(Deadline.class, taskList.get(0));
@@ -64,7 +66,8 @@ public class DeadlineCommandTest {
         Ui ui = new Ui();
         Storage storage = new Storage(tempDir.resolve("clover.txt"));
         TaskList taskList = new TaskList();
-        CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(taskList, ui, storage));
+        CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(
+                taskList, new TutoreeList(), ui, storage));
 
         assertEquals("Please enter dates in the format yyyy-MM-dd.", exception.getMessage());
 

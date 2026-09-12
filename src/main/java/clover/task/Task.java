@@ -5,14 +5,23 @@ package clover.task;
  */
 public abstract class Task {
     private final String description;
+    private final String tutoreeName;
     private TaskStatus status;
 
     /**
      * Creates an incomplete task with the supplied description.
      */
     protected Task(String description) {
+        this(description, null);
+    }
+
+    /**
+     * Creates an incomplete task with an optional linked tutoree.
+     */
+    protected Task(String description, String tutoreeName) {
         assert description != null : "Task descriptions must not be null.";
         this.description = description;
+        this.tutoreeName = tutoreeName;
         this.status = TaskStatus.NOT_DONE;
     }
 
@@ -39,10 +48,27 @@ public abstract class Task {
     }
 
     /**
+     * Returns the linked tutoree name, or {@code null} when this task is not linked.
+     */
+    public String getTutoreeName() {
+        return tutoreeName;
+    }
+
+    /**
      * Returns whether this task has been completed.
      */
     public boolean isDone() {
         return status == TaskStatus.DONE;
+    }
+
+    /** Returns the common status and description portion of a task display. */
+    protected String formatTaskDisplay() {
+        return "[" + getStatusIcon() + "] " + description;
+    }
+
+    /** Returns the optional display suffix identifying the linked tutoree. */
+    protected String formatTutoreeSuffix() {
+        return tutoreeName == null ? "" : " (for: " + tutoreeName + ")";
     }
 
     /**
@@ -50,6 +76,6 @@ public abstract class Task {
      */
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + description;
+        return formatTaskDisplay() + formatTutoreeSuffix();
     }
 }

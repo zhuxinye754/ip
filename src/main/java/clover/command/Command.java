@@ -6,6 +6,8 @@ import clover.exception.CloverException;
 import clover.parser.Parser;
 import clover.storage.Storage;
 import clover.task.TaskList;
+import clover.tutoree.Tutoree;
+import clover.tutoree.TutoreeList;
 import clover.ui.Ui;
 
 /**
@@ -15,7 +17,7 @@ public abstract class Command {
     /**
      * Performs this command using Clover's current collaborators.
      */
-    public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws CloverException;
+    public abstract void execute(TaskList tasks, TutoreeList tutorees, Ui ui, Storage storage) throws CloverException;
 
     /**
      * Returns whether this command ends the Clover application.
@@ -59,5 +61,27 @@ public abstract class Command {
         } catch (IOException | SecurityException exception) {
             ui.showError("I could not save your tasks to the data file.");
         }
+    }
+
+    /** Saves the tutoree list and reports an error without stopping the command loop. */
+    protected void saveTutorees(TutoreeList tutorees, Ui ui, Storage storage) {
+        try {
+            storage.saveTutorees(tutorees.asList());
+        } catch (IOException | SecurityException exception) {
+            ui.showError("I could not save your tutorees to the data file.");
+        }
+    }
+
+    /**
+     * Validates an optional tutoree name and returns its stored spelling.
+     */
+    protected String validateTutoreeName(String tutoreeName, TutoreeList tutorees) throws CloverException {
+        if (tutoreeName == null) {
+            return null;
+        }
+        Tutoree tutoree = tutorees.findExactName(tutoreeName)
+                .orElseThrow(() -> new CloverException("No tutoree named \"" + tutoreeName
+                        + "\" exists. Add the tutoree before linking a task to them."));
+        return tutoree.getName();
     }
 }

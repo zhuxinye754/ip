@@ -15,6 +15,7 @@ import clover.parser.Parser;
 import clover.storage.Storage;
 import clover.task.TaskList;
 import clover.task.ToDo;
+import clover.tutoree.TutoreeList;
 import clover.ui.Ui;
 
 class ToDoCommandTest {
@@ -28,7 +29,8 @@ class ToDoCommandTest {
         Ui ui = new Ui();
         Storage storage = new Storage(tempDir.resolve("clover.txt"));
         TaskList taskList = new TaskList();
-        CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(taskList, ui, storage));
+        CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(
+                taskList, new TutoreeList(), ui, storage));
 
         assertEquals("The description of a todo cannot be empty.", exception.getMessage());
 
@@ -41,7 +43,7 @@ class ToDoCommandTest {
         Ui ui = new Ui();
         Storage storage = new Storage(tempDir.resolve("clover.txt"));
         TaskList taskList = new TaskList();
-        cmd.execute(taskList, ui, storage);
+        cmd.execute(taskList, new TutoreeList(), ui, storage);
 
         assertEquals(1, taskList.size());
         ToDo todo = assertInstanceOf(ToDo.class, taskList.get(0));

@@ -1,14 +1,16 @@
  # Clover UI test plan
 
-The runner compiles the Java files in `src/main/java` and launches `Clover` for every command-line case. Expected output is compared exactly, excluding only a final newline.
+The `test-ui` skill compiles Clover and launches `clover.Clover` for every command-line case. Expected output is compared exactly, excluding only a final newline. Cases marked **Type:** Manual require a JavaFX visual check and are skipped by the console runner.
 
 Each case uses an isolated working directory. A case can include an optional **Saved data** block to provide the contents of `data/clover.txt` before Clover starts.
 
 ## Test case: Launch the JavaFX window
 
+**Type:** Manual
+
 **Aim:** Verify that Gradle starts the JavaFX application through `clover.Launcher`.
 
-**Steps:**
+**Input:**
 
 1. Run `./gradlew run` with JDK 25 selected.
 2. Confirm that an FXML-based JavaFX window appears.
@@ -20,7 +22,7 @@ Each case uses an isolated working directory. A case can include an optional **S
 8. Confirm that the background image, styled message bubbles, and button hover/pressed states appear.
 9. Close the window.
 
-**Expected behaviour:** Clover opens an FXML-based JavaFX window with the Part 5 responsive, styled chat layout and exits cleanly when the window is closed.
+**Expected output:** Clover opens an FXML-based JavaFX window with the Part 5 responsive, styled chat layout and exits cleanly when the window is closed.
 
 ## Test case: Run the extracted task commands
 
@@ -328,10 +330,126 @@ ____________________________________________________________
 Please enter dates in the format yyyy-MM-dd.
 ____________________________________________________________
 ____________________________________________________________
-Unknown command. Please use: todo, deadline, event, list, find, mark, unmark, delete, or bye.
+Unknown command. Please use: todo, deadline, event, list, find, mark, unmark, delete, add-tutoree, list-tutorees, find-tutoree, or bye.
 ____________________________________________________________
 ____________________________________________________________
 Please enter a command or task description.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case: Manage tutorees and link tasks
+
+**Aim:** Verify that Clover stores tutoree records and links each supported task type only to an existing tutoree.
+
+**Input:**
+```text
+add-tutoree Alice Tan /address 12 Example Road /fee $50/hour
+todo prepare worksheet /for Alice Tan
+deadline collect fee /by 2026-09-30 /for alice tan
+event lesson /from 2026-09-20 /to 2026-09-20 /for Alice Tan
+list-tutorees
+find-tutoree ALI
+list
+bye
+```
+
+**Expected output:**
+```text
+____________________________________________________________
+  _____    _         ____    __      __   ______    _____
+ / ____|  | |       / __ \   \ \    / /  |  ____|  |  __ \
+| |       | |      | |  | |   \ \  / /   | |__     | |__) |
+| |       | |      | |  | |    \ \/ /    |  __|    |  _  /
+| |____   | |____  | |  | |     \  /     | |____   | | \ \
+ \_____|  |______|  \____/       \/      |______|  |_|  \_\
+
+Hello! I'm Clover.
+What can I do for you?
+
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this tutoree:
+Alice Tan
+Address: 12 Example Road
+Fee: $50/hour
+Now you have 1 tutoree in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task: [T] [ ] prepare worksheet (for: Alice Tan)
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task: [D] [ ] collect fee (by: Sep 30 2026) (for: Alice Tan)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task: [E] [ ] lesson (from: Sep 20 2026 to: Sep 20 2026) (for: Alice Tan)
+Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tutorees in your list:
+1. Alice Tan
+   Address: 12 Example Road
+   Fee: $50/hour
+____________________________________________________________
+____________________________________________________________
+Here are the matching tutorees in your list:
+1. Alice Tan
+   Address: 12 Example Road
+   Fee: $50/hour
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T] [ ] prepare worksheet (for: Alice Tan)
+2.[D] [ ] collect fee (by: Sep 30 2026) (for: Alice Tan)
+3.[E] [ ] lesson (from: Sep 20 2026 to: Sep 20 2026) (for: Alice Tan)
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+**Expected saved data:**
+```text
+T | 0 | prepare worksheet | Alice Tan
+D | 0 | collect fee | 2026-09-30 | Alice Tan
+E | 0 | lesson | 2026-09-20 | 2026-09-20 | Alice Tan
+```
+
+**Expected saved tutoree data:**
+```text
+S | Alice Tan | 12 Example Road | $50/hour
+```
+
+## Test case: Reject an unknown linked tutoree
+
+**Aim:** Verify that a task cannot be linked to a student who is absent from the tutoree directory.
+
+**Input:**
+```text
+todo prepare worksheet /for Alice Tan
+bye
+```
+
+**Expected output:**
+```text
+____________________________________________________________
+  _____    _         ____    __      __   ______    _____
+ / ____|  | |       / __ \   \ \    / /  |  ____|  |  __ \
+| |       | |      | |  | |   \ \  / /   | |__     | |__) |
+| |       | |      | |  | |    \ \/ /    |  __|    |  _  /
+| |____   | |____  | |  | |     \  /     | |____   | | \ \
+ \_____|  |______|  \____/       \/      |______|  |_|  \_\
+
+Hello! I'm Clover.
+What can I do for you?
+
+____________________________________________________________
+____________________________________________________________
+No tutoree named "Alice Tan" exists. Add the tutoree before linking a task to them.
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!

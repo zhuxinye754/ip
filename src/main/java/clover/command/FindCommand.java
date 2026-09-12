@@ -7,6 +7,7 @@ import clover.exception.CloverException;
 import clover.storage.Storage;
 import clover.task.Task;
 import clover.task.TaskList;
+import clover.tutoree.TutoreeList;
 import clover.ui.Ui;
 
 /**
@@ -30,7 +31,7 @@ public class FindCommand extends Command {
      * Displays tasks whose descriptions contain the keyword.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws CloverException {
+    public void execute(TaskList tasks, TutoreeList tutorees, Ui ui, Storage storage) throws CloverException {
         List<Task> matchingTasks = tasks.asList().stream()
                 .filter(task -> task.getDescription().toLowerCase(Locale.ROOT).contains(keyword))
                 .toList();

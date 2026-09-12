@@ -19,6 +19,7 @@ import clover.task.Deadline;
 import clover.task.Event;
 import clover.task.Task;
 import clover.task.ToDo;
+import clover.tutoree.Tutoree;
 
 /** Tests loading task data from Clover's saved-data file. */
 class StorageTest {
@@ -40,6 +41,55 @@ class StorageTest {
                 "T | 1 | read \\| annotate \\\\ draft",
                 "D | 0 | submit report | 2026-09-01",
                 "E | 1 | project meeting | 2026-09-02 | 2026-09-03"), Files.readAllLines(dataFile));
+    }
+
+    @Test
+    void save_linkedTasksAndTutorees_recordsWrittenInExtendedFormats() throws IOException {
+        Path taskFile = tempDir.resolve("data/clover.txt");
+        Path tutoreeFile = tempDir.resolve("data/tutorees.txt");
+        Storage storage = new Storage(taskFile, tutoreeFile);
+
+        storage.save(List.of(
+                new ToDo("prepare worksheet", "Alice Tan"),
+                new Deadline("collect fee", LocalDate.of(2026, 9, 30), "Alice Tan"),
+                new Event("lesson", LocalDate.of(2026, 9, 20), LocalDate.of(2026, 9, 20), "Alice Tan")));
+        storage.saveTutorees(List.of(new Tutoree("Alice Tan", "12 Example Road", "$50/hour")));
+
+        assertEquals(List.of(
+                "T | 0 | prepare worksheet | Alice Tan",
+                "D | 0 | collect fee | 2026-09-30 | Alice Tan",
+                "E | 0 | lesson | 2026-09-20 | 2026-09-20 | Alice Tan"), Files.readAllLines(taskFile));
+        assertEquals(List.of("S | Alice Tan | 12 Example Road | $50/hour"), Files.readAllLines(tutoreeFile));
+    }
+
+    @Test
+    void load_linkedTaskAndTutoree_recordsRecreatedWithTheirDetails() throws IOException {
+        Path taskFile = writeSavedData("D | 0 | collect fee | 2026-09-30 | Alice Tan");
+        Path tutoreeFile = tempDir.resolve("tutorees.txt");
+        Files.write(tutoreeFile, List.of("S | Alice Tan | 12 Example Road | $50/hour"));
+
+        Storage storage = new Storage(taskFile, tutoreeFile);
+
+        Deadline task = assertInstanceOf(Deadline.class, storage.load().getFirst());
+        Tutoree tutoree = storage.loadTutorees().getFirst();
+        assertEquals("Alice Tan", task.getTutoreeName());
+        assertEquals("Alice Tan", tutoree.getName());
+        assertEquals("12 Example Road", tutoree.getAddress());
+        assertEquals("$50/hour", tutoree.getFee());
+    }
+
+    @Test
+    void load_tutoreeDataContainsDuplicateNamesIgnoringCase_exceptionIdentifiesLine() throws IOException {
+        Path taskFile = tempDir.resolve("clover.txt");
+        Path tutoreeFile = tempDir.resolve("tutorees.txt");
+        Files.write(tutoreeFile, List.of(
+                "S | Alice Tan | 12 Example Road | $50/hour",
+                "S | alice tan | 8 Sample Avenue | $55/hour"));
+
+        IOException exception = assertThrows(IOException.class, () ->
+                new Storage(taskFile, tutoreeFile).loadTutorees());
+
+        assertEquals("Invalid tutoree data on line 2: duplicate tutoree name.", exception.getMessage());
     }
 
     @Test

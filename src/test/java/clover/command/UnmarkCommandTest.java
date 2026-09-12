@@ -16,6 +16,7 @@ import clover.exception.CloverException;
 import clover.storage.Storage;
 import clover.task.TaskList;
 import clover.task.ToDo;
+import clover.tutoree.TutoreeList;
 import clover.ui.Ui;
 
 /** Tests marking tasks incomplete through the unmark command. */
@@ -31,7 +32,7 @@ class UnmarkCommandTest {
         tasks.add(task);
         Storage storage = new Storage(tempDir.resolve("clover.txt"));
 
-        new UnmarkCommand("1").execute(tasks, new Ui(), storage);
+        new UnmarkCommand("1").execute(tasks, new TutoreeList(), new Ui(), storage);
 
         assertFalse(task.isDone());
         assertFalse(storage.load().getFirst().isDone());
@@ -46,7 +47,7 @@ class UnmarkCommandTest {
         tasks.add(task);
 
         CloverException exception = assertThrows(CloverException.class, () -> new UnmarkCommand(taskNumber).execute(
-                tasks, new Ui(), new Storage(tempDir.resolve("clover.txt"))));
+                tasks, new TutoreeList(), new Ui(), new Storage(tempDir.resolve("clover.txt"))));
 
         assertEquals("Please enter a valid task number to unmark.", exception.getMessage());
         assertTrue(task.isDone());

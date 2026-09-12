@@ -12,6 +12,13 @@ public class ToDo extends Task {
     }
 
     /**
+     * Creates a todo that is optionally linked to a tutoree.
+     */
+    public ToDo(String description, String tutoreeName) {
+        super(description, tutoreeName);
+    }
+
+    /**
      * Returns this todo in Clover's display format.
      */
     @Override

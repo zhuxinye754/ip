@@ -18,6 +18,7 @@ import clover.storage.Storage;
 import clover.task.Deadline;
 import clover.task.TaskList;
 import clover.task.ToDo;
+import clover.tutoree.TutoreeList;
 import clover.ui.Ui;
 
 /** Tests searching tasks by a keyword in their descriptions. */
@@ -69,7 +70,7 @@ class FindCommandTest {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
             System.setOut(new PrintStream(output, true, StandardCharsets.UTF_8));
-            command.execute(taskList, new Ui(), new Storage(tempDir.resolve("clover.txt")));
+            command.execute(taskList, new TutoreeList(), new Ui(), new Storage(tempDir.resolve("clover.txt")));
         } finally {
             System.setOut(originalOut);
         }
