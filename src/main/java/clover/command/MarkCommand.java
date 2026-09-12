@@ -1,7 +1,6 @@
 package clover.command;
 
 import clover.exception.CloverException;
-import clover.parser.Parser;
 import clover.storage.Storage;
 import clover.task.Task;
 import clover.task.TaskList;
@@ -25,12 +24,7 @@ public class MarkCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws CloverException {
-        if (!Parser.isValidTaskNumber(taskNumber, tasks.size())) {
-            throw new CloverException("Please enter a valid task number to mark.");
-        }
-        int taskIndex = Parser.parseTaskIndex(taskNumber);
-        assert taskIndex >= 0 && taskIndex < tasks.size()
-                : "A validated one-based task number must map to an existing list index.";
+        int taskIndex = parseValidTaskIndex(taskNumber, tasks, "Please enter a valid task number to mark.");
         Task task = tasks.get(taskIndex);
         task.markAsDone();
         saveTasks(tasks, ui, storage);
