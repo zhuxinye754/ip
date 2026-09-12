@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -66,7 +66,7 @@ class StorageTest {
                 "D | 0 | submit report | 2026-09-01",
                 "E | 1 | project meeting | 2026-09-02 | 2026-09-03");
 
-        ArrayList<Task> tasks = new Storage(dataFile).load();
+        List<Task> tasks = new Storage(dataFile).load();
 
         assertEquals(3, tasks.size());
         assertInstanceOf(ToDo.class, tasks.get(0));
@@ -89,7 +89,7 @@ class StorageTest {
     void load_dataFileContainsBlankLines_blankLinesIgnored() throws IOException {
         Path dataFile = writeSavedData("", "T | 0 | first task", "   ", "T | 0 | second task");
 
-        ArrayList<Task> tasks = new Storage(dataFile).load();
+        List<Task> tasks = new Storage(dataFile).load();
 
         assertEquals(2, tasks.size());
         assertEquals("first task", tasks.get(0).getDescription());

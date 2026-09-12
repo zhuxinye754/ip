@@ -10,7 +10,7 @@ public abstract class Task {
     /**
      * Creates an incomplete task with the supplied description.
      */
-    public Task(String description) {
+    protected Task(String description) {
         assert description != null : "Task descriptions must not be null.";
         this.description = description;
         this.status = TaskStatus.NOT_DONE;

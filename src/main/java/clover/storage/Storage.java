@@ -76,7 +76,7 @@ public class Storage {
     /**
      * Loads saved tasks, or returns an empty list when Clover is run for the first time.
      */
-    public ArrayList<Task> load() throws IOException {
+    public List<Task> load() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
         if (Files.notExists(filePath)) {
             return tasks;
