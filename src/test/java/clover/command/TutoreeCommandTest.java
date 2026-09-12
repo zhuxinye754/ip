@@ -56,10 +56,10 @@ class TutoreeCommandTest {
         String output = captureOutput(() -> new FindTutoreeCommand("ALI")
                 .execute(new TaskList(), tutorees, new Ui(), storage()));
 
-        assertEquals("Here are the matching tutorees in your list:\n"
-                + "1. Alice Tan\n"
-                + "   Address: 12 Example Road\n"
-                + "   Fee: $50/hour\n", output);
+        assertEquals("Here are the matching tutorees in your list:" + System.lineSeparator()
+                + "1. Alice Tan" + System.lineSeparator()
+                + "   Address: 12 Example Road" + System.lineSeparator()
+                + "   Fee: $50/hour" + System.lineSeparator(), output);
     }
 
     @Test

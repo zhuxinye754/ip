@@ -35,9 +35,9 @@ class FindCommandTest {
 
         String output = captureExecutionOutput(new FindCommand("BoOk"), taskList);
 
-        assertEquals("Here are the matching tasks in your list:\n"
-                + "1.[T] [ ] read book\n"
-                + "2.[D] [ ] return BOOK (by: Jun 6 2026)\n", output);
+        assertEquals("Here are the matching tasks in your list:" + System.lineSeparator()
+                + "1.[T] [ ] read book" + System.lineSeparator()
+                + "2.[D] [ ] return BOOK (by: Jun 6 2026)" + System.lineSeparator(), output);
     }
 
     @Test
@@ -57,8 +57,8 @@ class FindCommandTest {
 
             String output = captureExecutionOutput(new FindCommand("fix"), taskList);
 
-            assertEquals("Here are the matching tasks in your list:\n"
-                    + "1.[T] [ ] FIX parser\n", output);
+            assertEquals("Here are the matching tasks in your list:" + System.lineSeparator()
+                    + "1.[T] [ ] FIX parser" + System.lineSeparator(), output);
         } finally {
             Locale.setDefault(originalLocale);
         }
