@@ -4,8 +4,8 @@ package clover.task;
  * Represents one task in the task list.
  */
 public class Task {
-    protected String description;
-    protected TaskStatus status;
+    private final String description;
+    private TaskStatus status;
 
     /**
      * Creates an incomplete task with the supplied description.
