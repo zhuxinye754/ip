@@ -38,7 +38,7 @@ class UiTest {
 
         ui.showTaskAdded(new ToDo("read book"), 1);
 
-        assertEquals("Got it. I've added this task: [T] [ ] read book\n"
+        assertEquals("Got it. I've added this task: [T] [ ] read book" + System.lineSeparator()
                 + "Now you have 1 tasks in the list.", ui.buildResponse());
     }
 
@@ -48,8 +48,8 @@ class UiTest {
 
         ui.showTaskList(List.of(new ToDo("read book"), new ToDo("buy groceries")));
 
-        assertEquals("Here are the tasks in your list:\n"
-                + "1.[T] [ ] read book\n"
+        assertEquals("Here are the tasks in your list:" + System.lineSeparator()
+                + "1.[T] [ ] read book" + System.lineSeparator()
                 + "2.[T] [ ] buy groceries", ui.buildResponse());
     }
 
@@ -59,8 +59,8 @@ class UiTest {
 
         ui.showFindResults(List.of(new ToDo("read book"), new ToDo("buy bookcase")));
 
-        assertEquals("Here are the matching tasks in your list:\n"
-                + "1.[T] [ ] read book\n"
+        assertEquals("Here are the matching tasks in your list:" + System.lineSeparator()
+                + "1.[T] [ ] read book" + System.lineSeparator()
                 + "2.[T] [ ] buy bookcase", ui.buildResponse());
     }
 }
