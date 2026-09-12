@@ -37,7 +37,7 @@ public class DialogBox extends HBox {
             fxmlLoader.setRoot(this);
             fxmlLoader.load();
         } catch (IOException exception) {
-            exception.printStackTrace();
+            throw new IllegalStateException("Unable to load Clover's dialog box.", exception);
         }
 
         dialog.setText(dialogText);
