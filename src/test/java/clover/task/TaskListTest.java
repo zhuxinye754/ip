@@ -35,10 +35,10 @@ class TaskListTest {
     @Test
     void constructor_sourceListChanged_taskListIsUnchanged() {
         List<Task> sourceTasks = new ArrayList<>();
-        sourceTasks.add(new Task("read book"));
+        sourceTasks.add(new ToDo("read book"));
         TaskList taskList = new TaskList(sourceTasks);
 
-        sourceTasks.add(new Task("buy groceries"));
+        sourceTasks.add(new ToDo("buy groceries"));
 
         assertEquals(1, taskList.size());
     }
@@ -47,6 +47,6 @@ class TaskListTest {
     void asList_taskAddedToReturnedList_unsupportedOperationExceptionThrown() {
         TaskList taskList = new TaskList();
 
-        assertThrows(UnsupportedOperationException.class, () -> taskList.asList().add(new Task("read book")));
+        assertThrows(UnsupportedOperationException.class, () -> taskList.asList().add(new ToDo("read book")));
     }
 }

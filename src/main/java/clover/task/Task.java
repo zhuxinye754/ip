@@ -1,9 +1,9 @@
 package clover.task;
 
 /**
- * Represents one task in the task list.
+ * Represents the shared state and behavior of a task in the task list.
  */
-public class Task {
+public abstract class Task {
     private final String description;
     private TaskStatus status;
 
