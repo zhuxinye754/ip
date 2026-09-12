@@ -8,6 +8,7 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -43,6 +44,23 @@ class FindCommandTest {
         CloverException exception = assertThrows(CloverException.class, () -> new FindCommand("   "));
 
         assertEquals("Please enter a keyword to search for.", exception.getMessage());
+    }
+
+    @Test
+    void execute_turkishDefaultLocale_matchesCaseInsensitiveDescriptions() throws CloverException {
+        Locale originalLocale = Locale.getDefault();
+        Locale.setDefault(Locale.forLanguageTag("tr-TR"));
+        try {
+            TaskList taskList = new TaskList();
+            taskList.add(new ToDo("FIX parser"));
+
+            String output = captureExecutionOutput(new FindCommand("fix"), taskList);
+
+            assertEquals("Here are the matching tasks in your list:\n"
+                    + "1.[T] [ ] FIX parser\n", output);
+        } finally {
+            Locale.setDefault(originalLocale);
+        }
     }
 
     /** Executes a command while capturing the console output it sends through the UI. */

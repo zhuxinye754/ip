@@ -1,6 +1,7 @@
 package clover.command;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import clover.exception.CloverException;
 import clover.storage.Storage;
@@ -22,7 +23,7 @@ public class FindCommand extends Command {
         if (trimmed.isEmpty()) {
             throw new CloverException("Please enter a keyword to search for.");
         }
-        this.keyword = trimmed;
+        this.keyword = trimmed.toLowerCase(Locale.ROOT);
     }
 
     /**
@@ -30,12 +31,9 @@ public class FindCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws CloverException {
-        ArrayList<Task> matchingTasks = new ArrayList<>();
-        for (Task task : tasks.asList()) {
-            if (task.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
-                matchingTasks.add(task);
-            }
-        }
+        List<Task> matchingTasks = tasks.asList().stream()
+                .filter(task -> task.getDescription().toLowerCase(Locale.ROOT).contains(keyword))
+                .toList();
         ui.showFindResults(matchingTasks);
     }
 }
