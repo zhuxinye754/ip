@@ -18,6 +18,7 @@ import clover.storage.Storage;
 import clover.task.Deadline;
 import clover.task.TaskList;
 import clover.task.ToDo;
+import clover.tutoree.TutoreeList;
 import clover.ui.Ui;
 
 /** Tests searching tasks by a keyword in their descriptions. */
@@ -34,9 +35,9 @@ class FindCommandTest {
 
         String output = captureExecutionOutput(new FindCommand("BoOk"), taskList);
 
-        assertEquals("Here are the matching tasks in your list:\n"
-                + "1.[T] [ ] read book\n"
-                + "2.[D] [ ] return BOOK (by: Jun 6 2026)\n", output);
+        assertEquals("Here are the matching tasks in your list:" + System.lineSeparator()
+                + "1.[T] [ ] read book" + System.lineSeparator()
+                + "2.[D] [ ] return BOOK (by: Jun 6 2026)" + System.lineSeparator(), output);
     }
 
     @Test
@@ -56,8 +57,8 @@ class FindCommandTest {
 
             String output = captureExecutionOutput(new FindCommand("fix"), taskList);
 
-            assertEquals("Here are the matching tasks in your list:\n"
-                    + "1.[T] [ ] FIX parser\n", output);
+            assertEquals("Here are the matching tasks in your list:" + System.lineSeparator()
+                    + "1.[T] [ ] FIX parser" + System.lineSeparator(), output);
         } finally {
             Locale.setDefault(originalLocale);
         }
@@ -69,7 +70,7 @@ class FindCommandTest {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
             System.setOut(new PrintStream(output, true, StandardCharsets.UTF_8));
-            command.execute(taskList, new Ui(), new Storage(tempDir.resolve("clover.txt")));
+            command.execute(taskList, new TutoreeList(), new Ui(), new Storage(tempDir.resolve("clover.txt")));
         } finally {
             System.setOut(originalOut);
         }

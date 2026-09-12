@@ -4,6 +4,7 @@ import clover.exception.CloverException;
 import clover.storage.Storage;
 import clover.task.Task;
 import clover.task.TaskList;
+import clover.tutoree.TutoreeList;
 import clover.ui.Ui;
 
 /**
@@ -23,7 +24,7 @@ public class UnmarkCommand extends Command {
      * Unmarks and saves the selected task.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws CloverException {
+    public void execute(TaskList tasks, TutoreeList tutorees, Ui ui, Storage storage) throws CloverException {
         int taskIndex = parseValidTaskIndex(taskNumber, tasks, "Please enter a valid task number to unmark.");
         Task task = tasks.get(taskIndex);
         task.markAsUndone();

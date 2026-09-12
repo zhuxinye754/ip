@@ -2,14 +2,19 @@ package clover.parser;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import clover.command.AddTutoreeCommand;
 import clover.command.Command;
 import clover.command.DeadlineCommand;
 import clover.command.DeleteCommand;
 import clover.command.EventCommand;
 import clover.command.ExitCommand;
 import clover.command.FindCommand;
+import clover.command.FindTutoreeCommand;
 import clover.command.ListCommand;
+import clover.command.ListTutoreesCommand;
 import clover.command.MarkCommand;
 import clover.command.ToDoCommand;
 import clover.command.UnmarkCommand;
@@ -20,7 +25,8 @@ import clover.exception.CloverException;
  */
 public class Parser {
     private static final String UNKNOWN_COMMAND_MESSAGE = "Unknown command. Please use: todo, deadline, event, list, "
-            + "find, mark, unmark, delete, or bye.";
+            + "find, mark, unmark, delete, add-tutoree, list-tutorees, find-tutoree, or bye.";
+    private static final Pattern FOR_MARKER_PATTERN = Pattern.compile("(?<!\\S)/for(?:\\s|$)");
 
     /**
      * Creates the command represented by one complete line of user input.
@@ -43,6 +49,9 @@ public class Parser {
             case "event" -> new EventCommand(arguments);
             case "delete" -> new DeleteCommand(arguments);
             case "find" -> new FindCommand(arguments);
+            case "add-tutoree" -> new AddTutoreeCommand(arguments);
+            case "list-tutorees" -> new ListTutoreesCommand();
+            case "find-tutoree" -> new FindTutoreeCommand(arguments);
             case "bye" -> new ExitCommand();
             default -> throw new CloverException(UNKNOWN_COMMAND_MESSAGE);
         };
@@ -76,5 +85,25 @@ public class Parser {
         } catch (DateTimeParseException exception) {
             throw new CloverException("Please enter dates in the format yyyy-MM-dd.");
         }
+    }
+
+    /**
+     * Separates the optional final {@code /for TUTOREE NAME} marker from task arguments.
+     */
+    public static TaskArguments parseTaskArguments(String arguments) throws CloverException {
+        Matcher matcher = FOR_MARKER_PATTERN.matcher(arguments);
+        if (!matcher.find()) {
+            return new TaskArguments(arguments, null);
+        }
+        int markerIndex = matcher.start();
+        String taskArguments = arguments.substring(0, markerIndex).trim();
+        String tutoreeName = arguments.substring(matcher.end()).trim();
+        if (tutoreeName.isEmpty()) {
+            throw new CloverException("Please provide a tutoree name after /for.");
+        }
+        if (FOR_MARKER_PATTERN.matcher(tutoreeName).find()) {
+            throw new CloverException("Please use /for only once and at the end of the task command.");
+        }
+        return new TaskArguments(taskArguments, tutoreeName);
     }
 }

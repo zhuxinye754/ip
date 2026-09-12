@@ -5,15 +5,11 @@ import clover.task.TaskList;
 import clover.tutoree.TutoreeList;
 import clover.ui.Ui;
 
-/**
- * Displays all tasks in Clover's current task list.
- */
-public class ListCommand extends Command {
-    /**
-     * Displays the task list.
-     */
+/** Displays all tutorees in Clover's tutoree directory. */
+public class ListTutoreesCommand extends Command {
+    /** Displays the tutoree directory. */
     @Override
     public void execute(TaskList tasks, TutoreeList tutorees, Ui ui, Storage storage) {
-        ui.showTaskList(tasks.asList());
+        ui.showTutoreeList(tutorees.asList());
     }
 }

@@ -36,7 +36,7 @@ Ensure that Java 25 is used when running the application or build tasks. On macO
 
 ## UI test maintenance
 
-After every code update, review `test/ui-test-plan.md` and update it when the change affects command inputs, expected console output, or UI behaviour. Then invoke the project `test-ui` skill and report the test result. Do this before handing the change back to the user.
+After every code update, review `test/ui-test-plan.md` and update it when the change affects command inputs, expected console output, or UI behaviour. Then invoke the project `test-ui` skill at `.codex/skills/test-ui/SKILL.md`, run its console-test runner, and report its transcript and result. Do this before handing the change back to the user.
 
 ## JUnit test coverage maintenance
 

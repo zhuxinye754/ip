@@ -10,12 +10,15 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
+import clover.command.AddTutoreeCommand;
 import clover.command.DeadlineCommand;
 import clover.command.DeleteCommand;
 import clover.command.EventCommand;
 import clover.command.ExitCommand;
 import clover.command.FindCommand;
+import clover.command.FindTutoreeCommand;
 import clover.command.ListCommand;
+import clover.command.ListTutoreesCommand;
 import clover.command.MarkCommand;
 import clover.command.ToDoCommand;
 import clover.command.UnmarkCommand;
@@ -34,6 +37,9 @@ class ParserTest {
         assertInstanceOf(EventCommand.class, Parser.parse("event meeting /from 2026-09-01 /to 2026-09-02"));
         assertInstanceOf(DeleteCommand.class, Parser.parse("delete 1"));
         assertInstanceOf(FindCommand.class, Parser.parse("find book"));
+        assertInstanceOf(AddTutoreeCommand.class, Parser.parse("add-tutoree Alice /address Home /fee $50/hour"));
+        assertInstanceOf(ListTutoreesCommand.class, Parser.parse("list-tutorees"));
+        assertInstanceOf(FindTutoreeCommand.class, Parser.parse("find-tutoree Alice"));
         assertInstanceOf(ExitCommand.class, Parser.parse("bye"));
     }
 
@@ -46,7 +52,8 @@ class ParserTest {
     void parse_unknownCommandWord_exceptionThrown() {
         CloverException exception = assertThrows(CloverException.class, () -> Parser.parse("read book"));
 
-        assertEquals("Unknown command. Please use: todo, deadline, event, list, find, mark, unmark, delete, or bye.",
+        assertEquals("Unknown command. Please use: todo, deadline, event, list, find, mark, unmark, delete, "
+                        + "add-tutoree, list-tutorees, find-tutoree, or bye.",
                 exception.getMessage());
     }
 
@@ -104,5 +111,21 @@ class ParserTest {
         CloverException exception = assertThrows(CloverException.class, () -> Parser.parseDate("2024-02-30"));
 
         assertEquals("Please enter dates in the format yyyy-MM-dd.", exception.getMessage());
+    }
+
+    @Test
+    void parseTaskArguments_taskLinkedToTutoree_taskAndTutoreeSeparated() throws CloverException {
+        TaskArguments arguments = Parser.parseTaskArguments("prepare worksheet /for Alice Tan");
+
+        assertEquals("prepare worksheet", arguments.getTaskArguments());
+        assertEquals("Alice Tan", arguments.getTutoreeName());
+    }
+
+    @Test
+    void parseTaskArguments_blankTutoreeName_exceptionThrown() {
+        CloverException exception = assertThrows(CloverException.class, () ->
+                Parser.parseTaskArguments("prepare worksheet /for"));
+
+        assertEquals("Please provide a tutoree name after /for.", exception.getMessage());
     }
 }

@@ -4,9 +4,11 @@ import java.time.LocalDate;
 
 import clover.exception.CloverException;
 import clover.parser.Parser;
+import clover.parser.TaskArguments;
 import clover.storage.Storage;
 import clover.task.Event;
 import clover.task.TaskList;
+import clover.tutoree.TutoreeList;
 import clover.ui.Ui;
 
 /**
@@ -29,23 +31,26 @@ public class EventCommand extends Command {
      * Validates, adds, and saves the event task.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws CloverException {
-        int fromIndex = arguments.indexOf(FROM_MARKER);
-        int toIndex = arguments.indexOf(TO_MARKER);
+    public void execute(TaskList tasks, TutoreeList tutorees, Ui ui, Storage storage) throws CloverException {
+        TaskArguments parsedArguments = Parser.parseTaskArguments(arguments);
+        String taskArguments = parsedArguments.getTaskArguments();
+        int fromIndex = taskArguments.indexOf(FROM_MARKER);
+        int toIndex = taskArguments.indexOf(TO_MARKER);
         if (fromIndex <= 0 || toIndex <= fromIndex + FROM_MARKER.length()) {
             throw invalidFormat();
         }
 
-        String description = arguments.substring(0, fromIndex).trim();
-        String startDate = arguments.substring(fromIndex + FROM_MARKER.length(), toIndex).trim();
-        String endDate = arguments.substring(toIndex + TO_MARKER.length()).trim();
+        String description = taskArguments.substring(0, fromIndex).trim();
+        String startDate = taskArguments.substring(fromIndex + FROM_MARKER.length(), toIndex).trim();
+        String endDate = taskArguments.substring(toIndex + TO_MARKER.length()).trim();
         if (description.isEmpty() || startDate.isEmpty() || endDate.isEmpty()) {
             throw invalidFormat();
         }
 
         LocalDate start = Parser.parseDate(startDate);
         LocalDate end = Parser.parseDate(endDate);
-        tasks.add(new Event(description, start, end));
+        String tutoreeName = validateTutoreeName(parsedArguments.getTutoreeName(), tutorees);
+        tasks.add(new Event(description, start, end, tutoreeName));
         saveTasks(tasks, ui, storage);
         ui.showTaskAdded(tasks.getLast(), tasks.size());
     }

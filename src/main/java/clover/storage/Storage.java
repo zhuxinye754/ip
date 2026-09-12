@@ -15,15 +15,18 @@ import clover.task.Deadline;
 import clover.task.Event;
 import clover.task.Task;
 import clover.task.ToDo;
+import clover.tutoree.Tutoree;
 
 /**
  * Saves Clover tasks to, and loads them from, a file on the hard disk.
  */
 public class Storage {
     private static final Path FILE_PATH = Path.of("data", "clover.txt");
+    private static final Path TUTOREE_FILE_PATH = Path.of("data", "tutorees.txt");
     private static final String TODO_TASK_TYPE = "T";
     private static final String DEADLINE_TASK_TYPE = "D";
     private static final String EVENT_TASK_TYPE = "E";
+    private static final String TUTOREE_TYPE = "S";
     private static final String INCOMPLETE_STATUS = "0";
     private static final String COMPLETE_STATUS = "1";
     private static final int TASK_TYPE_FIELD = 0;
@@ -32,20 +35,32 @@ public class Storage {
     private static final int DEADLINE_DUE_DATE_FIELD = 3;
     private static final int EVENT_START_DATE_FIELD = 3;
     private static final int EVENT_END_DATE_FIELD = 4;
-    private final Path filePath;
+    private static final int TUTOREE_NAME_FIELD = 1;
+    private static final int TUTOREE_ADDRESS_FIELD = 2;
+    private static final int TUTOREE_FEE_FIELD = 3;
+    private final Path taskFilePath;
+    private final Path tutoreeFilePath;
 
     /**
      * Creates storage that uses Clover's default data-file location.
      */
     public Storage() {
-        this(FILE_PATH);
+        this(FILE_PATH, TUTOREE_FILE_PATH);
     }
 
     /**
      * Creates storage that uses the supplied data-file location.
      */
     public Storage(Path filePath) {
-        this.filePath = filePath;
+        this(filePath, filePath.resolveSibling("tutorees.txt"));
+    }
+
+    /**
+     * Creates storage that uses the supplied task and tutoree data-file locations.
+     */
+    public Storage(Path taskFilePath, Path tutoreeFilePath) {
+        this.taskFilePath = taskFilePath;
+        this.tutoreeFilePath = tutoreeFilePath;
     }
 
     /**
@@ -53,8 +68,8 @@ public class Storage {
      */
     public void save(List<Task> tasks) throws IOException {
         assert tasks != null : "Storage saves a task collection supplied by TaskList.";
-        Files.createDirectories(filePath.getParent());
-        if (Files.isDirectory(filePath)) {
+        Files.createDirectories(taskFilePath.getParent());
+        if (Files.isDirectory(taskFilePath)) {
             throw new IOException("The task data path is a directory.");
         }
 
@@ -64,10 +79,10 @@ public class Storage {
             taskLines.add(toFileLine(task));
         }
 
-        Path temporaryFile = Files.createTempFile(filePath.getParent(), "clover-", ".tmp");
+        Path temporaryFile = Files.createTempFile(taskFilePath.getParent(), "clover-", ".tmp");
         try {
             Files.write(temporaryFile, taskLines, StandardCharsets.UTF_8);
-            moveIntoPlace(temporaryFile);
+            moveIntoPlace(temporaryFile, taskFilePath);
         } finally {
             Files.deleteIfExists(temporaryFile);
         }
@@ -78,14 +93,14 @@ public class Storage {
      */
     public List<Task> load() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
-        if (Files.notExists(filePath)) {
+        if (Files.notExists(taskFilePath)) {
             return tasks;
         }
-        if (!Files.isRegularFile(filePath)) {
+        if (!Files.isRegularFile(taskFilePath)) {
             throw new IOException("The task data path is not a regular file.");
         }
 
-        List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
+        List<String> lines = Files.readAllLines(taskFilePath, StandardCharsets.UTF_8);
         for (int lineNumber = 0; lineNumber < lines.size(); lineNumber++) {
             String line = lines.get(lineNumber);
             if (!line.isBlank()) {
@@ -95,22 +110,76 @@ public class Storage {
         return tasks;
     }
 
+    /** Writes the current tutoree list to the tutoree data file. */
+    public void saveTutorees(List<Tutoree> tutorees) throws IOException {
+        assert tutorees != null : "Storage saves a tutoree collection supplied by TutoreeList.";
+        Files.createDirectories(tutoreeFilePath.getParent());
+        if (Files.isDirectory(tutoreeFilePath)) {
+            throw new IOException("The tutoree data path is a directory.");
+        }
+
+        List<String> tutoreeLines = new ArrayList<>();
+        for (Tutoree tutoree : tutorees) {
+            assert tutoree != null : "TutoreeList must not pass null tutorees to storage.";
+            tutoreeLines.add(toTutoreeFileLine(tutoree));
+        }
+
+        Path temporaryFile = Files.createTempFile(tutoreeFilePath.getParent(), "tutorees-", ".tmp");
+        try {
+            Files.write(temporaryFile, tutoreeLines, StandardCharsets.UTF_8);
+            moveIntoPlace(temporaryFile, tutoreeFilePath);
+        } finally {
+            Files.deleteIfExists(temporaryFile);
+        }
+    }
+
+    /** Loads saved tutorees, or returns an empty list when no tutoree data file exists. */
+    public List<Tutoree> loadTutorees() throws IOException {
+        ArrayList<Tutoree> tutorees = new ArrayList<>();
+        if (Files.notExists(tutoreeFilePath)) {
+            return tutorees;
+        }
+        if (!Files.isRegularFile(tutoreeFilePath)) {
+            throw new IOException("The tutoree data path is not a regular file.");
+        }
+
+        List<String> lines = Files.readAllLines(tutoreeFilePath, StandardCharsets.UTF_8);
+        for (int lineNumber = 0; lineNumber < lines.size(); lineNumber++) {
+            String line = lines.get(lineNumber);
+            if (!line.isBlank()) {
+                Tutoree tutoree = tutoreeFromFileLine(line, lineNumber + 1);
+                if (tutorees.stream().anyMatch(existing -> existing.getName().equalsIgnoreCase(tutoree.getName()))) {
+                    throw invalidTutoreeData(lineNumber + 1, "duplicate tutoree name");
+                }
+                tutorees.add(tutoree);
+            }
+        }
+        return tutorees;
+    }
+
     /** Converts one task to a stable, pipe-separated file line. */
     private String toFileLine(Task task) throws IOException {
         String status = task.isDone() ? COMPLETE_STATUS : INCOMPLETE_STATUS;
+        String tutoreeSuffix = task.getTutoreeName() == null ? "" : " | " + escape(task.getTutoreeName());
         if (task instanceof Deadline deadline) {
             return DEADLINE_TASK_TYPE + " | " + status + " | " + escape(deadline.getDescription())
-                    + " | " + escape(deadline.getEndBy().toString());
+                    + " | " + escape(deadline.getEndBy().toString()) + tutoreeSuffix;
         }
         if (task instanceof Event event) {
             return EVENT_TASK_TYPE + " | " + status + " | " + escape(event.getDescription())
                     + " | " + escape(event.getStart().toString())
-                    + " | " + escape(event.getEnd().toString());
+                    + " | " + escape(event.getEnd().toString()) + tutoreeSuffix;
         }
         if (task instanceof ToDo) {
-            return TODO_TASK_TYPE + " | " + status + " | " + escape(task.getDescription());
+            return TODO_TASK_TYPE + " | " + status + " | " + escape(task.getDescription()) + tutoreeSuffix;
         }
         throw new IOException("Unsupported task type.");
+    }
+
+    /** Converts one tutoree to a stable, pipe-separated file line. */
+    private String toTutoreeFileLine(Tutoree tutoree) {
+        return TUTOREE_TYPE + " | " + escape(tutoree.getName()) + " | " + escape(tutoree.getAddress())
+                + " | " + escape(tutoree.getFee());
     }
 
     /** Parses an ISO date stored in the data file. */
@@ -129,19 +198,21 @@ public class Storage {
 
         Task task = switch (parts.get(TASK_TYPE_FIELD)) {
             case TODO_TASK_TYPE -> {
-                requirePartCount(parts, 3, lineNumber);
-                yield new ToDo(parts.get(TASK_DESCRIPTION_FIELD));
+                requirePartCount(parts, 3, 4, lineNumber);
+                yield new ToDo(parts.get(TASK_DESCRIPTION_FIELD), getOptionalTutoreeName(parts, 3, lineNumber));
             }
             case DEADLINE_TASK_TYPE -> {
-                requirePartCount(parts, 4, lineNumber);
+                requirePartCount(parts, 4, 5, lineNumber);
                 yield new Deadline(parts.get(TASK_DESCRIPTION_FIELD),
-                        parseDate(parts.get(DEADLINE_DUE_DATE_FIELD), lineNumber));
+                        parseDate(parts.get(DEADLINE_DUE_DATE_FIELD), lineNumber),
+                        getOptionalTutoreeName(parts, 4, lineNumber));
             }
             case EVENT_TASK_TYPE -> {
-                requirePartCount(parts, 5, lineNumber);
+                requirePartCount(parts, 5, 6, lineNumber);
                 yield new Event(parts.get(TASK_DESCRIPTION_FIELD),
                         parseDate(parts.get(EVENT_START_DATE_FIELD), lineNumber),
-                        parseDate(parts.get(EVENT_END_DATE_FIELD), lineNumber));
+                        parseDate(parts.get(EVENT_END_DATE_FIELD), lineNumber),
+                        getOptionalTutoreeName(parts, 5, lineNumber));
             }
             default -> throw invalidData(lineNumber, "unknown task type");
         };
@@ -152,6 +223,35 @@ public class Storage {
             throw invalidData(lineNumber, "invalid task status");
         }
         return task;
+    }
+
+    /** Recreates one tutoree from a pipe-separated file line. */
+    private Tutoree tutoreeFromFileLine(String line, int lineNumber) throws IOException {
+        List<String> parts = splitFields(line, lineNumber);
+        if (parts.size() != 4) {
+            throw invalidTutoreeData(lineNumber, "wrong number of fields");
+        }
+        if (!TUTOREE_TYPE.equals(parts.get(0))) {
+            throw invalidTutoreeData(lineNumber, "unknown record type");
+        }
+        if (parts.get(TUTOREE_NAME_FIELD).isBlank() || parts.get(TUTOREE_ADDRESS_FIELD).isBlank()
+                || parts.get(TUTOREE_FEE_FIELD).isBlank()) {
+            throw invalidTutoreeData(lineNumber, "blank required field");
+        }
+        return new Tutoree(parts.get(TUTOREE_NAME_FIELD), parts.get(TUTOREE_ADDRESS_FIELD),
+                parts.get(TUTOREE_FEE_FIELD));
+    }
+
+    /** Returns an optional tutoree field from a task record. */
+    private String getOptionalTutoreeName(List<String> parts, int tutoreeField, int lineNumber) throws IOException {
+        if (parts.size() == tutoreeField) {
+            return null;
+        }
+        String tutoreeName = parts.get(tutoreeField);
+        if (tutoreeName.isBlank()) {
+            throw invalidData(lineNumber, "blank tutoree name");
+        }
+        return tutoreeName;
     }
 
     /** Splits a line at unescaped pipe characters and removes delimiter spacing. */
@@ -185,19 +285,19 @@ public class Storage {
     }
 
     /** Replaces the old data file only after the temporary file is fully written. */
-    private void moveIntoPlace(Path temporaryFile) throws IOException {
+    private void moveIntoPlace(Path temporaryFile, Path destination) throws IOException {
         try {
-            Files.move(temporaryFile, filePath, StandardCopyOption.ATOMIC_MOVE,
+            Files.move(temporaryFile, destination, StandardCopyOption.ATOMIC_MOVE,
                     StandardCopyOption.REPLACE_EXISTING);
         } catch (AtomicMoveNotSupportedException exception) {
-            Files.move(temporaryFile, filePath, StandardCopyOption.REPLACE_EXISTING);
+            Files.move(temporaryFile, destination, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
     /** Verifies that a task line includes all fields required by its task type. */
-    private void requirePartCount(List<String> parts, int expectedCount, int lineNumber)
+    private void requirePartCount(List<String> parts, int minimumCount, int maximumCount, int lineNumber)
             throws IOException {
-        if (parts.size() != expectedCount) {
+        if (parts.size() < minimumCount || parts.size() > maximumCount) {
             throw invalidData(lineNumber, "wrong number of fields");
         }
     }
@@ -205,5 +305,10 @@ public class Storage {
     /** Creates a clear error for a corrupt line in the saved task data. */
     private IOException invalidData(int lineNumber, String reason) {
         return new IOException("Invalid task data on line " + lineNumber + ": " + reason + ".");
+    }
+
+    /** Creates a clear error for a corrupt tutoree-data line. */
+    private IOException invalidTutoreeData(int lineNumber, String reason) {
+        return new IOException("Invalid tutoree data on line " + lineNumber + ": " + reason + ".");
     }
 }

@@ -19,7 +19,7 @@ class UiTest {
 
         ui.showError("Invalid command");
 
-        assertEquals("Invalid command", ui.getResponse());
+        assertEquals("Invalid command", ui.buildResponse());
     }
 
     @Test
@@ -29,7 +29,7 @@ class UiTest {
 
         ui.clearResponse();
 
-        assertEquals("", ui.getResponse());
+        assertEquals("", ui.buildResponse());
     }
 
     @Test
@@ -38,8 +38,8 @@ class UiTest {
 
         ui.showTaskAdded(new ToDo("read book"), 1);
 
-        assertEquals("Got it. I've added this task: [T] [ ] read book\n"
-                + "Now you have 1 tasks in the list.", ui.getResponse());
+        assertEquals("Got it. I've added this task: [T] [ ] read book" + System.lineSeparator()
+                + "Now you have 1 tasks in the list.", ui.buildResponse());
     }
 
     @Test
@@ -48,9 +48,9 @@ class UiTest {
 
         ui.showTaskList(List.of(new ToDo("read book"), new ToDo("buy groceries")));
 
-        assertEquals("Here are the tasks in your list:\n"
-                + "1.[T] [ ] read book\n"
-                + "2.[T] [ ] buy groceries", ui.getResponse());
+        assertEquals("Here are the tasks in your list:" + System.lineSeparator()
+                + "1.[T] [ ] read book" + System.lineSeparator()
+                + "2.[T] [ ] buy groceries", ui.buildResponse());
     }
 
     @Test
@@ -59,8 +59,8 @@ class UiTest {
 
         ui.showFindResults(List.of(new ToDo("read book"), new ToDo("buy bookcase")));
 
-        assertEquals("Here are the matching tasks in your list:\n"
-                + "1.[T] [ ] read book\n"
-                + "2.[T] [ ] buy bookcase", ui.getResponse());
+        assertEquals("Here are the matching tasks in your list:" + System.lineSeparator()
+                + "1.[T] [ ] read book" + System.lineSeparator()
+                + "2.[T] [ ] buy bookcase", ui.buildResponse());
     }
 }

@@ -8,6 +8,7 @@ import clover.exception.CloverException;
 import clover.parser.Parser;
 import clover.storage.Storage;
 import clover.task.TaskList;
+import clover.tutoree.TutoreeList;
 import clover.ui.Ui;
 
 /**
@@ -17,6 +18,7 @@ public class Clover {
     private final Storage storage;
     private final Ui ui;
     private TaskList tasks;
+    private TutoreeList tutorees;
     private CommandResponseStyle responseStyle;
 
     /**
@@ -32,6 +34,12 @@ public class Clover {
             ui.showError("I could not load your saved tasks. Starting with an empty list.");
             tasks = new TaskList();
         }
+        try {
+            tutorees = new TutoreeList(storage.loadTutorees());
+        } catch (IOException | SecurityException exception) {
+            ui.showError("I could not load your saved tutorees. Starting with an empty tutoree list.");
+            tutorees = new TutoreeList();
+        }
     }
 
     /**
@@ -46,7 +54,7 @@ public class Clover {
                 String fullCommand = ui.readCommand();
                 ui.showLine();
                 Command command = Parser.parse(fullCommand);
-                command.execute(tasks, ui, storage);
+                command.execute(tasks, tutorees, ui, storage);
                 isExit = command.isExit();
             } catch (CloverException exception) {
                 ui.showError(exception.getMessage());
@@ -68,11 +76,11 @@ public class Clover {
         try {
             Command command = Parser.parse(input);
             responseStyle = command.getResponseStyle();
-            command.execute(tasks, ui, storage);
+            command.execute(tasks, tutorees, ui, storage);
         } catch (CloverException exception) {
             ui.showError(exception.getMessage());
         }
-        return ui.getResponse();
+        return ui.buildResponse();
     }
 
     /**

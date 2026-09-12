@@ -16,6 +16,7 @@ import clover.exception.CloverException;
 import clover.storage.Storage;
 import clover.task.TaskList;
 import clover.task.ToDo;
+import clover.tutoree.TutoreeList;
 import clover.ui.Ui;
 
 /** Tests marking tasks complete through the mark command. */
@@ -30,7 +31,7 @@ class MarkCommandTest {
         tasks.add(task);
         Storage storage = new Storage(tempDir.resolve("clover.txt"));
 
-        new MarkCommand("1").execute(tasks, new Ui(), storage);
+        new MarkCommand("1").execute(tasks, new TutoreeList(), new Ui(), storage);
 
         assertTrue(task.isDone());
         assertTrue(storage.load().getFirst().isDone());
@@ -44,7 +45,7 @@ class MarkCommandTest {
         tasks.add(task);
 
         CloverException exception = assertThrows(CloverException.class, () -> new MarkCommand(taskNumber).execute(
-                tasks, new Ui(), new Storage(tempDir.resolve("clover.txt"))));
+                tasks, new TutoreeList(), new Ui(), new Storage(tempDir.resolve("clover.txt"))));
 
         assertEquals("Please enter a valid task number to mark.", exception.getMessage());
         assertFalse(task.isDone());

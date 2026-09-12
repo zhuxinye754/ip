@@ -22,6 +22,15 @@ public class Event extends Task {
         this.end = end;
     }
 
+    /**
+     * Creates an event that is optionally linked to a tutoree.
+     */
+    public Event(String description, LocalDate start, LocalDate end, String tutoreeName) {
+        super(description, tutoreeName);
+        this.start = start;
+        this.end = end;
+    }
+
     /** Returns the event start text. */
     public LocalDate getStart() {
         return start;
@@ -39,8 +48,8 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
-        return "[E] " + super.toString()
+        return "[E] " + formatTaskDisplay()
                 + " (from: " + start.format(DISPLAY_FORMAT)
-                + " to: " + end.format(DISPLAY_FORMAT) + ")";
+                + " to: " + end.format(DISPLAY_FORMAT) + ")" + formatTutoreeSuffix();
     }
 }
