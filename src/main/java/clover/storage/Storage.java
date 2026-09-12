@@ -29,8 +29,9 @@ public class Storage {
     private static final int TASK_TYPE_FIELD = 0;
     private static final int TASK_STATUS_FIELD = 1;
     private static final int TASK_DESCRIPTION_FIELD = 2;
-    private static final int FIRST_DATE_FIELD = 3;
-    private static final int SECOND_DATE_FIELD = 4;
+    private static final int DEADLINE_DUE_DATE_FIELD = 3;
+    private static final int EVENT_START_DATE_FIELD = 3;
+    private static final int EVENT_END_DATE_FIELD = 4;
     private final Path filePath;
 
     /**
@@ -134,13 +135,13 @@ public class Storage {
             case DEADLINE_TASK_TYPE -> {
                 requirePartCount(parts, 4, lineNumber);
                 yield new Deadline(parts.get(TASK_DESCRIPTION_FIELD),
-                        parseDate(parts.get(FIRST_DATE_FIELD), lineNumber));
+                        parseDate(parts.get(DEADLINE_DUE_DATE_FIELD), lineNumber));
             }
             case EVENT_TASK_TYPE -> {
                 requirePartCount(parts, 5, lineNumber);
                 yield new Event(parts.get(TASK_DESCRIPTION_FIELD),
-                        parseDate(parts.get(FIRST_DATE_FIELD), lineNumber),
-                        parseDate(parts.get(SECOND_DATE_FIELD), lineNumber));
+                        parseDate(parts.get(EVENT_START_DATE_FIELD), lineNumber),
+                        parseDate(parts.get(EVENT_END_DATE_FIELD), lineNumber));
             }
             default -> throw invalidData(lineNumber, "unknown task type");
         };
