@@ -2,8 +2,11 @@ package clover.ui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
+import clover.task.Task;
 import clover.task.ToDo;
 
 /**
@@ -38,5 +41,27 @@ class UiTest {
 
         assertEquals("Got it. I've added this task: [T] [ ] read book\n"
                 + "Now you have 1 tasks in the list.", ui.getResponse());
+    }
+
+    @Test
+    void showTaskList_tasksSupplied_responseListsTasksInNumberedOrder() {
+        Ui ui = new Ui();
+
+        ui.showTaskList(List.of(new ToDo("read book"), new Task("buy groceries")));
+
+        assertEquals("Here are the tasks in your list:\n"
+                + "1.[T] [ ] read book\n"
+                + "2.[ ] buy groceries", ui.getResponse());
+    }
+
+    @Test
+    void showFindResults_tasksSupplied_responseListsMatchingTasksInNumberedOrder() {
+        Ui ui = new Ui();
+
+        ui.showFindResults(List.of(new ToDo("read book"), new Task("buy bookcase")));
+
+        assertEquals("Here are the matching tasks in your list:\n"
+                + "1.[T] [ ] read book\n"
+                + "2.[ ] buy bookcase", ui.getResponse());
     }
 }
