@@ -28,7 +28,10 @@ public class DeleteCommand extends Command {
         if (!Parser.isValidTaskNumber(taskNumber, tasks.size())) {
             throw new CloverException("Please enter a valid task number to delete.");
         }
-        Task deletedTask = tasks.remove(Parser.parseTaskIndex(taskNumber));
+        int taskIndex = Parser.parseTaskIndex(taskNumber);
+        assert taskIndex >= 0 && taskIndex < tasks.size()
+                : "A validated one-based task number must map to an existing list index.";
+        Task deletedTask = tasks.remove(taskIndex);
         saveTasks(tasks, ui, storage);
         ui.showTaskDeleted(deletedTask, tasks.size());
     }

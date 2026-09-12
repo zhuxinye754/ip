@@ -20,6 +20,7 @@ public class TaskList {
      * Creates a task list containing the supplied tasks.
      */
     public TaskList(ArrayList<Task> tasks) {
+        assert tasks != null : "A task list must have a backing collection.";
         this.tasks = tasks;
     }
 
@@ -27,6 +28,7 @@ public class TaskList {
      * Adds a task to this list.
      */
     public void add(Task task) {
+        assert task != null : "A task list must not contain null tasks.";
         tasks.add(task);
     }
 
@@ -48,6 +50,7 @@ public class TaskList {
      * Returns the last task in this list.
      */
     public Task getLast() {
+        assert !tasks.isEmpty() : "The last task is requested only after a task is added.";
         return tasks.getLast();
     }
 
