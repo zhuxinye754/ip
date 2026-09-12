@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import clover.task.Task;
 import clover.task.ToDo;
 
 /**
@@ -47,21 +46,21 @@ class UiTest {
     void showTaskList_tasksSupplied_responseListsTasksInNumberedOrder() {
         Ui ui = new Ui();
 
-        ui.showTaskList(List.of(new ToDo("read book"), new Task("buy groceries")));
+        ui.showTaskList(List.of(new ToDo("read book"), new ToDo("buy groceries")));
 
         assertEquals("Here are the tasks in your list:\n"
                 + "1.[T] [ ] read book\n"
-                + "2.[ ] buy groceries", ui.getResponse());
+                + "2.[T] [ ] buy groceries", ui.getResponse());
     }
 
     @Test
     void showFindResults_tasksSupplied_responseListsMatchingTasksInNumberedOrder() {
         Ui ui = new Ui();
 
-        ui.showFindResults(List.of(new ToDo("read book"), new Task("buy bookcase")));
+        ui.showFindResults(List.of(new ToDo("read book"), new ToDo("buy bookcase")));
 
         assertEquals("Here are the matching tasks in your list:\n"
                 + "1.[T] [ ] read book\n"
-                + "2.[ ] buy bookcase", ui.getResponse());
+                + "2.[T] [ ] buy bookcase", ui.getResponse());
     }
 }

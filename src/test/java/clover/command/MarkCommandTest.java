@@ -14,8 +14,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import clover.exception.CloverException;
 import clover.storage.Storage;
-import clover.task.Task;
 import clover.task.TaskList;
+import clover.task.ToDo;
 import clover.ui.Ui;
 
 /** Tests marking tasks complete through the mark command. */
@@ -25,7 +25,7 @@ class MarkCommandTest {
 
     @Test
     void execute_validTaskNumber_taskMarkedAndSaved() throws CloverException, java.io.IOException {
-        Task task = new Task("read book");
+        ToDo task = new ToDo("read book");
         TaskList tasks = new TaskList();
         tasks.add(task);
         Storage storage = new Storage(tempDir.resolve("clover.txt"));
@@ -39,7 +39,7 @@ class MarkCommandTest {
     @ParameterizedTest
     @ValueSource(strings = {"", "0", "2", "one"})
     void execute_invalidTaskNumber_exceptionThrownWithoutChangingTask(String taskNumber) {
-        Task task = new Task("read book");
+        ToDo task = new ToDo("read book");
         TaskList tasks = new TaskList();
         tasks.add(task);
 

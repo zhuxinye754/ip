@@ -117,13 +117,6 @@ public class Ui {
     }
 
     /**
-     * Displays a task created from a plain task description.
-     */
-    public void showPlainTask(Task task) {
-        showMessage(task.toString());
-    }
-
-    /**
      * Displays the closing message.
      */
     public void showGoodbye() {

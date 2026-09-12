@@ -11,7 +11,6 @@ import clover.command.ExitCommand;
 import clover.command.FindCommand;
 import clover.command.ListCommand;
 import clover.command.MarkCommand;
-import clover.command.PlainTaskCommand;
 import clover.command.ToDoCommand;
 import clover.command.UnmarkCommand;
 import clover.exception.CloverException;
@@ -20,6 +19,9 @@ import clover.exception.CloverException;
  * Converts raw user input into executable Clover commands.
  */
 public class Parser {
+    private static final String UNKNOWN_COMMAND_MESSAGE = "Unknown command. Please use: todo, deadline, event, list, "
+            + "find, mark, unmark, delete, or bye.";
+
     /**
      * Creates the command represented by one complete line of user input.
      */
@@ -42,7 +44,7 @@ public class Parser {
             case "delete" -> new DeleteCommand(arguments);
             case "find" -> new FindCommand(arguments);
             case "bye" -> new ExitCommand();
-            default -> new PlainTaskCommand(input);
+            default -> throw new CloverException(UNKNOWN_COMMAND_MESSAGE);
         };
     }
 

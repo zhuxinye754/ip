@@ -21,7 +21,6 @@ import clover.task.ToDo;
  */
 public class Storage {
     private static final Path FILE_PATH = Path.of("data", "clover.txt");
-    private static final String PLAIN_TASK_TYPE = "N";
     private static final String TODO_TASK_TYPE = "T";
     private static final String DEADLINE_TASK_TYPE = "D";
     private static final String EVENT_TASK_TYPE = "E";
@@ -96,7 +95,7 @@ public class Storage {
     }
 
     /** Converts one task to a stable, pipe-separated file line. */
-    private String toFileLine(Task task) {
+    private String toFileLine(Task task) throws IOException {
         String status = task.isDone() ? COMPLETE_STATUS : INCOMPLETE_STATUS;
         if (task instanceof Deadline deadline) {
             return DEADLINE_TASK_TYPE + " | " + status + " | " + escape(deadline.getDescription())
@@ -110,7 +109,7 @@ public class Storage {
         if (task instanceof ToDo) {
             return TODO_TASK_TYPE + " | " + status + " | " + escape(task.getDescription());
         }
-        return PLAIN_TASK_TYPE + " | " + status + " | " + escape(task.getDescription());
+        throw new IOException("Unsupported task type.");
     }
 
     /** Parses an ISO date stored in the data file. */
@@ -128,10 +127,6 @@ public class Storage {
         assert !parts.isEmpty() : "Splitting a task-data line always produces its first field.";
 
         Task task = switch (parts.get(TASK_TYPE_FIELD)) {
-            case PLAIN_TASK_TYPE -> {
-                requirePartCount(parts, 3, lineNumber);
-                yield new Task(parts.get(TASK_DESCRIPTION_FIELD));
-            }
             case TODO_TASK_TYPE -> {
                 requirePartCount(parts, 3, lineNumber);
                 yield new ToDo(parts.get(TASK_DESCRIPTION_FIELD));

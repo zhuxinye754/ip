@@ -30,7 +30,6 @@ Each case uses an isolated working directory. A case can include an optional **S
 ```text
 todo read book
 deadline submit report /by 2026-09-01
-plain reminder
 mark 2
 unmark 2
 delete 1
@@ -61,9 +60,6 @@ Got it. I've added this task: [D] [ ] submit report (by: Sep 1 2026)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-[ ] plain reminder
-____________________________________________________________
-____________________________________________________________
 Nice! I've marked this task as done: [D] [X] submit report (by: Sep 1 2026)
 ____________________________________________________________
 ____________________________________________________________
@@ -71,12 +67,11 @@ OK, I've marked this task as not done yet: [D] [ ] submit report (by: Sep 1 2026
 ____________________________________________________________
 ____________________________________________________________
 Noted. I've removed this task: [T] [ ] read book
-Now you have 2 tasks in the list.
+Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[D] [ ] submit report (by: Sep 1 2026)
-2.[ ] plain reminder
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -86,7 +81,6 @@ ____________________________________________________________
 **Expected saved data:**
 ```text
 D | 0 | submit report | 2026-09-01
-N | 0 | plain reminder
 ```
 
 ## Test case: Find tasks by keyword
@@ -97,7 +91,7 @@ N | 0 | plain reminder
 ```text
 T | 1 | read book
 D | 1 | return book | 2026-06-06
-N | 0 | buy groceries
+T | 0 | buy groceries
 ```
 
 **Input:**
@@ -293,6 +287,7 @@ deadline submit
 event tutorial /from 2019-12-02
 deadline return book /by tomorrow
 event tutorial /from 2019-12-02 /to tomorrow
+read book
 
 bye
 ```
@@ -331,6 +326,9 @@ Please enter dates in the format yyyy-MM-dd.
 ____________________________________________________________
 ____________________________________________________________
 Please enter dates in the format yyyy-MM-dd.
+____________________________________________________________
+____________________________________________________________
+Unknown command. Please use: todo, deadline, event, list, find, mark, unmark, delete, or bye.
 ____________________________________________________________
 ____________________________________________________________
 Please enter a command or task description.
