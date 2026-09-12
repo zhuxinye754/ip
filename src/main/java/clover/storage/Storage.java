@@ -21,6 +21,17 @@ import clover.task.ToDo;
  */
 public class Storage {
     private static final Path FILE_PATH = Path.of("data", "clover.txt");
+    private static final String PLAIN_TASK_TYPE = "N";
+    private static final String TODO_TASK_TYPE = "T";
+    private static final String DEADLINE_TASK_TYPE = "D";
+    private static final String EVENT_TASK_TYPE = "E";
+    private static final String INCOMPLETE_STATUS = "0";
+    private static final String COMPLETE_STATUS = "1";
+    private static final int TASK_TYPE_FIELD = 0;
+    private static final int TASK_STATUS_FIELD = 1;
+    private static final int TASK_DESCRIPTION_FIELD = 2;
+    private static final int FIRST_DATE_FIELD = 3;
+    private static final int SECOND_DATE_FIELD = 4;
     private final Path filePath;
 
     /**
@@ -86,20 +97,20 @@ public class Storage {
 
     /** Converts one task to a stable, pipe-separated file line. */
     private String toFileLine(Task task) {
-        String completed = task.isDone() ? "1" : "0";
+        String status = task.isDone() ? COMPLETE_STATUS : INCOMPLETE_STATUS;
         if (task instanceof Deadline deadline) {
-            return "D | " + completed + " | " + escape(deadline.getDescription())
+            return DEADLINE_TASK_TYPE + " | " + status + " | " + escape(deadline.getDescription())
                     + " | " + escape(deadline.getEndBy().toString());
         }
         if (task instanceof Event event) {
-            return "E | " + completed + " | " + escape(event.getDescription())
+            return EVENT_TASK_TYPE + " | " + status + " | " + escape(event.getDescription())
                     + " | " + escape(event.getStart().toString())
                     + " | " + escape(event.getEnd().toString());
         }
         if (task instanceof ToDo) {
-            return "T | " + completed + " | " + escape(task.getDescription());
+            return TODO_TASK_TYPE + " | " + status + " | " + escape(task.getDescription());
         }
-        return "N | " + completed + " | " + escape(task.getDescription());
+        return PLAIN_TASK_TYPE + " | " + status + " | " + escape(task.getDescription());
     }
 
     /** Parses an ISO date stored in the data file. */
@@ -116,33 +127,32 @@ public class Storage {
         List<String> parts = splitFields(line, lineNumber);
         assert !parts.isEmpty() : "Splitting a task-data line always produces its first field.";
 
-        Task task;
-        switch (parts.get(0)) {
-            case "N":
+        Task task = switch (parts.get(TASK_TYPE_FIELD)) {
+            case PLAIN_TASK_TYPE -> {
                 requirePartCount(parts, 3, lineNumber);
-                task = new Task(parts.get(2));
-                break;
-            case "T":
+                yield new Task(parts.get(TASK_DESCRIPTION_FIELD));
+            }
+            case TODO_TASK_TYPE -> {
                 requirePartCount(parts, 3, lineNumber);
-                task = new ToDo(parts.get(2));
-                break;
-            case "D":
+                yield new ToDo(parts.get(TASK_DESCRIPTION_FIELD));
+            }
+            case DEADLINE_TASK_TYPE -> {
                 requirePartCount(parts, 4, lineNumber);
-                task = new Deadline(parts.get(2), parseDate(parts.get(3), lineNumber));
-                break;
-            case "E":
+                yield new Deadline(parts.get(TASK_DESCRIPTION_FIELD),
+                        parseDate(parts.get(FIRST_DATE_FIELD), lineNumber));
+            }
+            case EVENT_TASK_TYPE -> {
                 requirePartCount(parts, 5, lineNumber);
-                task = new Event(parts.get(2),
-                        parseDate(parts.get(3), lineNumber),
-                        parseDate(parts.get(4), lineNumber));
-                break;
-            default:
-                throw invalidData(lineNumber, "unknown task type");
-        }
+                yield new Event(parts.get(TASK_DESCRIPTION_FIELD),
+                        parseDate(parts.get(FIRST_DATE_FIELD), lineNumber),
+                        parseDate(parts.get(SECOND_DATE_FIELD), lineNumber));
+            }
+            default -> throw invalidData(lineNumber, "unknown task type");
+        };
 
-        if ("1".equals(parts.get(1))) {
+        if (COMPLETE_STATUS.equals(parts.get(TASK_STATUS_FIELD))) {
             task.markAsDone();
-        } else if (!"0".equals(parts.get(1))) {
+        } else if (!INCOMPLETE_STATUS.equals(parts.get(TASK_STATUS_FIELD))) {
             throw invalidData(lineNumber, "invalid task status");
         }
         return task;
