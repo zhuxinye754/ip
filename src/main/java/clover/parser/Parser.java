@@ -2,7 +2,6 @@ package clover.parser;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.Locale;
 
 import clover.command.Command;
 import clover.command.DeadlineCommand;
@@ -32,7 +31,7 @@ public class Parser {
         }
 
         String[] parts = input.trim().split("\\s+", 2);
-        String commandWord = parts[0].toLowerCase(Locale.ROOT);
+        String commandWord = parts[0].toLowerCase();
         String arguments = parts.length == 2 ? parts[1] : "";
 
         return switch (commandWord) {

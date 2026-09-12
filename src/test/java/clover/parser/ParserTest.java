@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
-import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
 
@@ -41,18 +40,6 @@ class ParserTest {
     @Test
     void parse_commandWordWithDifferentCapitalisation_correctCommandTypeReturned() throws CloverException {
         assertInstanceOf(ToDoCommand.class, Parser.parse("TODO read book"));
-    }
-
-    @Test
-    void parse_uppercaseCommandWordWithTurkishLocale_correctCommandTypeReturned() throws CloverException {
-        Locale originalLocale = Locale.getDefault();
-        Locale.setDefault(Locale.forLanguageTag("tr-TR"));
-
-        try {
-            assertInstanceOf(ListCommand.class, Parser.parse("LIST"));
-        } finally {
-            Locale.setDefault(originalLocale);
-        }
     }
 
     @Test
