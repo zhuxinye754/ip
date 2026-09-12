@@ -1,7 +1,6 @@
 package clover.command;
 
 import clover.exception.CloverException;
-import clover.parser.Parser;
 import clover.storage.Storage;
 import clover.task.Task;
 import clover.task.TaskList;
@@ -25,14 +24,14 @@ public class DeleteCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws CloverException {
-        if (!Parser.isValidTaskNumber(taskNumber, tasks.size())) {
-            throw new CloverException("Please enter a valid task number to delete.");
-        }
-        int taskIndex = Parser.parseTaskIndex(taskNumber);
-        assert taskIndex >= 0 && taskIndex < tasks.size()
-                : "A validated one-based task number must map to an existing list index.";
+        int taskIndex = parseValidTaskIndex(taskNumber, tasks, "Please enter a valid task number to delete.");
         Task deletedTask = tasks.remove(taskIndex);
         saveTasks(tasks, ui, storage);
         ui.showTaskDeleted(deletedTask, tasks.size());
+    }
+
+    @Override
+    public CommandResponseStyle getResponseStyle() {
+        return CommandResponseStyle.TASK_DELETED;
     }
 }

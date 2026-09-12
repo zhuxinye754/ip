@@ -73,9 +73,7 @@ public class Ui {
      */
     public void showTaskList(List<Task> tasks) {
         showMessage("Here are the tasks in your list:");
-        for (int taskIndex = 0; taskIndex < tasks.size(); taskIndex++) {
-            showMessage((taskIndex + 1) + "." + tasks.get(taskIndex));
-        }
+        showNumberedTasks(tasks);
     }
 
     /**
@@ -115,16 +113,7 @@ public class Ui {
      */
     public void showFindResults(List<Task> result) {
         showMessage("Here are the matching tasks in your list:");
-        for (int taskIndex = 0; taskIndex < result.size(); taskIndex++) {
-            showMessage((taskIndex + 1) + "." + result.get(taskIndex));
-        }
-    }
-
-    /**
-     * Displays a task created from a plain task description.
-     */
-    public void showPlainTask(Task task) {
-        showMessage(task.toString());
+        showNumberedTasks(result);
     }
 
     /**
@@ -164,6 +153,13 @@ public class Ui {
     private void showMessages(String... messages) {
         for (String message : messages) {
             showMessage(message);
+        }
+    }
+
+    /** Displays the supplied tasks in one-based numbered order. */
+    private void showNumberedTasks(List<Task> tasks) {
+        for (int taskIndex = 0; taskIndex < tasks.size(); taskIndex++) {
+            showMessage((taskIndex + 1) + "." + tasks.get(taskIndex));
         }
     }
 

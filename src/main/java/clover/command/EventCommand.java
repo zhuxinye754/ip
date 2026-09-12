@@ -50,6 +50,11 @@ public class EventCommand extends Command {
         ui.showTaskAdded(tasks.getLast(), tasks.size());
     }
 
+    @Override
+    public CommandResponseStyle getResponseStyle() {
+        return CommandResponseStyle.TASK_ADDED;
+    }
+
     /**
      * Creates the shared guidance message for malformed event commands.
      */

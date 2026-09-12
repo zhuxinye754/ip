@@ -1,6 +1,7 @@
 package clover.ui;
 
 import clover.Clover;
+import clover.command.CommandResponseStyle;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -50,10 +51,10 @@ public class MainWindow extends AnchorPane {
     private void handleUserInput() {
         String input = userInput.getText();
         String response = clover.getResponse(input);
-        String commandType = clover.getCommandType();
+        CommandResponseStyle responseStyle = clover.getResponseStyle();
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getCloverDialog(response, cloverImage, commandType)
+                DialogBox.getCloverDialog(response, cloverImage, responseStyle)
         );
         userInput.clear();
     }

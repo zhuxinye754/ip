@@ -31,4 +31,9 @@ public class ToDoCommand extends Command {
         saveTasks(tasks, ui, storage);
         ui.showTaskAdded(tasks.getLast(), tasks.size());
     }
+
+    @Override
+    public CommandResponseStyle getResponseStyle() {
+        return CommandResponseStyle.TASK_ADDED;
+    }
 }

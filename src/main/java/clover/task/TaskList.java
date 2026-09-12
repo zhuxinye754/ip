@@ -17,11 +17,11 @@ public class TaskList {
     }
 
     /**
-     * Creates a task list containing the supplied tasks.
+     * Creates a task list containing a copy of the supplied tasks.
      */
-    public TaskList(ArrayList<Task> tasks) {
+    public TaskList(List<Task> tasks) {
         assert tasks != null : "A task list must have a backing collection.";
-        this.tasks = tasks;
+        this.tasks = new ArrayList<>(tasks);
     }
 
     /**
@@ -62,9 +62,9 @@ public class TaskList {
     }
 
     /**
-     * Returns the tasks in this list.
+     * Returns an unmodifiable snapshot of the tasks in this list.
      */
     public List<Task> asList() {
-        return tasks;
+        return List.copyOf(tasks);
     }
 }

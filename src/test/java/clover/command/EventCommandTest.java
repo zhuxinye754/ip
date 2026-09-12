@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -63,7 +63,7 @@ class EventCommandTest {
         assertEquals(LocalDate.of(2022, 12, 21), event.getEnd());
         assertFalse(event.isDone());
 
-        ArrayList<Task> savedTasks = storage.load();
+        List<Task> savedTasks = storage.load();
         Event savedEvent = assertInstanceOf(Event.class, savedTasks.getFirst());
         assertEquals(event.getDescription(), savedEvent.getDescription());
         assertEquals(event.getStart(), savedEvent.getStart());

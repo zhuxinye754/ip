@@ -32,7 +32,7 @@ public class Main extends Application {
             fxmlLoader.<MainWindow>getController().setClover(clover);
             stage.show();
         } catch (IOException exception) {
-            exception.printStackTrace();
+            throw new IllegalStateException("Unable to load Clover's main window.", exception);
         }
     }
 }

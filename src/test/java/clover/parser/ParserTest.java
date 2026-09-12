@@ -17,7 +17,6 @@ import clover.command.ExitCommand;
 import clover.command.FindCommand;
 import clover.command.ListCommand;
 import clover.command.MarkCommand;
-import clover.command.PlainTaskCommand;
 import clover.command.ToDoCommand;
 import clover.command.UnmarkCommand;
 import clover.exception.CloverException;
@@ -44,8 +43,11 @@ class ParserTest {
     }
 
     @Test
-    void parse_unknownCommandWord_plainTaskCommandReturned() throws CloverException {
-        assertInstanceOf(PlainTaskCommand.class, Parser.parse("read book"));
+    void parse_unknownCommandWord_exceptionThrown() {
+        CloverException exception = assertThrows(CloverException.class, () -> Parser.parse("read book"));
+
+        assertEquals("Unknown command. Please use: todo, deadline, event, list, find, mark, unmark, delete, or bye.",
+                exception.getMessage());
     }
 
     @Test

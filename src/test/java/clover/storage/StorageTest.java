@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -26,8 +26,7 @@ class StorageTest {
     Path tempDir;
 
     @Test
-    void save_allTaskTypes_tasksWrittenInCloverFileFormat() throws IOException {
-        Task plainTask = new Task("plain task");
+    void save_allSupportedTaskTypes_tasksWrittenInCloverFileFormat() throws IOException {
         ToDo todo = new ToDo("read | annotate \\ draft");
         todo.markAsDone();
         Deadline deadline = new Deadline("submit report", LocalDate.of(2026, 9, 1));
@@ -35,10 +34,9 @@ class StorageTest {
         event.markAsDone();
         Path dataFile = tempDir.resolve("data/clover.txt");
 
-        new Storage(dataFile).save(java.util.List.of(plainTask, todo, deadline, event));
+        new Storage(dataFile).save(java.util.List.of(todo, deadline, event));
 
         assertEquals(java.util.List.of(
-                "N | 0 | plain task",
                 "T | 1 | read \\| annotate \\\\ draft",
                 "D | 0 | submit report | 2026-09-01",
                 "E | 1 | project meeting | 2026-09-02 | 2026-09-03"), Files.readAllLines(dataFile));
@@ -62,30 +60,25 @@ class StorageTest {
     }
 
     @Test
-    void load_dataFileContainsAllTaskTypes_tasksRecreatedWithTheirDetails() throws IOException {
+    void load_dataFileContainsSupportedTaskTypes_tasksRecreatedWithTheirDetails() throws IOException {
         Path dataFile = writeSavedData(
-                "N | 0 | plain task",
                 "T | 1 | read \\| annotate \\\\ draft",
                 "D | 0 | submit report | 2026-09-01",
                 "E | 1 | project meeting | 2026-09-02 | 2026-09-03");
 
-        ArrayList<Task> tasks = new Storage(dataFile).load();
+        List<Task> tasks = new Storage(dataFile).load();
 
-        assertEquals(4, tasks.size());
-        assertEquals(Task.class, tasks.get(0).getClass());
-        assertEquals("plain task", tasks.get(0).getDescription());
-        assertFalse(tasks.get(0).isDone());
+        assertEquals(3, tasks.size());
+        assertInstanceOf(ToDo.class, tasks.get(0));
+        assertEquals("read | annotate \\ draft", tasks.get(0).getDescription());
+        assertTrue(tasks.get(0).isDone());
 
-        assertInstanceOf(ToDo.class, tasks.get(1));
-        assertEquals("read | annotate \\ draft", tasks.get(1).getDescription());
-        assertTrue(tasks.get(1).isDone());
-
-        Deadline deadline = assertInstanceOf(Deadline.class, tasks.get(2));
+        Deadline deadline = assertInstanceOf(Deadline.class, tasks.get(1));
         assertEquals("submit report", deadline.getDescription());
         assertEquals(LocalDate.of(2026, 9, 1), deadline.getEndBy());
         assertFalse(deadline.isDone());
 
-        Event event = assertInstanceOf(Event.class, tasks.get(3));
+        Event event = assertInstanceOf(Event.class, tasks.get(2));
         assertEquals("project meeting", event.getDescription());
         assertEquals(LocalDate.of(2026, 9, 2), event.getStart());
         assertEquals(LocalDate.of(2026, 9, 3), event.getEnd());
@@ -94,9 +87,9 @@ class StorageTest {
 
     @Test
     void load_dataFileContainsBlankLines_blankLinesIgnored() throws IOException {
-        Path dataFile = writeSavedData("", "N | 0 | first task", "   ", "T | 0 | second task");
+        Path dataFile = writeSavedData("", "T | 0 | first task", "   ", "T | 0 | second task");
 
-        ArrayList<Task> tasks = new Storage(dataFile).load();
+        List<Task> tasks = new Storage(dataFile).load();
 
         assertEquals(2, tasks.size());
         assertEquals("first task", tasks.get(0).getDescription());

@@ -1,16 +1,16 @@
 package clover.task;
 
 /**
- * Represents one task in the task list.
+ * Represents the shared state and behavior of a task in the task list.
  */
-public class Task {
-    protected String description;
-    protected TaskStatus status;
+public abstract class Task {
+    private final String description;
+    private TaskStatus status;
 
     /**
      * Creates an incomplete task with the supplied description.
      */
-    public Task(String description) {
+    protected Task(String description) {
         assert description != null : "Task descriptions must not be null.";
         this.description = description;
         this.status = TaskStatus.NOT_DONE;
