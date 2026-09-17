@@ -46,6 +46,11 @@ public class AddTutoreeCommand extends Command {
         ui.showTutoreeAdded(tutoree, tutorees.size());
     }
 
+    @Override
+    public CommandResponseStyle getResponseStyle() {
+        return CommandResponseStyle.TUTOREE_ADDED;
+    }
+
     /** Creates the shared guidance message for malformed add-tutoree commands. */
     private CloverException invalidFormat() {
         return new CloverException("Please use the format: add-tutoree NAME /address ADDRESS /fee FEE");

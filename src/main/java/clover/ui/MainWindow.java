@@ -2,11 +2,13 @@ package clover.ui;
 
 import clover.Clover;
 import clover.command.CommandResponseStyle;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
@@ -32,7 +34,23 @@ public class MainWindow extends AnchorPane {
      */
     @FXML
     public void initialize() {
-        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        scrollPane.addEventFilter(ScrollEvent.SCROLL, this::handleScroll);
+    }
+
+    /**
+     * Scrolls the chat log when the pointer is over it.
+     *
+     * @param event the mouse-wheel or trackpad scroll event
+     */
+    private void handleScroll(ScrollEvent event) {
+        double scrollableHeight = dialogContainer.getHeight() - scrollPane.getViewportBounds().getHeight();
+        if (scrollableHeight <= 0 || event.getDeltaY() == 0) {
+            return;
+        }
+
+        double newVerticalValue = scrollPane.getVvalue() - event.getDeltaY() / scrollableHeight;
+        scrollPane.setVvalue(Math.clamp(newVerticalValue, 0, 1));
+        event.consume();
     }
 
     /**
@@ -42,6 +60,9 @@ public class MainWindow extends AnchorPane {
      */
     public void setClover(Clover cloverInstance) {
         clover = cloverInstance;
+        dialogContainer.getChildren().add(DialogBox.getCloverDialog(
+                "Welcome to Clover.\nTry: todo prepare worksheet /for Alice Tan", cloverImage));
+        scrollToLatestMessage();
     }
 
     /**
@@ -56,6 +77,13 @@ public class MainWindow extends AnchorPane {
                 DialogBox.getUserDialog(input, userImage),
                 DialogBox.getCloverDialog(response, cloverImage, responseStyle)
         );
+        scrollToLatestMessage();
         userInput.clear();
+        userInput.requestFocus();
+    }
+
+    /** Scrolls to the newest message after JavaFX updates the chat layout. */
+    private void scrollToLatestMessage() {
+        Platform.runLater(() -> scrollPane.setVvalue(1));
     }
 }

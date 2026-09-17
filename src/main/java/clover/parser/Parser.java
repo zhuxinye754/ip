@@ -83,7 +83,8 @@ public class Parser {
         try {
             return LocalDate.parse(text);
         } catch (DateTimeParseException exception) {
-            throw new CloverException("Please enter dates in the format yyyy-MM-dd.");
+            throw new CloverException("Please enter dates in the format yyyy-MM-dd. Optional: add "
+                    + "/for TUTOREE NAME at the end of the command.");
         }
     }
 

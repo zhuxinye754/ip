@@ -5,7 +5,9 @@ package clover.command;
  */
 public enum CommandResponseStyle {
     STANDARD,
+    ERROR,
     TASK_ADDED,
+    TUTOREE_ADDED,
     TASK_MARKED,
     TASK_DELETED
 }
