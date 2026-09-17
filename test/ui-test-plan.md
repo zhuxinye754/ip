@@ -13,14 +13,18 @@ Each case uses an isolated working directory. A case can include an optional **S
 **Input:**
 
 1. Run `./gradlew run` with JDK 25 selected.
-2. Confirm that an FXML-based JavaFX window appears.
-3. Enter `todo read book` and press Enter. Confirm that the left-aligned reply confirms that the task was added.
+2. Confirm that an FXML-based JavaFX window appears with the Clover header, a subtle pale-sage gradient, and a welcome card.
+3. Enter `todo read book` and press Enter. Confirm that the command and reply use small circular avatars aligned with the bottom of their message bubbles, with the user message on the right and Clover's reply on the left.
 4. Enter `list` and select `Send`. Confirm that the reply lists `read book`, showing that chat commands use Clover's task list.
 5. Add enough messages to exceed the visible area and confirm that it scrolls to the latest response.
-6. Enter `mark 1` and confirm that Clover's reply bubble uses the marked-task style. Enter `delete 1` and confirm it uses the delete-task style.
-7. Resize the window. Confirm that the input field, Send button, and scroll pane remain anchored to their respective edges.
-8. Confirm that the background image, styled message bubbles, and button hover/pressed states appear.
-9. Close the window.
+6. Hover over the chat log and use the mouse wheel or trackpad. Confirm that it scrolls without dragging the side scrollbar, and that dragging the scrollbar can review earlier messages.
+7. Enter an invalid command and confirm that Clover's reply is styled as a distinct red error bubble.
+8. Enter `mark 1` and confirm that Clover's reply bubble uses the success style. Enter `delete 1` and confirm it uses the delete-task style.
+9. Enter `add-tutoree Alice Tan /address 12 Example Road /fee $50/hour` and confirm that the reply uses the distinct lavender tutoree-added style.
+10. Resize the window. Confirm that the input bar and chat log remain anchored, and message bubbles expand while retaining comfortable reading widths.
+11. Confirm that the background has a visible but gentle lavender, sage, and blue gradient and each avatar has a fixed-size circular coloured ring, even beside a long reply.
+12. Confirm that button hover/pressed states do not change the layout.
+13. Close the window.
 
 **Expected output:** Clover opens an FXML-based JavaFX window with the Part 5 responsive, styled chat layout and exits cleanly when the window is closed.
 
@@ -269,7 +273,7 @@ What can I do for you?
 
 ____________________________________________________________
 ____________________________________________________________
-Please use the format: event DESCRIPTION /from START /to END
+Please use the format: event DESCRIPTION /from START /to END. Optional: add /for TUTOREE NAME.
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -309,7 +313,7 @@ What can I do for you?
 
 ____________________________________________________________
 ____________________________________________________________
-The description of a todo cannot be empty.
+Please use the format: todo DESCRIPTION. Optional: add /for TUTOREE NAME.
 ____________________________________________________________
 ____________________________________________________________
 Please enter a valid task number to mark.
@@ -318,16 +322,16 @@ ____________________________________________________________
 Please enter a valid task number to unmark.
 ____________________________________________________________
 ____________________________________________________________
-Please use the format: deadline DESCRIPTION /by DUE DATE
+Please use the format: deadline DESCRIPTION /by DUE DATE. Optional: add /for TUTOREE NAME.
 ____________________________________________________________
 ____________________________________________________________
-Please use the format: event DESCRIPTION /from START /to END
+Please use the format: event DESCRIPTION /from START /to END. Optional: add /for TUTOREE NAME.
 ____________________________________________________________
 ____________________________________________________________
-Please enter dates in the format yyyy-MM-dd.
+Please enter dates in the format yyyy-MM-dd. Optional: add /for TUTOREE NAME at the end of the command.
 ____________________________________________________________
 ____________________________________________________________
-Please enter dates in the format yyyy-MM-dd.
+Please enter dates in the format yyyy-MM-dd. Optional: add /for TUTOREE NAME at the end of the command.
 ____________________________________________________________
 ____________________________________________________________
 Unknown command. Please use: todo, deadline, event, list, find, mark, unmark, delete, add-tutoree, list-tutorees, find-tutoree, or bye.

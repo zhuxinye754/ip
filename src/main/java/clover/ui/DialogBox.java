@@ -14,6 +14,8 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
 
 /**
  * Represents a dialog box containing a speaker's image and message.
@@ -23,6 +25,8 @@ public class DialogBox extends HBox {
     private Label dialog;
     @FXML
     private ImageView displayPicture;
+    @FXML
+    private StackPane avatarContainer;
 
     /**
      * Creates a dialog box with the supplied text and avatar image.
@@ -42,6 +46,9 @@ public class DialogBox extends HBox {
 
         dialog.setText(dialogText);
         displayPicture.setImage(avatarImage);
+        displayPicture.setClip(new Circle(17, 17, 17));
+        avatarContainer.setClip(new Circle(19, 19, 19));
+        dialog.maxWidthProperty().bind(widthProperty().multiply(0.72));
     }
 
     /**
@@ -51,7 +58,8 @@ public class DialogBox extends HBox {
         ObservableList<Node> temporaryChildren = FXCollections.observableArrayList(this.getChildren());
         Collections.reverse(temporaryChildren);
         getChildren().setAll(temporaryChildren);
-        setAlignment(Pos.TOP_LEFT);
+        setAlignment(Pos.BOTTOM_LEFT);
+        getStyleClass().add("clover-dialog");
         dialog.getStyleClass().add("reply-label");
     }
 
@@ -63,7 +71,9 @@ public class DialogBox extends HBox {
      * @return the dialog box to display
      */
     public static DialogBox getUserDialog(String dialogText, Image avatarImage) {
-        return new DialogBox(dialogText, avatarImage);
+        DialogBox dialogBox = new DialogBox(dialogText, avatarImage);
+        dialogBox.getStyleClass().add("user-dialog");
+        return dialogBox;
     }
 
     /**
@@ -97,11 +107,17 @@ public class DialogBox extends HBox {
      */
     private void changeDialogStyle(CommandResponseStyle responseStyle) {
         switch (responseStyle) {
+            case ERROR:
+                dialog.getStyleClass().add("error-label");
+                break;
             case TASK_ADDED:
-                dialog.getStyleClass().add("add-label");
+                dialog.getStyleClass().add("success-label");
+                break;
+            case TUTOREE_ADDED:
+                dialog.getStyleClass().add("tutoree-label");
                 break;
             case TASK_MARKED:
-                dialog.getStyleClass().add("marked-label");
+                dialog.getStyleClass().add("success-label");
                 break;
             case TASK_DELETED:
                 dialog.getStyleClass().add("delete-label");

@@ -110,7 +110,8 @@ class ParserTest {
     void parseDate_invalidDate_exceptionThrown() {
         CloverException exception = assertThrows(CloverException.class, () -> Parser.parseDate("2024-02-30"));
 
-        assertEquals("Please enter dates in the format yyyy-MM-dd.", exception.getMessage());
+        assertEquals("Please enter dates in the format yyyy-MM-dd. Optional: add /for TUTOREE NAME at the end "
+                + "of the command.", exception.getMessage());
     }
 
     @Test

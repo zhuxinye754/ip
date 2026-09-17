@@ -78,6 +78,7 @@ public class Clover {
             responseStyle = command.getResponseStyle();
             command.execute(tasks, tutorees, ui, storage);
         } catch (CloverException exception) {
+            responseStyle = CommandResponseStyle.ERROR;
             ui.showError(exception.getMessage());
         }
         return ui.buildResponse();
