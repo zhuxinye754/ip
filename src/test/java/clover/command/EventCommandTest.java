@@ -45,7 +45,7 @@ class EventCommandTest {
         CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(
                 taskList, new TutoreeList(), ui, storage));
 
-        assertEquals("Please use the format: event DESCRIPTION /from START /to END. Optional: add "
+        assertEquals("To schedule a grove event, use: event DESCRIPTION /from START /to END. Optional: add "
                 + "/for TUTOREE NAME.", exception.getMessage());
         assertTrue(taskList.asList().isEmpty());
     }
@@ -83,7 +83,7 @@ class EventCommandTest {
         CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(
                 taskList, new TutoreeList(), ui, storage));
 
-        assertEquals("Please enter dates in the format yyyy-MM-dd. Optional: add /for TUTOREE NAME at the end "
+        assertEquals("The calendar leaves need a date in yyyy-MM-dd format. Optional: add /for TUTOREE NAME at the end "
                 + "of the command.", exception.getMessage());
         assertTrue(taskList.asList().isEmpty());
     }
@@ -98,7 +98,7 @@ class EventCommandTest {
         CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(
                 taskList, new TutoreeList(), ui, storage));
 
-        assertEquals("Please enter dates in the format yyyy-MM-dd. Optional: add /for TUTOREE NAME at the end "
+        assertEquals("The calendar leaves need a date in yyyy-MM-dd format. Optional: add /for TUTOREE NAME at the end "
                 + "of the command.", exception.getMessage());
         assertTrue(taskList.asList().isEmpty());
     }

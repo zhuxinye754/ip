@@ -66,14 +66,14 @@ public class Ui {
      * Displays an error message.
      */
     public void showError(String message) {
-        showMessage(message);
+        showMessage("The forest path is unclear. " + message);
     }
 
     /**
      * Displays every task currently in the list.
      */
     public void showTaskList(List<Task> tasks) {
-        showMessage("Here are the tasks in your list:");
+        showMessage("The grove has gathered your study quests:");
         showNumberedTasks(tasks);
     }
 
@@ -82,22 +82,22 @@ public class Ui {
      */
     public void showTaskAdded(Task task, int taskCount) {
         showMessages(
-                "Got it. I've added this task: " + task,
-                "Now you have " + taskCount + " tasks in the list.");
+                "A new study quest has taken root: " + task,
+                "The grove now holds " + taskCount + " quest" + (taskCount == 1 ? "" : "s") + ".");
     }
 
     /**
      * Confirms that a task was marked as done.
      */
     public void showTaskMarked(Task task) {
-        showMessage("Nice! I've marked this task as done: " + task);
+        showMessage("The grove celebrates! This quest is complete: " + task);
     }
 
     /**
      * Confirms that a task was marked as not done.
      */
     public void showTaskUnmarked(Task task) {
-        showMessage("OK, I've marked this task as not done yet: " + task);
+        showMessage("This quest needs a little more tending: " + task);
     }
 
     /**
@@ -105,38 +105,38 @@ public class Ui {
      */
     public void showTaskDeleted(Task task, int taskCount) {
         showMessages(
-                "Noted. I've removed this task: " + task,
-                "Now you have " + taskCount + " tasks in the list.");
+                "This trail has been cleared: " + task,
+                "The grove now holds " + taskCount + " quest" + (taskCount == 1 ? "" : "s") + ".");
     }
 
     /**
      * Displays all the tasks whose description contains a given keyword.
      */
     public void showFindResults(List<Task> result) {
-        showMessage("Here are the matching tasks in your list:");
+        showMessage("The grove found these matching quests:");
         showNumberedTasks(result);
     }
 
     /** Confirms that a tutoree was added and shows the updated tutoree count. */
     public void showTutoreeAdded(Tutoree tutoree, int tutoreeCount) {
         showMessages(
-                "Got it. I've added this tutoree:",
+                "A new learning companion has arrived in the grove:",
                 tutoree.getName(),
                 "Address: " + tutoree.getAddress(),
                 "Fee: " + tutoree.getFee(),
-                "Now you have " + tutoreeCount + " tutoree"
-                        + (tutoreeCount == 1 ? "" : "s") + " in the list.");
+                "The grove now knows " + tutoreeCount + " learning companion"
+                        + (tutoreeCount == 1 ? "" : "s") + ".");
     }
 
     /** Displays every tutoree currently in the directory. */
     public void showTutoreeList(List<Tutoree> tutorees) {
-        showMessage("Here are the tutorees in your list:");
+        showMessage("Here are the learning companions in the grove:");
         showNumberedTutorees(tutorees);
     }
 
     /** Displays tutorees whose names match the user's search keyword. */
     public void showTutoreeFindResults(List<Tutoree> tutorees) {
-        showMessage("Here are the matching tutorees in your list:");
+        showMessage("The grove found these matching learning companions:");
         showNumberedTutorees(tutorees);
     }
 
@@ -144,7 +144,7 @@ public class Ui {
      * Displays the closing message.
      */
     public void showGoodbye() {
-        showMessage("Bye. Hope to see you again soon!");
+        showMessage("The grove closes for now. Goodbye, and may your path through the grove be gentle.");
     }
 
     /**

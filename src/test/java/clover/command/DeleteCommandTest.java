@@ -35,7 +35,7 @@ public class DeleteCommandTest {
         CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(
                 taskList, new TutoreeList(), ui, storage));
 
-        assertEquals("Please enter a valid task number to delete.", exception.getMessage());
+        assertEquals("Choose a valid quest number to clear.", exception.getMessage());
 
     }
 

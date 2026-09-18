@@ -30,7 +30,7 @@ public class ToDoCommand extends Command {
         TaskArguments parsedArguments = Parser.parseTaskArguments(description);
         String taskDescription = parsedArguments.getTaskArguments();
         if (taskDescription.isEmpty()) {
-            throw new CloverException("Please use the format: todo DESCRIPTION. Optional: add /for TUTOREE NAME.");
+            throw new CloverException("To plant a task, use: todo DESCRIPTION. Optional: add /for TUTOREE NAME.");
         }
         String tutoreeName = validateTutoreeName(parsedArguments.getTutoreeName(), tutorees);
         tasks.add(new ToDo(taskDescription, tutoreeName));

@@ -25,7 +25,7 @@ public class MarkCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, TutoreeList tutorees, Ui ui, Storage storage) throws CloverException {
-        int taskIndex = parseValidTaskIndex(taskNumber, tasks, "Please enter a valid task number to mark.");
+        int taskIndex = parseValidTaskIndex(taskNumber, tasks, "Choose a valid quest number to complete.");
         Task task = tasks.get(taskIndex);
         task.markAsDone();
         saveTasks(tasks, ui, storage);

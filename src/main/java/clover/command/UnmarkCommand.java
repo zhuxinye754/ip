@@ -25,7 +25,7 @@ public class UnmarkCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, TutoreeList tutorees, Ui ui, Storage storage) throws CloverException {
-        int taskIndex = parseValidTaskIndex(taskNumber, tasks, "Please enter a valid task number to unmark.");
+        int taskIndex = parseValidTaskIndex(taskNumber, tasks, "Choose a valid quest number to tend again.");
         Task task = tasks.get(taskIndex);
         task.markAsUndone();
         saveTasks(tasks, ui, storage);

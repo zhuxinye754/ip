@@ -19,7 +19,7 @@ class UiTest {
 
         ui.showError("Invalid command");
 
-        assertEquals("Invalid command", ui.buildResponse());
+        assertEquals("The forest path is unclear. Invalid command", ui.buildResponse());
     }
 
     @Test
@@ -38,8 +38,8 @@ class UiTest {
 
         ui.showTaskAdded(new ToDo("read book"), 1);
 
-        assertEquals("Got it. I've added this task: [T] [ ] read book" + System.lineSeparator()
-                + "Now you have 1 tasks in the list.", ui.buildResponse());
+        assertEquals("A new study quest has taken root: [T] [ ] read book" + System.lineSeparator()
+                + "The grove now holds 1 quest.", ui.buildResponse());
     }
 
     @Test
@@ -48,7 +48,7 @@ class UiTest {
 
         ui.showTaskList(List.of(new ToDo("read book"), new ToDo("buy groceries")));
 
-        assertEquals("Here are the tasks in your list:" + System.lineSeparator()
+        assertEquals("The grove has gathered your study quests:" + System.lineSeparator()
                 + "1.[T] [ ] read book" + System.lineSeparator()
                 + "2.[T] [ ] buy groceries", ui.buildResponse());
     }
@@ -59,7 +59,7 @@ class UiTest {
 
         ui.showFindResults(List.of(new ToDo("read book"), new ToDo("buy bookcase")));
 
-        assertEquals("Here are the matching tasks in your list:" + System.lineSeparator()
+        assertEquals("The grove found these matching quests:" + System.lineSeparator()
                 + "1.[T] [ ] read book" + System.lineSeparator()
                 + "2.[T] [ ] buy bookcase", ui.buildResponse());
     }

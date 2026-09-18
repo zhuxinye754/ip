@@ -37,7 +37,7 @@ public class AddTutoreeCommand extends Command {
             throw invalidFormat();
         }
         if (tutorees.findExactName(name).isPresent()) {
-            throw new CloverException("A tutoree named \"" + name + "\" already exists.");
+            throw new CloverException("A learning companion named \"" + name + "\" is already in the grove.");
         }
 
         Tutoree tutoree = new Tutoree(name, address, fee);
@@ -53,6 +53,6 @@ public class AddTutoreeCommand extends Command {
 
     /** Creates the shared guidance message for malformed add-tutoree commands. */
     private CloverException invalidFormat() {
-        return new CloverException("Please use the format: add-tutoree NAME /address ADDRESS /fee FEE");
+        return new CloverException("To welcome a learning companion, use: add-tutoree NAME /address ADDRESS /fee FEE");
     }
 }

@@ -47,7 +47,7 @@ class MarkCommandTest {
         CloverException exception = assertThrows(CloverException.class, () -> new MarkCommand(taskNumber).execute(
                 tasks, new TutoreeList(), new Ui(), new Storage(tempDir.resolve("clover.txt"))));
 
-        assertEquals("Please enter a valid task number to mark.", exception.getMessage());
+        assertEquals("Choose a valid quest number to complete.", exception.getMessage());
         assertFalse(task.isDone());
     }
 }
