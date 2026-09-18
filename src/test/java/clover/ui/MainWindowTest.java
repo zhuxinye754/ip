@@ -4,10 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
+import clover.Main;
 import clover.command.CommandResponseStyle;
 
 /** Tests the forest-sprite reactions added to JavaFX command responses. */
 class MainWindowTest {
+
+    @Test
+    void applicationTitle_returnsClover() {
+        assertEquals("Clover", Main.APPLICATION_TITLE);
+    }
 
     @Test
     void addForestSpriteReaction_responseStyles_returnsMatchingShortReaction() {

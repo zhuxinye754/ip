@@ -78,11 +78,25 @@ class ParserTest {
     }
 
     @Test
+    void findSingleMarker_singleAbsentAndEmbeddedMarkers_returnsExpectedIndex() {
+        assertEquals(5, Parser.findSingleMarker("work /by 2026-09-01", "/by"));
+        assertEquals(-1, Parser.findSingleMarker("work /before tomorrow", "/by"));
+        assertEquals(-1, Parser.findSingleMarker("work /bygone tomorrow", "/by"));
+        assertEquals(5, Parser.findSingleMarker("work /by", "/by"));
+    }
+
+    @Test
     void rejectUnknownParameters_unknownParameter_exceptionIdentifiesParameter() {
         CloverException exception = assertThrows(CloverException.class, () ->
                 Parser.rejectUnknownParameters("finish notes /due Friday", "/by", "/for"));
 
         assertEquals("Unknown parameter \"/due\" for this command.", exception.getMessage());
+    }
+
+    @Test
+    void rejectUnknownParameters_allowedAndNonParameterSlashText_noExceptionThrown() {
+        org.junit.jupiter.api.Assertions.assertDoesNotThrow(() ->
+                Parser.rejectUnknownParameters("read /for Alice at /tmp/file", "/for"));
     }
 
     @Test
@@ -117,6 +131,12 @@ class ParserTest {
     }
 
     @Test
+    void isValidTaskNumber_overflowAndExplicitPlus_falseReturned() {
+        assertFalse(Parser.isValidTaskNumber("99999999999999999999", 3));
+        assertTrue(Parser.isValidTaskNumber("+2", 3));
+    }
+
+    @Test
     void parseTaskIndex_validTaskNumber_zeroBasedIndexReturned() {
         assertEquals(0, Parser.parseTaskIndex("1"));
         assertEquals(2, Parser.parseTaskIndex(" 3 "));
@@ -143,6 +163,13 @@ class ParserTest {
     }
 
     @Test
+    void parseDate_nonIsoShapes_formatGuidanceExceptionThrown() {
+        assertThrows(CloverException.class, () -> Parser.parseDate("2026-2-03"));
+        assertThrows(CloverException.class, () -> Parser.parseDate("2026/02/03"));
+        assertThrows(CloverException.class, () -> Parser.parseDate("2025-02-29"));
+    }
+
+    @Test
     void parseTaskArguments_taskLinkedToTutoree_taskAndTutoreeSeparated() throws CloverException {
         TaskArguments arguments = Parser.parseTaskArguments("prepare worksheet /for Alice Tan");
 
@@ -156,5 +183,21 @@ class ParserTest {
                 Parser.parseTaskArguments("prepare worksheet /for"));
 
         assertEquals("Please add a learning companion name after /for.", exception.getMessage());
+    }
+
+    @Test
+    void parseTaskArguments_noMarkerAndRepeatedMarker_returnsTaskOrException() throws CloverException {
+        assertEquals("prepare worksheet", Parser.parseTaskArguments("prepare worksheet").getTaskArguments());
+
+        CloverException exception = assertThrows(CloverException.class, () ->
+                Parser.parseTaskArguments("prepare /for Alice /for Bob"));
+        assertEquals("Use /for only once, at the end of the task command.", exception.getMessage());
+    }
+
+    @Test
+    void parse_everyNoArgumentCommandWithText_exceptionThrown() {
+        assertThrows(CloverException.class, () -> Parser.parse("help now"));
+        assertThrows(CloverException.class, () -> Parser.parse("bye now"));
+        assertThrows(CloverException.class, () -> Parser.parse("list-tutorees now"));
     }
 }

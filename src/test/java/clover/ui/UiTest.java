@@ -1,12 +1,14 @@
 package clover.ui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
 import clover.task.ToDo;
+import clover.tutoree.Tutoree;
 
 /**
  * Tests for UI messages captured for the JavaFX chat interface.
@@ -115,5 +117,68 @@ class UiTest {
         assertEquals("The grove found these matching quests:" + System.lineSeparator()
                 + "1.[T] [ ] read book" + System.lineSeparator()
                 + "2.[T] [ ] buy bookcase", ui.buildResponse());
+    }
+
+    @Test
+    void taskMutationMessages_singularAndPluralCounts_displayExpectedText() {
+        Ui ui = new Ui();
+        ToDo task = new ToDo("read book");
+
+        ui.showTaskMarked(task);
+        ui.showTaskUnmarked(task);
+        ui.showTaskDeleted(task, 2);
+
+        assertEquals("The grove celebrates! This quest is complete: [T] [ ] read book" + System.lineSeparator()
+                + "This quest needs a little more tending: [T] [ ] read book" + System.lineSeparator()
+                + "This trail has been cleared: [T] [ ] read book" + System.lineSeparator()
+                + "The grove now holds 2 quests.", ui.buildResponse());
+    }
+
+    @Test
+    void tutoreeMessages_emptyAndPopulatedLists_displayExpectedText() {
+        Ui ui = new Ui();
+        Tutoree alice = new Tutoree("Alice Tan", "12 Example Road", "50/hour");
+
+        ui.showTutoreeAdded(alice, 1);
+        assertEquals("A new learning companion has arrived in the grove:" + System.lineSeparator()
+                + "Alice Tan" + System.lineSeparator() + "Address: 12 Example Road" + System.lineSeparator()
+                + "Fee: 50/hour" + System.lineSeparator() + "The grove now knows 1 learning companion.",
+                ui.buildResponse());
+        ui.clearResponse();
+        ui.showTutoreeList(List.of(alice));
+        assertEquals("Here are the learning companions in the grove:" + System.lineSeparator()
+                + "1. Alice Tan" + System.lineSeparator() + "   Address: 12 Example Road" + System.lineSeparator()
+                + "   Fee: 50/hour", ui.buildResponse());
+        ui.clearResponse();
+        ui.showTutoreeFindResults(List.of());
+        assertEquals("No matching learning companions found.", ui.buildResponse());
+    }
+
+    @Test
+    void showGoodbye_responseContainsFarewell() {
+        Ui ui = new Ui();
+
+        ui.showGoodbye();
+
+        assertEquals("The grove closes for now. Goodbye, and may your path through the grove be gentle.",
+                ui.buildResponse());
+    }
+
+    @Test
+    void welcomeDividerAndEmptySearches_displayExpectedMessages() {
+        Ui ui = new Ui();
+
+        ui.showWelcome();
+        assertTrue(ui.buildResponse().contains("Hello! I'm Clover."));
+        ui.clearResponse();
+        ui.showLine();
+        ui.showFindResults(List.of());
+        ui.showTutoreeList(List.of());
+        ui.showTutoreeAdded(new Tutoree("Alice", "Home", "50"), 2);
+
+        assertTrue(ui.buildResponse().startsWith("____________________________________________________________"));
+        assertTrue(ui.buildResponse().contains("No matching tasks found."));
+        assertTrue(ui.buildResponse().contains("There are no learning companions in the grove yet."));
+        assertTrue(ui.buildResponse().endsWith("The grove now knows 2 learning companions."));
     }
 }

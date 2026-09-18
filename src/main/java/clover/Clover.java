@@ -26,8 +26,15 @@ public class Clover {
      * Creates Clover and loads its previously saved task list.
      */
     public Clover() {
-        storage = new Storage();
-        ui = new Ui();
+        this(new Storage(), new Ui());
+    }
+
+    /**
+     * Creates Clover with its collaborators, primarily to isolate automated integration tests.
+     */
+    Clover(Storage storage, Ui ui) {
+        this.storage = storage;
+        this.ui = ui;
 
         try {
             if (!storage.acquireApplicationLock()) {
