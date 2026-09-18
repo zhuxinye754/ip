@@ -51,4 +51,17 @@ class ToDoCommandTest {
         assertEquals("do cooking", todo.getDescription());
         assertFalse(todo.isDone());
     }
+
+    @Test
+    void execute_duplicateDescription_exceptionThrownWithoutAddingSecondTask() throws CloverException {
+        Storage storage = new Storage(tempDir.resolve("clover.txt"));
+        TaskList taskList = new TaskList();
+        new ToDoCommand("do cooking").execute(taskList, new TutoreeList(), new Ui(), storage);
+
+        CloverException exception = assertThrows(CloverException.class, () -> new ToDoCommand("do cooking")
+                .execute(taskList, new TutoreeList(), new Ui(), storage));
+
+        assertEquals("That study quest is already in the grove.", exception.getMessage());
+        assertEquals(1, taskList.size());
+    }
 }

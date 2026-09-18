@@ -14,13 +14,13 @@ Each case uses an isolated working directory. A case can include an optional **S
 
 1. Run `./gradlew run` with JDK 25 selected.
 2. Confirm that an FXML-based JavaFX window appears with the Clover header, a gentle lavender, sage, and blue gradient, and a welcome card featuring Clover's original forest-sprite avatar.
-3. Enter `todo read book` and press Enter. Confirm that the command and reply use small circular avatars aligned with the bottom of their message bubbles, with the user message on the right and Clover's forest-sprite reply on the left. Confirm that Clover says the new study quest has "taken root."
+3. Press Enter with an empty input and with an input containing only spaces. Confirm that neither creates a user message or a Clover reply. Then enter `todo read book` and press Enter. Confirm that the command and reply use small circular avatars aligned with the bottom of their message bubbles, with the user message on the right and Clover's forest-sprite reply on the left. Confirm that Clover says the new study quest has "taken root."
 4. Enter `list` and select `Send`. Confirm that Clover says "The grove has gathered these for you," then lists `read book`, showing that chat commands use Clover's task list.
 5. Add enough messages to exceed the visible area and confirm that it scrolls to the latest response.
 6. Hover over the chat log and use the mouse wheel or trackpad. Confirm that it scrolls without dragging the side scrollbar, and that dragging the scrollbar can review earlier messages.
 7. Enter an invalid command and confirm that Clover's reply begins with "The forest path is unclear." and is styled as a distinct red error bubble.
 8. Enter `mark 1` and confirm that Clover's "The grove celebrates!" reply bubble uses the success style. Enter `delete 1` and confirm its "This trail has been cleared." reply uses the delete-task style.
-9. Enter `add-tutoree Alice Tan /address 12 Example Road /fee $50/hour` and confirm that Clover's study-quest reply uses the distinct lavender tutoree-added style.
+9. Enter `add-tutoree Alice Tan /address 12 Example Road /fee 50` and confirm that Clover's study-quest reply uses the distinct lavender tutoree-added style.
 10. Resize the window. Confirm that the input bar and chat log remain anchored, and message bubbles expand while retaining comfortable reading widths.
 11. Confirm that the background has a visible but gentle lavender, sage, and blue gradient and each avatar has a fixed-size circular coloured ring, even beside a long reply.
 12. Confirm that button hover/pressed states do not change the layout.
@@ -103,6 +103,7 @@ T | 0 | buy groceries
 **Input:**
 ```text
 find BOOK
+find absent
 bye
 ```
 
@@ -124,6 +125,41 @@ ____________________________________________________________
 The grove found these matching quests:
 1.[T] [X] read book
 2.[D] [X] return book (by: Jun 6 2026)
+____________________________________________________________
+____________________________________________________________
+No matching tasks found.
+____________________________________________________________
+____________________________________________________________
+The grove closes for now. Goodbye, and may your path through the grove be gentle.
+____________________________________________________________
+```
+
+## Test case: Reject unknown parameters
+
+**Aim:** Verify that an unsupported slash parameter is identified directly instead of being treated as task text.
+
+**Input:**
+```text
+deadline submit report /due Friday
+bye
+```
+
+**Expected output:**
+```text
+____________________________________________________________
+  _____    _         ____    __      __   ______    _____
+ / ____|  | |       / __ \   \ \    / /  |  ____|  |  __ \
+| |       | |      | |  | |   \ \  / /   | |__     | |__) |
+| |       | |      | |  | |    \ \/ /    |  __|    |  _  /
+| |____   | |____  | |  | |     \  /     | |____   | | \ \
+ \_____|  |______|  \____/       \/      |______|  |_|  \_\
+
+Hello! I'm Clover.
+What can I do for you?
+
+____________________________________________________________
+____________________________________________________________
+The forest path is unclear. Unknown parameter "/due" for this command.
 ____________________________________________________________
 ____________________________________________________________
 The grove closes for now. Goodbye, and may your path through the grove be gentle.
@@ -189,7 +225,7 @@ bye
 
 **Expected output:**
 ```text
-The forest path is unclear. The saved quest journal could not be opened. Starting with an empty grove.
+The forest path is unclear. The saved quest journal could not be opened. A backup was kept. Starting with an empty grove.
 ____________________________________________________________
   _____    _         ____    __      __   ______    _____
  / ____|  | |       / __ \   \ \    / /  |  ____|  |  __ \
@@ -203,7 +239,7 @@ What can I do for you?
 
 ____________________________________________________________
 ____________________________________________________________
-The grove has gathered your study quests:
+There are no study quests in the grove yet.
 ____________________________________________________________
 ____________________________________________________________
 The grove closes for now. Goodbye, and may your path through the grove be gentle.
@@ -328,13 +364,13 @@ ____________________________________________________________
 The forest path is unclear. To schedule a grove event, use: event DESCRIPTION /from START /to END. Optional: add /for TUTOREE NAME.
 ____________________________________________________________
 ____________________________________________________________
-The forest path is unclear. The calendar leaves need a date in yyyy-MM-dd format. Optional: add /for TUTOREE NAME at the end of the command.
+The forest path is unclear. Enter a date in yyyy-MM-dd format, for example 2026-02-28.
 ____________________________________________________________
 ____________________________________________________________
-The forest path is unclear. The calendar leaves need a date in yyyy-MM-dd format. Optional: add /for TUTOREE NAME at the end of the command.
+The forest path is unclear. Enter a date in yyyy-MM-dd format, for example 2026-02-28.
 ____________________________________________________________
 ____________________________________________________________
-The forest path is unclear. That command is not a forest path I know. Try: todo, deadline, event, list, find, mark, unmark, delete, add-tutoree, list-tutorees, find-tutoree, or bye.
+The forest path is unclear. That command is not a forest path I know. Type "help" to view the supported commands.
 ____________________________________________________________
 ____________________________________________________________
 The forest path is unclear. The grove needs a command or a quest description.
@@ -350,10 +386,10 @@ ____________________________________________________________
 
 **Input:**
 ```text
-add-tutoree Alice Tan /address 12 Example Road /fee $50/hour
+add-tutoree Alice Tan /address 12 Example Road /fee 50
 todo prepare worksheet /for Alice Tan
 deadline collect fee /by 2026-09-30 /for alice tan
-event lesson /from 2026-09-20 /to 2026-09-20 /for Alice Tan
+event lesson /from 2026-09-20 /to 2026-09-21 /for Alice Tan
 list-tutorees
 find-tutoree ALI
 list
@@ -378,7 +414,7 @@ ____________________________________________________________
 A new learning companion has arrived in the grove:
 Alice Tan
 Address: 12 Example Road
-Fee: $50/hour
+Fee: 50
 The grove now knows 1 learning companion.
 ____________________________________________________________
 ____________________________________________________________
@@ -390,26 +426,26 @@ A new study quest has taken root: [D] [ ] collect fee (by: Sep 30 2026) (for: Al
 The grove now holds 2 quests.
 ____________________________________________________________
 ____________________________________________________________
-A new study quest has taken root: [E] [ ] lesson (from: Sep 20 2026 to: Sep 20 2026) (for: Alice Tan)
+A new study quest has taken root: [E] [ ] lesson (from: Sep 20 2026 to: Sep 21 2026) (for: Alice Tan)
 The grove now holds 3 quests.
 ____________________________________________________________
 ____________________________________________________________
 Here are the learning companions in the grove:
 1. Alice Tan
    Address: 12 Example Road
-   Fee: $50/hour
+   Fee: 50
 ____________________________________________________________
 ____________________________________________________________
 The grove found these matching learning companions:
 1. Alice Tan
    Address: 12 Example Road
-   Fee: $50/hour
+   Fee: 50
 ____________________________________________________________
 ____________________________________________________________
 The grove has gathered your study quests:
 1.[T] [ ] prepare worksheet (for: Alice Tan)
 2.[D] [ ] collect fee (by: Sep 30 2026) (for: Alice Tan)
-3.[E] [ ] lesson (from: Sep 20 2026 to: Sep 20 2026) (for: Alice Tan)
+3.[E] [ ] lesson (from: Sep 20 2026 to: Sep 21 2026) (for: Alice Tan)
 ____________________________________________________________
 ____________________________________________________________
 The grove closes for now. Goodbye, and may your path through the grove be gentle.
@@ -420,12 +456,12 @@ ____________________________________________________________
 ```text
 T | 0 | prepare worksheet | Alice Tan
 D | 0 | collect fee | 2026-09-30 | Alice Tan
-E | 0 | lesson | 2026-09-20 | 2026-09-20 | Alice Tan
+E | 0 | lesson | 2026-09-20 | 2026-09-21 | Alice Tan
 ```
 
 **Expected saved tutoree data:**
 ```text
-S | Alice Tan | 12 Example Road | $50/hour
+S | Alice Tan | 12 Example Road | 50
 ```
 
 ## Test case: Reject an unknown linked tutoree
@@ -454,6 +490,72 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
 The forest path is unclear. No learning companion named "Alice Tan" is in the grove. Add them before linking a quest.
+____________________________________________________________
+____________________________________________________________
+The grove closes for now. Goodbye, and may your path through the grove be gentle.
+____________________________________________________________
+```
+
+## Test case: Display command help
+
+**Aim:** Verify that Clover lists every supported command and its format.
+
+**Input:**
+```text
+help
+bye
+```
+
+**Expected output:**
+```text
+____________________________________________________________
+  _____    _         ____    __      __   ______    _____
+ / ____|  | |       / __ \   \ \    / /  |  ____|  |  __ \
+| |       | |      | |  | |   \ \  / /   | |__     | |__) |
+| |       | |      | |  | |    \ \/ /    |  __|    |  _  /
+| |____   | |____  | |  | |     \  /     | |____   | | \ \
+ \_____|  |______|  \____/       \/      |______|  |_|  \_\
+
+Hello! I'm Clover.
+What can I do for you?
+
+____________________________________________________________
+____________________________________________________________
+How to use Clover
+Type lowercase words exactly. Replace <UPPERCASE> placeholders with your details.
+[Square brackets show optional parts; do not type the brackets when writing the command.]
+
+TASKS
+• todo <DESCRIPTION> [/for <NAME>]
+  Add a task. /for links it to a tutoree.
+• deadline <DESCRIPTION> /by <DATE> [/for <NAME>]
+  Add a deadline. DATE uses yyyy-MM-dd.
+• event <DESCRIPTION> /from <DATE> /to <DATE> [/for <NAME>]
+  Add an event. The end date must be after the start date.
+• list
+  Show all tasks.
+• find <KEYWORD>
+  Search task descriptions.
+• mark <NUMBER>
+  Complete a task.
+• unmark <NUMBER>
+  Reopen a completed task.
+• delete <NUMBER>
+  Remove a task.
+
+TUTOREE DIRECTORY
+• add-tutoree <NAME> /address <ADDRESS> /fee <AMOUNT>[/RATE]
+  Add a tutoree. RATE may be /hour, /session, /lesson, or /month.
+• list-tutorees
+  Show all tutorees.
+• find-tutoree <KEYWORD>
+  Search tutoree names.
+
+OTHER
+• help
+  Show this command guide.
+• bye
+  Close Clover.
 ____________________________________________________________
 ____________________________________________________________
 The grove closes for now. Goodbye, and may your path through the grove be gentle.

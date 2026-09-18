@@ -28,12 +28,12 @@ class TutoreeTaskLinkTest {
         new ToDoCommand("prepare worksheet /for alice tan").execute(tasks, tutorees, new Ui(), storage());
         new DeadlineCommand("collect fee /by 2026-09-30 /for Alice Tan")
                 .execute(tasks, tutorees, new Ui(), storage());
-        new EventCommand("lesson /from 2026-09-20 /to 2026-09-20 /for Alice Tan")
+        new EventCommand("lesson /from 2026-09-20 /to 2026-09-21 /for Alice Tan")
                 .execute(tasks, tutorees, new Ui(), storage());
 
         assertEquals("[T] [ ] prepare worksheet (for: Alice Tan)", tasks.get(0).toString());
         assertEquals("[D] [ ] collect fee (by: Sep 30 2026) (for: Alice Tan)", tasks.get(1).toString());
-        assertEquals("[E] [ ] lesson (from: Sep 20 2026 to: Sep 20 2026) (for: Alice Tan)",
+        assertEquals("[E] [ ] lesson (from: Sep 20 2026 to: Sep 21 2026) (for: Alice Tan)",
                 tasks.get(2).toString());
     }
 
@@ -51,7 +51,7 @@ class TutoreeTaskLinkTest {
 
     private TutoreeList tutoreesWithAlice() {
         TutoreeList tutorees = new TutoreeList();
-        tutorees.add(new Tutoree("Alice Tan", "12 Example Road", "$50/hour"));
+        tutorees.add(new Tutoree("Alice Tan", "12 Example Road", "50"));
         return tutorees;
     }
 

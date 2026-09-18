@@ -69,10 +69,54 @@ public class Ui {
         showMessage("The forest path is unclear. " + message);
     }
 
+    /** Displays a concise reference for every command accepted by Clover. */
+    public void showHelp() {
+        showMessages(
+                "How to use Clover",
+                "Type lowercase words exactly. Replace <UPPERCASE> placeholders with your details.",
+                "[Square brackets show optional parts; do not type the brackets when writing the command.]",
+                "",
+                "TASKS",
+                "• todo <DESCRIPTION> [/for <NAME>]",
+                "  Add a task. /for links it to a tutoree.",
+                "• deadline <DESCRIPTION> /by <DATE> [/for <NAME>]",
+                "  Add a deadline. DATE uses yyyy-MM-dd.",
+                "• event <DESCRIPTION> /from <DATE> /to <DATE> [/for <NAME>]",
+                "  Add an event. The end date must be after the start date.",
+                "• list",
+                "  Show all tasks.",
+                "• find <KEYWORD>",
+                "  Search task descriptions.",
+                "• mark <NUMBER>",
+                "  Complete a task.",
+                "• unmark <NUMBER>",
+                "  Reopen a completed task.",
+                "• delete <NUMBER>",
+                "  Remove a task.",
+                "",
+                "TUTOREE DIRECTORY",
+                "• add-tutoree <NAME> /address <ADDRESS> /fee <AMOUNT>[/RATE]",
+                "  Add a tutoree. RATE may be /hour, /session, /lesson, or /month.",
+                "• list-tutorees",
+                "  Show all tutorees.",
+                "• find-tutoree <KEYWORD>",
+                "  Search tutoree names.",
+                "",
+                "OTHER",
+                "• help",
+                "  Show this command guide.",
+                "• bye",
+                "  Close Clover.");
+    }
+
     /**
      * Displays every task currently in the list.
      */
     public void showTaskList(List<Task> tasks) {
+        if (tasks.isEmpty()) {
+            showMessage("There are no study quests in the grove yet.");
+            return;
+        }
         showMessage("The grove has gathered your study quests:");
         showNumberedTasks(tasks);
     }
@@ -113,6 +157,10 @@ public class Ui {
      * Displays all the tasks whose description contains a given keyword.
      */
     public void showFindResults(List<Task> result) {
+        if (result.isEmpty()) {
+            showMessage("No matching tasks found.");
+            return;
+        }
         showMessage("The grove found these matching quests:");
         showNumberedTasks(result);
     }
@@ -130,12 +178,20 @@ public class Ui {
 
     /** Displays every tutoree currently in the directory. */
     public void showTutoreeList(List<Tutoree> tutorees) {
+        if (tutorees.isEmpty()) {
+            showMessage("There are no learning companions in the grove yet.");
+            return;
+        }
         showMessage("Here are the learning companions in the grove:");
         showNumberedTutorees(tutorees);
     }
 
     /** Displays tutorees whose names match the user's search keyword. */
     public void showTutoreeFindResults(List<Tutoree> tutorees) {
+        if (tutorees.isEmpty()) {
+            showMessage("No matching learning companions found.");
+            return;
+        }
         showMessage("The grove found these matching learning companions:");
         showNumberedTutorees(tutorees);
     }

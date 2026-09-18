@@ -35,4 +35,10 @@ public class Main extends Application {
             throw new IllegalStateException("Unable to load Clover's main window.", exception);
         }
     }
+
+    /** Releases Clover's data lock when the JavaFX application exits. */
+    @Override
+    public void stop() {
+        clover.close();
+    }
 }

@@ -37,6 +37,20 @@ class MarkCommandTest {
         assertTrue(storage.load().getFirst().isDone());
     }
 
+    @Test
+    void execute_completedTask_exceptionThrownWithoutSavingAgain() {
+        ToDo task = new ToDo("read book");
+        task.markAsDone();
+        TaskList tasks = new TaskList();
+        tasks.add(task);
+
+        CloverException exception = assertThrows(CloverException.class, () -> new MarkCommand("1").execute(
+                tasks, new TutoreeList(), new Ui(), new Storage(tempDir.resolve("clover.txt"))));
+
+        assertEquals("That study quest is already complete.", exception.getMessage());
+        assertTrue(task.isDone());
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {"", "0", "2", "one"})
     void execute_invalidTaskNumber_exceptionThrownWithoutChangingTask(String taskNumber) {

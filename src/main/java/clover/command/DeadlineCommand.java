@@ -31,9 +31,10 @@ public class DeadlineCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, TutoreeList tutorees, Ui ui, Storage storage) throws CloverException {
+        Parser.rejectUnknownParameters(arguments, "/by", "/for");
         TaskArguments parsedArguments = Parser.parseTaskArguments(arguments);
         String taskArguments = parsedArguments.getTaskArguments();
-        int markerIndex = taskArguments.indexOf(DEADLINE_MARKER);
+        int markerIndex = Parser.findSingleMarker(taskArguments, DEADLINE_MARKER);
         if (markerIndex <= 0) {
             throw invalidFormat();
         }
@@ -46,9 +47,18 @@ public class DeadlineCommand extends Command {
 
         LocalDate date = Parser.parseDate(dueDate);
         String tutoreeName = validateTutoreeName(parsedArguments.getTutoreeName(), tutorees);
-        tasks.add(new Deadline(description, date, tutoreeName));
-        saveTasks(tasks, ui, storage);
-        ui.showTaskAdded(tasks.getLast(), tasks.size());
+        Deadline task = new Deadline(description, date, tutoreeName);
+        if (tasks.containsEquivalent(task)) {
+            throw new CloverException("That study quest is already in the grove.");
+        }
+        tasks.add(task);
+        try {
+            saveTasks(tasks, storage);
+        } catch (CloverException exception) {
+            tasks.remove(tasks.size() - 1);
+            throw exception;
+        }
+        ui.showTaskAdded(task, tasks.size());
     }
 
     @Override

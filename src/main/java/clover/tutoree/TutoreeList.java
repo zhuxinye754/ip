@@ -28,6 +28,11 @@ public class TutoreeList {
         tutorees.add(tutoree);
     }
 
+    /** Removes and returns the most recently added tutoree. */
+    public Tutoree removeLast() {
+        return tutorees.removeLast();
+    }
+
     /** Returns a tutoree whose name matches the supplied name, ignoring case. */
     public Optional<Tutoree> findExactName(String name) {
         return tutorees.stream()

@@ -27,8 +27,19 @@ public class MarkCommand extends Command {
     public void execute(TaskList tasks, TutoreeList tutorees, Ui ui, Storage storage) throws CloverException {
         int taskIndex = parseValidTaskIndex(taskNumber, tasks, "Choose a valid quest number to complete.");
         Task task = tasks.get(taskIndex);
+        if (task.isDone()) {
+            throw new CloverException("That study quest is already complete.");
+        }
+        boolean wasDone = task.isDone();
         task.markAsDone();
-        saveTasks(tasks, ui, storage);
+        try {
+            saveTasks(tasks, storage);
+        } catch (CloverException exception) {
+            if (!wasDone) {
+                task.markAsUndone();
+            }
+            throw exception;
+        }
         ui.showTaskMarked(task);
     }
 

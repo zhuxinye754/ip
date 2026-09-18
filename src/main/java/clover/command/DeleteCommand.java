@@ -27,7 +27,12 @@ public class DeleteCommand extends Command {
     public void execute(TaskList tasks, TutoreeList tutorees, Ui ui, Storage storage) throws CloverException {
         int taskIndex = parseValidTaskIndex(taskNumber, tasks, "Choose a valid quest number to clear.");
         Task deletedTask = tasks.remove(taskIndex);
-        saveTasks(tasks, ui, storage);
+        try {
+            saveTasks(tasks, storage);
+        } catch (CloverException exception) {
+            tasks.add(taskIndex, deletedTask);
+            throw exception;
+        }
         ui.showTaskDeleted(deletedTask, tasks.size());
     }
 
