@@ -63,4 +63,29 @@ class TaskListTest {
         assertTrue(taskList.containsEquivalent(new ToDo("  READ  BOOK  ", " alice ")));
         assertFalse(taskList.containsEquivalent(new Deadline("read book", LocalDate.of(2026, 9, 1), "Alice")));
     }
+
+    @Test
+    void addAndRemove_indexedOperations_preserveExpectedOrder() {
+        TaskList taskList = new TaskList();
+        taskList.add(new ToDo("first"));
+        taskList.add(0, new ToDo("zeroth"));
+
+        assertEquals("zeroth", taskList.remove(0).getDescription());
+        assertEquals("first", taskList.get(0).getDescription());
+        assertThrows(IndexOutOfBoundsException.class, () -> taskList.get(1));
+        assertThrows(IndexOutOfBoundsException.class, () -> taskList.remove(1));
+    }
+
+    @Test
+    void containsEquivalent_eventWithChangedDatesOrTutoree_falseReturned() {
+        TaskList taskList = new TaskList();
+        taskList.add(new Event("lesson", LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 2), "Alice"));
+
+        assertFalse(taskList.containsEquivalent(
+                new Event("lesson", LocalDate.of(2026, 9, 3), LocalDate.of(2026, 9, 4), "Alice")));
+        assertFalse(taskList.containsEquivalent(
+                new Event("lesson", LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 3), "Alice")));
+        assertTrue(taskList.containsEquivalent(
+                new Event(" lesson ", LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 2), " alice ")));
+    }
 }

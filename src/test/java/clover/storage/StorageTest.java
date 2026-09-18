@@ -290,6 +290,131 @@ class StorageTest {
         }
     }
 
+    @Test
+    void saveAndLoad_escapedTutoreeFields_roundTripsEveryField() throws IOException {
+        Path taskFile = tempDir.resolve("tasks.txt");
+        Path tutoreeFile = tempDir.resolve("tutorees.txt");
+        Storage storage = new Storage(taskFile, tutoreeFile);
+        storage.save(List.of(new ToDo("read | revise \\ notes", "Ali|ce\\Tan")));
+        storage.saveTutorees(List.of(new Tutoree("Ali|ce\\Tan", "Block | A", "50/hour")));
+
+        assertEquals("Ali|ce\\Tan", storage.load().getFirst().getTutoreeName());
+        Tutoree tutoree = storage.loadTutorees().getFirst();
+        assertEquals("Ali|ce\\Tan", tutoree.getName());
+        assertEquals("Block | A", tutoree.getAddress());
+    }
+
+    @Test
+    void tutoreeStorage_missingAndDirectoryPaths_returnsEmptyOrFailsClearly() throws IOException {
+        Path taskFile = tempDir.resolve("tasks.txt");
+        Path tutoreePath = tempDir.resolve("tutorees");
+        Storage missingStorage = new Storage(taskFile, tutoreePath);
+        assertTrue(missingStorage.loadTutorees().isEmpty());
+        Files.createDirectory(tutoreePath);
+
+        IOException loadException = assertThrows(IOException.class, missingStorage::loadTutorees);
+        assertEquals("The tutoree data path is not a regular file.", loadException.getMessage());
+        IOException saveException = assertThrows(IOException.class, () -> missingStorage.saveTutorees(List.of()));
+        assertEquals("The tutoree data path is a directory.", saveException.getMessage());
+    }
+
+    @Test
+    void load_malformedTutoreeRecords_exceptionIdentifiesReason() throws IOException {
+        Path tutoreeFile = tempDir.resolve("tutorees.txt");
+        Storage storage = new Storage(tempDir.resolve("tasks.txt"), tutoreeFile);
+        Files.write(tutoreeFile, List.of("Q | Alice | Home | 50"));
+        assertEquals("Invalid tutoree data on line 1: unknown record type.",
+                assertThrows(IOException.class, storage::loadTutorees).getMessage());
+        Files.write(tutoreeFile, List.of("S | Alice | Home"));
+        assertEquals("Invalid tutoree data on line 1: wrong number of fields.",
+                assertThrows(IOException.class, storage::loadTutorees).getMessage());
+        Files.write(tutoreeFile, List.of("S | Alice | Home | 50\\x"));
+        assertEquals("Invalid task data on line 1: invalid escape sequence.",
+                assertThrows(IOException.class, storage::loadTutorees).getMessage());
+    }
+
+    @Test
+    void load_taskWithBlankOptionalTutoreeName_exceptionIdentifiesLine() throws IOException {
+        Path dataFile = writeSavedData("T | 0 | read book |   ");
+
+        IOException exception = assertThrows(IOException.class, () -> new Storage(dataFile).load());
+
+        assertEquals("Invalid task data on line 1: blank tutoree name.", exception.getMessage());
+    }
+
+    @Test
+    void disableWriting_taskAndTutoreeSaves_failWithLockMessage() {
+        Storage storage = new Storage(tempDir.resolve("tasks.txt"), tempDir.resolve("tutorees.txt"));
+        storage.disableWriting();
+
+        assertThrows(IOException.class, () -> storage.save(List.of()));
+        assertThrows(IOException.class, () -> storage.saveTutorees(List.of()));
+    }
+
+    @Test
+    void backupTutoreeData_existingFile_backupHasOriginalContents() throws IOException {
+        Path taskFile = tempDir.resolve("tasks.txt");
+        Path tutoreeFile = tempDir.resolve("tutorees.txt");
+        Files.write(tutoreeFile, List.of("S | Alice | Home | 50"));
+
+        new Storage(taskFile, tutoreeFile).backupTutoreeData();
+
+        assertEquals(Files.readAllLines(tutoreeFile), Files.readAllLines(tempDir.resolve("tutorees.txt.bak")));
+    }
+
+    @Test
+    void backup_missingTaskAndTutoreeFiles_doesNothing() throws IOException {
+        Storage storage = new Storage(tempDir.resolve("tasks.txt"), tempDir.resolve("tutorees.txt"));
+
+        storage.backupTaskData();
+        storage.backupTutoreeData();
+
+        assertFalse(Files.exists(tempDir.resolve("tasks.txt.bak")));
+        assertFalse(Files.exists(tempDir.resolve("tutorees.txt.bak")));
+    }
+
+    @Test
+    void save_nullCollectionsOrElements_assertionErrorThrown() {
+        Storage storage = new Storage(tempDir.resolve("tasks.txt"), tempDir.resolve("tutorees.txt"));
+
+        assertThrows(AssertionError.class, () -> storage.save(null));
+        assertThrows(AssertionError.class, () -> storage.save(java.util.Collections.singletonList(null)));
+        assertThrows(AssertionError.class, () -> storage.saveTutorees(null));
+        assertThrows(AssertionError.class, () -> storage.saveTutorees(java.util.Collections.singletonList(null)));
+    }
+
+    @Test
+    void loadTutorees_blankLinesBlankFieldsAndUnfinishedEscape_handledAsExpected() throws IOException {
+        Path tutoreeFile = tempDir.resolve("tutorees.txt");
+        Storage storage = new Storage(tempDir.resolve("tasks.txt"), tutoreeFile);
+        Files.write(tutoreeFile, List.of("", "  ", "S | 李明 | Home | 50"));
+        assertEquals("李明", storage.loadTutorees().getFirst().getName());
+
+        Files.write(tutoreeFile, List.of("S | Alice |   | 50"));
+        assertEquals("Invalid tutoree data on line 1: blank required field.",
+                assertThrows(IOException.class, storage::loadTutorees).getMessage());
+        Files.write(tutoreeFile, List.of("S | Alice | Home | 50\\"));
+        assertEquals("Invalid task data on line 1: unfinished escape sequence.",
+                assertThrows(IOException.class, storage::loadTutorees).getMessage());
+    }
+
+    @Test
+    void releaseApplicationLock_secondStorageCanAcquireAndSave() throws IOException {
+        Path taskFile = tempDir.resolve("tasks.txt");
+        Storage firstStorage = new Storage(taskFile);
+        Storage secondStorage = new Storage(taskFile);
+
+        assertTrue(firstStorage.acquireApplicationLock());
+        firstStorage.releaseApplicationLock();
+        assertTrue(secondStorage.acquireApplicationLock());
+        try {
+            secondStorage.save(List.of(new ToDo("read book")));
+            assertEquals(List.of("T | 0 | read book"), Files.readAllLines(taskFile));
+        } finally {
+            secondStorage.releaseApplicationLock();
+        }
+    }
+
     private Path writeSavedData(String... lines) throws IOException {
         Path dataFile = tempDir.resolve("clover.txt");
         Files.write(dataFile, java.util.List.of(lines));
