@@ -13,7 +13,7 @@ Each case uses an isolated working directory. A case can include an optional **S
 **Input:**
 
 1. Run `./gradlew run` with JDK 25 selected.
-2. Confirm that an FXML-based JavaFX window appears with the Clover header, a gentle lavender, sage, and blue gradient, and a welcome card featuring Clover's original forest-sprite avatar.
+2. Confirm that an FXML-based JavaFX window appears with **Clover** in both its operating-system title bar and its header, a gentle lavender, sage, and blue gradient, and a welcome card featuring Clover's original forest-sprite avatar.
 3. Press Enter with an empty input and with an input containing only spaces. Confirm that neither creates a user message or a Clover reply. Then enter `todo read book` and press Enter. Confirm that the command and reply use small circular avatars aligned with the bottom of their message bubbles, with the user message on the right and Clover's forest-sprite reply on the left. Confirm that Clover says the new study quest has "taken root."
 4. Enter `list` and select `Send`. Confirm that Clover says "The grove has gathered these for you," then lists `read book`, showing that chat commands use Clover's task list.
 5. Add enough messages to exceed the visible area and confirm that it scrolls to the latest response.
