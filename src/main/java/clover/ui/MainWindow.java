@@ -2,6 +2,7 @@ package clover.ui;
 
 import clover.Clover;
 import clover.command.CommandResponseStyle;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -11,11 +12,14 @@ import javafx.scene.image.Image;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 /**
  * Controller for the main GUI.
  */
 public class MainWindow extends AnchorPane {
+    private static final Duration EXIT_DELAY = Duration.millis(700);
+
     @FXML
     private ScrollPane scrollPane;
     @FXML
@@ -85,7 +89,20 @@ public class MainWindow extends AnchorPane {
         );
         scrollToLatestMessage();
         userInput.clear();
-        userInput.requestFocus();
+        if (clover.isExitRequested()) {
+            closeAfterFarewell();
+        } else {
+            userInput.requestFocus();
+        }
+    }
+
+    /** Disables further input and closes Clover after its farewell is visible briefly. */
+    private void closeAfterFarewell() {
+        userInput.setDisable(true);
+        sendButton.setDisable(true);
+        PauseTransition exitDelay = new PauseTransition(EXIT_DELAY);
+        exitDelay.setOnFinished(event -> Platform.exit());
+        exitDelay.play();
     }
 
     /**
