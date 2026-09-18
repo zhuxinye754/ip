@@ -14,7 +14,7 @@ public class FindTutoreeCommand extends Command {
     public FindTutoreeCommand(String arguments) throws CloverException {
         keyword = arguments.trim();
         if (keyword.isEmpty()) {
-            throw new CloverException("Please enter a tutoree name to search for.");
+            throw new CloverException("Give the grove a learning companion name to search for.");
         }
     }
 

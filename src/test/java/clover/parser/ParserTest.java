@@ -52,7 +52,8 @@ class ParserTest {
     void parse_unknownCommandWord_exceptionThrown() {
         CloverException exception = assertThrows(CloverException.class, () -> Parser.parse("read book"));
 
-        assertEquals("Unknown command. Please use: todo, deadline, event, list, find, mark, unmark, delete, "
+        assertEquals("That command is not a forest path I know. "
+                        + "Try: todo, deadline, event, list, find, mark, unmark, delete, "
                         + "add-tutoree, list-tutorees, find-tutoree, or bye.",
                 exception.getMessage());
     }
@@ -61,7 +62,7 @@ class ParserTest {
     void parse_blankInput_exceptionThrown() {
         CloverException exception = assertThrows(CloverException.class, () -> Parser.parse("   "));
 
-        assertEquals("Please enter a command or task description.", exception.getMessage());
+        assertEquals("The grove needs a command or a quest description.", exception.getMessage());
     }
 
     @Test
@@ -110,7 +111,7 @@ class ParserTest {
     void parseDate_invalidDate_exceptionThrown() {
         CloverException exception = assertThrows(CloverException.class, () -> Parser.parseDate("2024-02-30"));
 
-        assertEquals("Please enter dates in the format yyyy-MM-dd. Optional: add /for TUTOREE NAME at the end "
+        assertEquals("The calendar leaves need a date in yyyy-MM-dd format. Optional: add /for TUTOREE NAME at the end "
                 + "of the command.", exception.getMessage());
     }
 
@@ -127,6 +128,6 @@ class ParserTest {
         CloverException exception = assertThrows(CloverException.class, () ->
                 Parser.parseTaskArguments("prepare worksheet /for"));
 
-        assertEquals("Please provide a tutoree name after /for.", exception.getMessage());
+        assertEquals("Please add a learning companion name after /for.", exception.getMessage());
     }
 }

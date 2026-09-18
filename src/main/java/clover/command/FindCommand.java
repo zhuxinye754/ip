@@ -22,7 +22,7 @@ public class FindCommand extends Command {
     public FindCommand(String argument) throws CloverException {
         String trimmed = argument.trim();
         if (trimmed.isEmpty()) {
-            throw new CloverException("Please enter a keyword to search for.");
+            throw new CloverException("Give the grove a keyword to search for.");
         }
         this.keyword = trimmed.toLowerCase(Locale.ROOT);
     }

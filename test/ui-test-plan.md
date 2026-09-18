@@ -13,14 +13,14 @@ Each case uses an isolated working directory. A case can include an optional **S
 **Input:**
 
 1. Run `./gradlew run` with JDK 25 selected.
-2. Confirm that an FXML-based JavaFX window appears with the Clover header, a subtle pale-sage gradient, and a welcome card.
-3. Enter `todo read book` and press Enter. Confirm that the command and reply use small circular avatars aligned with the bottom of their message bubbles, with the user message on the right and Clover's reply on the left.
-4. Enter `list` and select `Send`. Confirm that the reply lists `read book`, showing that chat commands use Clover's task list.
+2. Confirm that an FXML-based JavaFX window appears with the Clover header, a gentle lavender, sage, and blue gradient, and a welcome card featuring Clover's original forest-sprite avatar.
+3. Enter `todo read book` and press Enter. Confirm that the command and reply use small circular avatars aligned with the bottom of their message bubbles, with the user message on the right and Clover's forest-sprite reply on the left. Confirm that Clover says the new study quest has "taken root."
+4. Enter `list` and select `Send`. Confirm that Clover says "The grove has gathered these for you," then lists `read book`, showing that chat commands use Clover's task list.
 5. Add enough messages to exceed the visible area and confirm that it scrolls to the latest response.
 6. Hover over the chat log and use the mouse wheel or trackpad. Confirm that it scrolls without dragging the side scrollbar, and that dragging the scrollbar can review earlier messages.
-7. Enter an invalid command and confirm that Clover's reply is styled as a distinct red error bubble.
-8. Enter `mark 1` and confirm that Clover's reply bubble uses the success style. Enter `delete 1` and confirm it uses the delete-task style.
-9. Enter `add-tutoree Alice Tan /address 12 Example Road /fee $50/hour` and confirm that the reply uses the distinct lavender tutoree-added style.
+7. Enter an invalid command and confirm that Clover's reply begins with "The forest path is unclear." and is styled as a distinct red error bubble.
+8. Enter `mark 1` and confirm that Clover's "The grove celebrates!" reply bubble uses the success style. Enter `delete 1` and confirm its "This trail has been cleared." reply uses the delete-task style.
+9. Enter `add-tutoree Alice Tan /address 12 Example Road /fee $50/hour` and confirm that Clover's study-quest reply uses the distinct lavender tutoree-added style.
 10. Resize the window. Confirm that the input bar and chat log remain anchored, and message bubbles expand while retaining comfortable reading widths.
 11. Confirm that the background has a visible but gentle lavender, sage, and blue gradient and each avatar has a fixed-size circular coloured ring, even beside a long reply.
 12. Confirm that button hover/pressed states do not change the layout.
@@ -58,29 +58,29 @@ What can I do for you?
 
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task: [T] [ ] read book
-Now you have 1 tasks in the list.
+A new study quest has taken root: [T] [ ] read book
+The grove now holds 1 quest.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task: [D] [ ] submit report (by: Sep 1 2026)
-Now you have 2 tasks in the list.
+A new study quest has taken root: [D] [ ] submit report (by: Sep 1 2026)
+The grove now holds 2 quests.
 ____________________________________________________________
 ____________________________________________________________
-Nice! I've marked this task as done: [D] [X] submit report (by: Sep 1 2026)
+The grove celebrates! This quest is complete: [D] [X] submit report (by: Sep 1 2026)
 ____________________________________________________________
 ____________________________________________________________
-OK, I've marked this task as not done yet: [D] [ ] submit report (by: Sep 1 2026)
+This quest needs a little more tending: [D] [ ] submit report (by: Sep 1 2026)
 ____________________________________________________________
 ____________________________________________________________
-Noted. I've removed this task: [T] [ ] read book
-Now you have 1 tasks in the list.
+This trail has been cleared: [T] [ ] read book
+The grove now holds 1 quest.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+The grove has gathered your study quests:
 1.[D] [ ] submit report (by: Sep 1 2026)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+The grove closes for now. Goodbye, and may your path through the grove be gentle.
 ____________________________________________________________
 ```
 
@@ -121,12 +121,12 @@ What can I do for you?
 
 ____________________________________________________________
 ____________________________________________________________
-Here are the matching tasks in your list:
+The grove found these matching quests:
 1.[T] [X] read book
 2.[D] [X] return book (by: Jun 6 2026)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+The grove closes for now. Goodbye, and may your path through the grove be gentle.
 ____________________________________________________________
 ```
 
@@ -162,13 +162,13 @@ What can I do for you?
 
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+The grove has gathered your study quests:
 1.[T] [X] read | annotate book
 2.[D] [ ] return book (by: Dec 2 2019)
 3.[E] [ ] project meeting (from: Aug 6 2019 to: Aug 7 2019)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+The grove closes for now. Goodbye, and may your path through the grove be gentle.
 ____________________________________________________________
 ```
 
@@ -189,7 +189,7 @@ bye
 
 **Expected output:**
 ```text
-I could not load your saved tasks. Starting with an empty list.
+The forest path is unclear. The saved quest journal could not be opened. Starting with an empty grove.
 ____________________________________________________________
   _____    _         ____    __      __   ______    _____
  / ____|  | |       / __ \   \ \    / /  |  ____|  |  __ \
@@ -203,10 +203,10 @@ What can I do for you?
 
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+The grove has gathered your study quests:
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+The grove closes for now. Goodbye, and may your path through the grove be gentle.
 ____________________________________________________________
 ```
 
@@ -235,11 +235,11 @@ What can I do for you?
 
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task: [E] [ ] tutorial (from: Dec 2 2019 to: Dec 4 2019)
-Now you have 1 tasks in the list.
+A new study quest has taken root: [E] [ ] tutorial (from: Dec 2 2019 to: Dec 4 2019)
+The grove now holds 1 quest.
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+The grove closes for now. Goodbye, and may your path through the grove be gentle.
 ____________________________________________________________
 ```
 
@@ -273,10 +273,10 @@ What can I do for you?
 
 ____________________________________________________________
 ____________________________________________________________
-Please use the format: event DESCRIPTION /from START /to END. Optional: add /for TUTOREE NAME.
+The forest path is unclear. To schedule a grove event, use: event DESCRIPTION /from START /to END. Optional: add /for TUTOREE NAME.
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+The grove closes for now. Goodbye, and may your path through the grove be gentle.
 ____________________________________________________________
 ```
 
@@ -313,34 +313,34 @@ What can I do for you?
 
 ____________________________________________________________
 ____________________________________________________________
-Please use the format: todo DESCRIPTION. Optional: add /for TUTOREE NAME.
+The forest path is unclear. To plant a task, use: todo DESCRIPTION. Optional: add /for TUTOREE NAME.
 ____________________________________________________________
 ____________________________________________________________
-Please enter a valid task number to mark.
+The forest path is unclear. Choose a valid quest number to complete.
 ____________________________________________________________
 ____________________________________________________________
-Please enter a valid task number to unmark.
+The forest path is unclear. Choose a valid quest number to tend again.
 ____________________________________________________________
 ____________________________________________________________
-Please use the format: deadline DESCRIPTION /by DUE DATE. Optional: add /for TUTOREE NAME.
+The forest path is unclear. To set a deadline, use: deadline DESCRIPTION /by DUE DATE. Optional: add /for TUTOREE NAME.
 ____________________________________________________________
 ____________________________________________________________
-Please use the format: event DESCRIPTION /from START /to END. Optional: add /for TUTOREE NAME.
+The forest path is unclear. To schedule a grove event, use: event DESCRIPTION /from START /to END. Optional: add /for TUTOREE NAME.
 ____________________________________________________________
 ____________________________________________________________
-Please enter dates in the format yyyy-MM-dd. Optional: add /for TUTOREE NAME at the end of the command.
+The forest path is unclear. The calendar leaves need a date in yyyy-MM-dd format. Optional: add /for TUTOREE NAME at the end of the command.
 ____________________________________________________________
 ____________________________________________________________
-Please enter dates in the format yyyy-MM-dd. Optional: add /for TUTOREE NAME at the end of the command.
+The forest path is unclear. The calendar leaves need a date in yyyy-MM-dd format. Optional: add /for TUTOREE NAME at the end of the command.
 ____________________________________________________________
 ____________________________________________________________
-Unknown command. Please use: todo, deadline, event, list, find, mark, unmark, delete, add-tutoree, list-tutorees, find-tutoree, or bye.
+The forest path is unclear. That command is not a forest path I know. Try: todo, deadline, event, list, find, mark, unmark, delete, add-tutoree, list-tutorees, find-tutoree, or bye.
 ____________________________________________________________
 ____________________________________________________________
-Please enter a command or task description.
+The forest path is unclear. The grove needs a command or a quest description.
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+The grove closes for now. Goodbye, and may your path through the grove be gentle.
 ____________________________________________________________
 ```
 
@@ -375,44 +375,44 @@ What can I do for you?
 
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this tutoree:
+A new learning companion has arrived in the grove:
 Alice Tan
 Address: 12 Example Road
 Fee: $50/hour
-Now you have 1 tutoree in the list.
+The grove now knows 1 learning companion.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task: [T] [ ] prepare worksheet (for: Alice Tan)
-Now you have 1 tasks in the list.
+A new study quest has taken root: [T] [ ] prepare worksheet (for: Alice Tan)
+The grove now holds 1 quest.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task: [D] [ ] collect fee (by: Sep 30 2026) (for: Alice Tan)
-Now you have 2 tasks in the list.
+A new study quest has taken root: [D] [ ] collect fee (by: Sep 30 2026) (for: Alice Tan)
+The grove now holds 2 quests.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task: [E] [ ] lesson (from: Sep 20 2026 to: Sep 20 2026) (for: Alice Tan)
-Now you have 3 tasks in the list.
+A new study quest has taken root: [E] [ ] lesson (from: Sep 20 2026 to: Sep 20 2026) (for: Alice Tan)
+The grove now holds 3 quests.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tutorees in your list:
+Here are the learning companions in the grove:
 1. Alice Tan
    Address: 12 Example Road
    Fee: $50/hour
 ____________________________________________________________
 ____________________________________________________________
-Here are the matching tutorees in your list:
+The grove found these matching learning companions:
 1. Alice Tan
    Address: 12 Example Road
    Fee: $50/hour
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+The grove has gathered your study quests:
 1.[T] [ ] prepare worksheet (for: Alice Tan)
 2.[D] [ ] collect fee (by: Sep 30 2026) (for: Alice Tan)
 3.[E] [ ] lesson (from: Sep 20 2026 to: Sep 20 2026) (for: Alice Tan)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+The grove closes for now. Goodbye, and may your path through the grove be gentle.
 ____________________________________________________________
 ```
 
@@ -453,9 +453,9 @@ What can I do for you?
 
 ____________________________________________________________
 ____________________________________________________________
-No tutoree named "Alice Tan" exists. Add the tutoree before linking a task to them.
+The forest path is unclear. No learning companion named "Alice Tan" is in the grove. Add them before linking a quest.
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+The grove closes for now. Goodbye, and may your path through the grove be gentle.
 ____________________________________________________________
 ```

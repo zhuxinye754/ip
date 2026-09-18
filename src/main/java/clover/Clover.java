@@ -31,13 +31,13 @@ public class Clover {
         try {
             tasks = new TaskList(storage.load());
         } catch (IOException | SecurityException exception) {
-            ui.showError("I could not load your saved tasks. Starting with an empty list.");
+            ui.showError("The saved quest journal could not be opened. Starting with an empty grove.");
             tasks = new TaskList();
         }
         try {
             tutorees = new TutoreeList(storage.loadTutorees());
         } catch (IOException | SecurityException exception) {
-            ui.showError("I could not load your saved tutorees. Starting with an empty tutoree list.");
+            ui.showError("The learning companion journal could not be opened. Starting with an empty grove.");
             tutorees = new TutoreeList();
         }
     }

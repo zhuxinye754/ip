@@ -44,7 +44,7 @@ class TutoreeTaskLinkTest {
         CloverException exception = assertThrows(CloverException.class, () -> new ToDoCommand(
                 "prepare worksheet /for Alice Tan").execute(tasks, new TutoreeList(), new Ui(), storage()));
 
-        assertEquals("No tutoree named \"Alice Tan\" exists. Add the tutoree before linking a task to them.",
+        assertEquals("No learning companion named \"Alice Tan\" is in the grove. Add them before linking a quest.",
                 exception.getMessage());
         assertEquals(0, tasks.size());
     }

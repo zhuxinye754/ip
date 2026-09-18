@@ -24,7 +24,8 @@ import clover.exception.CloverException;
  * Converts raw user input into executable Clover commands.
  */
 public class Parser {
-    private static final String UNKNOWN_COMMAND_MESSAGE = "Unknown command. Please use: todo, deadline, event, list, "
+    private static final String UNKNOWN_COMMAND_MESSAGE = "That command is not a forest path I know. "
+            + "Try: todo, deadline, event, list, "
             + "find, mark, unmark, delete, add-tutoree, list-tutorees, find-tutoree, or bye.";
     private static final Pattern FOR_MARKER_PATTERN = Pattern.compile("(?<!\\S)/for(?:\\s|$)");
 
@@ -33,7 +34,7 @@ public class Parser {
      */
     public static Command parse(String input) throws CloverException {
         if (input.isBlank()) {
-            throw new CloverException("Please enter a command or task description.");
+            throw new CloverException("The grove needs a command or a quest description.");
         }
 
         String[] parts = input.trim().split("\\s+", 2);
@@ -83,7 +84,7 @@ public class Parser {
         try {
             return LocalDate.parse(text);
         } catch (DateTimeParseException exception) {
-            throw new CloverException("Please enter dates in the format yyyy-MM-dd. Optional: add "
+            throw new CloverException("The calendar leaves need a date in yyyy-MM-dd format. Optional: add "
                     + "/for TUTOREE NAME at the end of the command.");
         }
     }
@@ -100,10 +101,10 @@ public class Parser {
         String taskArguments = arguments.substring(0, markerIndex).trim();
         String tutoreeName = arguments.substring(matcher.end()).trim();
         if (tutoreeName.isEmpty()) {
-            throw new CloverException("Please provide a tutoree name after /for.");
+            throw new CloverException("Please add a learning companion name after /for.");
         }
         if (FOR_MARKER_PATTERN.matcher(tutoreeName).find()) {
-            throw new CloverException("Please use /for only once and at the end of the task command.");
+            throw new CloverException("Use /for only once, at the end of the task command.");
         }
         return new TaskArguments(taskArguments, tutoreeName);
     }

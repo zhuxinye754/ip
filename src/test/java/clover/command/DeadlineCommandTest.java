@@ -39,7 +39,7 @@ public class DeadlineCommandTest {
         CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(
                 taskList, new TutoreeList(), ui, storage));
 
-        assertEquals("Please use the format: deadline DESCRIPTION /by DUE DATE. Optional: add /for TUTOREE NAME.",
+        assertEquals("To set a deadline, use: deadline DESCRIPTION /by DUE DATE. Optional: add /for TUTOREE NAME.",
                 exception.getMessage());
 
     }
@@ -70,7 +70,7 @@ public class DeadlineCommandTest {
         CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(
                 taskList, new TutoreeList(), ui, storage));
 
-        assertEquals("Please enter dates in the format yyyy-MM-dd. Optional: add /for TUTOREE NAME at the end "
+        assertEquals("The calendar leaves need a date in yyyy-MM-dd format. Optional: add /for TUTOREE NAME at the end "
                 + "of the command.", exception.getMessage());
 
     }

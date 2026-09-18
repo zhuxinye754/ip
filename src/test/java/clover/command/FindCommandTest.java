@@ -35,7 +35,7 @@ class FindCommandTest {
 
         String output = captureExecutionOutput(new FindCommand("BoOk"), taskList);
 
-        assertEquals("Here are the matching tasks in your list:" + System.lineSeparator()
+        assertEquals("The grove found these matching quests:" + System.lineSeparator()
                 + "1.[T] [ ] read book" + System.lineSeparator()
                 + "2.[D] [ ] return BOOK (by: Jun 6 2026)" + System.lineSeparator(), output);
     }
@@ -44,7 +44,7 @@ class FindCommandTest {
     void constructor_blankKeyword_exceptionThrown() {
         CloverException exception = assertThrows(CloverException.class, () -> new FindCommand("   "));
 
-        assertEquals("Please enter a keyword to search for.", exception.getMessage());
+        assertEquals("Give the grove a keyword to search for.", exception.getMessage());
     }
 
     @Test
@@ -57,7 +57,7 @@ class FindCommandTest {
 
             String output = captureExecutionOutput(new FindCommand("fix"), taskList);
 
-            assertEquals("Here are the matching tasks in your list:" + System.lineSeparator()
+            assertEquals("The grove found these matching quests:" + System.lineSeparator()
                     + "1.[T] [ ] FIX parser" + System.lineSeparator(), output);
         } finally {
             Locale.setDefault(originalLocale);

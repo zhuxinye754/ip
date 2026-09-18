@@ -59,7 +59,7 @@ public abstract class Command {
         try {
             storage.save(tasks.asList());
         } catch (IOException | SecurityException exception) {
-            ui.showError("I could not save your tasks to the data file.");
+            ui.showError("The grove could not save your study quests to the data file.");
         }
     }
 
@@ -68,7 +68,7 @@ public abstract class Command {
         try {
             storage.saveTutorees(tutorees.asList());
         } catch (IOException | SecurityException exception) {
-            ui.showError("I could not save your tutorees to the data file.");
+            ui.showError("The grove could not save your learning companions to the data file.");
         }
     }
 
@@ -80,8 +80,8 @@ public abstract class Command {
             return null;
         }
         Tutoree tutoree = tutorees.findExactName(tutoreeName)
-                .orElseThrow(() -> new CloverException("No tutoree named \"" + tutoreeName
-                        + "\" exists. Add the tutoree before linking a task to them."));
+                .orElseThrow(() -> new CloverException("No learning companion named \"" + tutoreeName
+                        + "\" is in the grove. Add them before linking a quest."));
         return tutoree.getName();
     }
 }

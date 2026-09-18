@@ -64,7 +64,8 @@ public class EventCommand extends Command {
      * Creates the shared guidance message for malformed event commands.
      */
     private CloverException invalidFormat() {
-        return new CloverException("Please use the format: event DESCRIPTION /from START /to END. Optional: add "
+        return new CloverException("To schedule a grove event, use: event DESCRIPTION /from START /to END. "
+                + "Optional: add "
                 + "/for TUTOREE NAME.");
     }
 }

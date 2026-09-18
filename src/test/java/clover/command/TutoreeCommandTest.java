@@ -45,7 +45,7 @@ class TutoreeCommandTest {
                 "alice tan /address 8 Sample Avenue /fee $55/hour").execute(
                         new TaskList(), tutorees, new Ui(), storage()));
 
-        assertEquals("A tutoree named \"alice tan\" already exists.", exception.getMessage());
+        assertEquals("A learning companion named \"alice tan\" is already in the grove.", exception.getMessage());
     }
 
     @Test
@@ -56,7 +56,7 @@ class TutoreeCommandTest {
         String output = captureOutput(() -> new FindTutoreeCommand("ALI")
                 .execute(new TaskList(), tutorees, new Ui(), storage()));
 
-        assertEquals("Here are the matching tutorees in your list:" + System.lineSeparator()
+        assertEquals("The grove found these matching learning companions:" + System.lineSeparator()
                 + "1. Alice Tan" + System.lineSeparator()
                 + "   Address: 12 Example Road" + System.lineSeparator()
                 + "   Fee: $50/hour" + System.lineSeparator(), output);
@@ -68,7 +68,8 @@ class TutoreeCommandTest {
                 "Alice Tan /address 12 Example Road").execute(
                         new TaskList(), new TutoreeList(), new Ui(), storage()));
 
-        assertEquals("Please use the format: add-tutoree NAME /address ADDRESS /fee FEE", exception.getMessage());
+        assertEquals("To welcome a learning companion, use: add-tutoree NAME /address ADDRESS /fee FEE",
+                exception.getMessage());
     }
 
     private Storage storage() {

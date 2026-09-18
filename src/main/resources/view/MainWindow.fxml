@@ -20,7 +20,7 @@
                 <VBox spacing="1.0">
                     <children>
                         <Label styleClass="header-title" text="Clover" />
-                        <Label styleClass="header-subtitle" text="Tutoring task assistant" />
+                        <Label styleClass="header-subtitle" text="Forest sprite study guide" />
                     </children>
                 </VBox>
             </children>

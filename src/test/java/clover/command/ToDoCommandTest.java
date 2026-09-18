@@ -32,7 +32,7 @@ class ToDoCommandTest {
         CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(
                 taskList, new TutoreeList(), ui, storage));
 
-        assertEquals("Please use the format: todo DESCRIPTION. Optional: add /for TUTOREE NAME.",
+        assertEquals("To plant a task, use: todo DESCRIPTION. Optional: add /for TUTOREE NAME.",
                 exception.getMessage());
 
     }
