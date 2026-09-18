@@ -13,6 +13,7 @@ import clover.command.EventCommand;
 import clover.command.ExitCommand;
 import clover.command.FindCommand;
 import clover.command.FindTutoreeCommand;
+import clover.command.HelpCommand;
 import clover.command.ListCommand;
 import clover.command.ListTutoreesCommand;
 import clover.command.MarkCommand;
@@ -25,8 +26,7 @@ import clover.exception.CloverException;
  */
 public class Parser {
     private static final String UNKNOWN_COMMAND_MESSAGE = "That command is not a forest path I know. "
-            + "Try: todo, deadline, event, list, "
-            + "find, mark, unmark, delete, add-tutoree, list-tutorees, find-tutoree, or bye.";
+            + "Type \"help\" to view the supported commands.";
     private static final Pattern FOR_MARKER_PATTERN = Pattern.compile("(?<!\\S)/for(?:\\s|$)");
 
     /**
@@ -59,6 +59,10 @@ public class Parser {
                 yield new ListTutoreesCommand();
             }
             case "find-tutoree" -> new FindTutoreeCommand(arguments);
+            case "help" -> {
+                requireNoArguments(commandWord, arguments);
+                yield new HelpCommand();
+            }
             case "bye" -> {
                 requireNoArguments(commandWord, arguments);
                 yield new ExitCommand();

@@ -17,6 +17,7 @@ import clover.command.EventCommand;
 import clover.command.ExitCommand;
 import clover.command.FindCommand;
 import clover.command.FindTutoreeCommand;
+import clover.command.HelpCommand;
 import clover.command.ListCommand;
 import clover.command.ListTutoreesCommand;
 import clover.command.MarkCommand;
@@ -40,6 +41,7 @@ class ParserTest {
         assertInstanceOf(AddTutoreeCommand.class, Parser.parse("add-tutoree Alice /address Home /fee 50"));
         assertInstanceOf(ListTutoreesCommand.class, Parser.parse("list-tutorees"));
         assertInstanceOf(FindTutoreeCommand.class, Parser.parse("find-tutoree Alice"));
+        assertInstanceOf(HelpCommand.class, Parser.parse("help"));
         assertInstanceOf(ExitCommand.class, Parser.parse("bye"));
     }
 
@@ -52,9 +54,7 @@ class ParserTest {
     void parse_unknownCommandWord_exceptionThrown() {
         CloverException exception = assertThrows(CloverException.class, () -> Parser.parse("read book"));
 
-        assertEquals("That command is not a forest path I know. "
-                        + "Try: todo, deadline, event, list, find, mark, unmark, delete, "
-                        + "add-tutoree, list-tutorees, find-tutoree, or bye.",
+        assertEquals("That command is not a forest path I know. Type \"help\" to view the supported commands.",
                 exception.getMessage());
     }
 

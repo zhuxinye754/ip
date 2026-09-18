@@ -63,6 +63,50 @@ class UiTest {
     }
 
     @Test
+    void showHelp_commandReferenceShown() {
+        Ui ui = new Ui();
+
+        ui.showHelp();
+
+        assertEquals(String.join(System.lineSeparator(),
+                "How to use Clover",
+                "Type lowercase words exactly. Replace <UPPERCASE> placeholders with your details.",
+                "[Square brackets show optional parts; do not type the brackets.]",
+                "",
+                "TASKS",
+                "• todo <DESCRIPTION> [/for <NAME>]",
+                "  Add a task; /for links it to a tutoree.",
+                "• deadline <DESCRIPTION> /by <DATE> [/for <NAME>]",
+                "  Add a deadline. DATE uses yyyy-MM-dd.",
+                "• event <DESCRIPTION> /from <DATE> /to <DATE> [/for <NAME>]",
+                "  Add an event. The end date must be after the start date.",
+                "• list",
+                "  Show all tasks.",
+                "• find <KEYWORD>",
+                "  Search task descriptions.",
+                "• mark <NUMBER>",
+                "  Complete a task.",
+                "• unmark <NUMBER>",
+                "  Reopen a completed task.",
+                "• delete <NUMBER>",
+                "  Remove a task.",
+                "",
+                "TUTOREE DIRECTORY",
+                "• add-tutoree <NAME> /address <ADDRESS> /fee <AMOUNT>[/RATE]",
+                "  Add a tutoree. RATE may be /hour, /session, /lesson, or /month.",
+                "• list-tutorees",
+                "  Show all tutorees.",
+                "• find-tutoree <KEYWORD>",
+                "  Search tutoree names.",
+                "",
+                "OTHER",
+                "• help",
+                "  Show this command guide.",
+                "• bye",
+                "  Close Clover."), ui.buildResponse());
+    }
+
+    @Test
     void showFindResults_tasksSupplied_responseListsMatchingTasksInNumberedOrder() {
         Ui ui = new Ui();
 

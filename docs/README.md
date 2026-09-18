@@ -2,6 +2,10 @@
 
 Clover helps private tutors maintain a task list and a directory of tutorees.
 
+## Help
+
+Use `help` to display every available command and its input format in Clover.
+
 ## Tutoree directory
 
 Each tutoree has a name, tutoring address, and fee arrangement.

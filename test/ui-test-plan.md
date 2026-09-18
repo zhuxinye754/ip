@@ -338,7 +338,7 @@ ____________________________________________________________
 The forest path is unclear. Enter a date in yyyy-MM-dd format, for example 2026-02-28.
 ____________________________________________________________
 ____________________________________________________________
-The forest path is unclear. That command is not a forest path I know. Try: todo, deadline, event, list, find, mark, unmark, delete, add-tutoree, list-tutorees, find-tutoree, or bye.
+The forest path is unclear. That command is not a forest path I know. Type "help" to view the supported commands.
 ____________________________________________________________
 ____________________________________________________________
 The forest path is unclear. The grove needs a command or a quest description.
@@ -458,6 +458,72 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
 The forest path is unclear. No learning companion named "Alice Tan" is in the grove. Add them before linking a quest.
+____________________________________________________________
+____________________________________________________________
+The grove closes for now. Goodbye, and may your path through the grove be gentle.
+____________________________________________________________
+```
+
+## Test case: Display command help
+
+**Aim:** Verify that Clover lists every supported command and its format.
+
+**Input:**
+```text
+help
+bye
+```
+
+**Expected output:**
+```text
+____________________________________________________________
+  _____    _         ____    __      __   ______    _____
+ / ____|  | |       / __ \   \ \    / /  |  ____|  |  __ \
+| |       | |      | |  | |   \ \  / /   | |__     | |__) |
+| |       | |      | |  | |    \ \/ /    |  __|    |  _  /
+| |____   | |____  | |  | |     \  /     | |____   | | \ \
+ \_____|  |______|  \____/       \/      |______|  |_|  \_\
+
+Hello! I'm Clover.
+What can I do for you?
+
+____________________________________________________________
+____________________________________________________________
+How to use Clover
+Type lowercase words exactly. Replace <UPPERCASE> placeholders with your details.
+[Square brackets show optional parts; do not type the brackets.]
+
+TASKS
+• todo <DESCRIPTION> [/for <NAME>]
+  Add a task; /for links it to a tutoree.
+• deadline <DESCRIPTION> /by <DATE> [/for <NAME>]
+  Add a deadline. DATE uses yyyy-MM-dd.
+• event <DESCRIPTION> /from <DATE> /to <DATE> [/for <NAME>]
+  Add an event. The end date must be after the start date.
+• list
+  Show all tasks.
+• find <KEYWORD>
+  Search task descriptions.
+• mark <NUMBER>
+  Complete a task.
+• unmark <NUMBER>
+  Reopen a completed task.
+• delete <NUMBER>
+  Remove a task.
+
+TUTOREE DIRECTORY
+• add-tutoree <NAME> /address <ADDRESS> /fee <AMOUNT>[/RATE]
+  Add a tutoree. RATE may be /hour, /session, /lesson, or /month.
+• list-tutorees
+  Show all tutorees.
+• find-tutoree <KEYWORD>
+  Search tutoree names.
+
+OTHER
+• help
+  Show this command guide.
+• bye
+  Close Clover.
 ____________________________________________________________
 ____________________________________________________________
 The grove closes for now. Goodbye, and may your path through the grove be gentle.
