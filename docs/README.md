@@ -15,10 +15,12 @@ add-tutoree NAME /address ADDRESS /fee FEE
 Example:
 
 ```text
-add-tutoree Alice Tan /address 12 Example Road /fee $50/hour
+add-tutoree Alice Tan /address 12 Example Road /fee 50
 ```
 
-Names must be unique regardless of capitalization. Name, address, and fee cannot be blank.
+Names must be unique regardless of capitalization and contain at least one letter. Name and address cannot be blank. The fee must be a positive
+number, optionally followed by `/hour`, `/session`, `/lesson`, or `/month`; for example, `50` or `50/hour`.
+Addresses are kept as free-form text because valid address formats differ by country and tutoring can occur online.
 
 ### List tutorees
 
@@ -47,7 +49,7 @@ Optionally append `/for TUTOREE_NAME` to a task-creation command. The tutoree mu
 ```text
 todo prepare worksheet /for Alice Tan
 deadline collect fee /by 2026-09-30 /for Alice Tan
-event lesson /from 2026-09-20 /to 2026-09-20 /for Alice Tan
+event lesson /from 2026-09-20 /to 2026-09-21 /for Alice Tan
 ```
 
 Linked tasks show the tutoree in task lists, for example:
@@ -69,11 +71,11 @@ Tasks continue to use `data/clover.txt`. Existing task records remain compatible
 ```text
 T | 0 | prepare worksheet | Alice Tan
 D | 0 | collect fee | 2026-09-30 | Alice Tan
-E | 0 | lesson | 2026-09-20 | 2026-09-20 | Alice Tan
+E | 0 | lesson | 2026-09-20 | 2026-09-21 | Alice Tan
 ```
 
 Tutorees are saved separately in `data/tutorees.txt`.
 
 ```text
-S | Alice Tan | 12 Example Road | $50/hour
+S | Alice Tan | 12 Example Road | 50
 ```

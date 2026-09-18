@@ -72,6 +72,11 @@ public class MainWindow extends AnchorPane {
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
+        if (input.isBlank()) {
+            userInput.clear();
+            userInput.requestFocus();
+            return;
+        }
         String response = clover.getResponse(input);
         CommandResponseStyle responseStyle = clover.getResponseStyle();
         dialogContainer.getChildren().addAll(
@@ -93,11 +98,7 @@ public class MainWindow extends AnchorPane {
      */
     static String addForestSpriteReaction(String response, CommandResponseStyle responseStyle) {
         return switch (responseStyle) {
-            case TASK_ADDED -> "A new study quest has taken root! " + response;
-            case TUTOREE_ADDED -> "A new learning companion has arrived in the grove. " + response;
-            case TASK_MARKED -> "The grove celebrates your progress! " + response;
-            case TASK_DELETED -> "This trail has been cleared from our grove. " + response;
-            case ERROR -> response;
+            case TASK_ADDED, TUTOREE_ADDED, TASK_MARKED, TASK_DELETED, ERROR -> response;
             case STANDARD -> addStandardForestSpriteIntroduction(response);
         };
     }

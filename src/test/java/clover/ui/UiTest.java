@@ -54,6 +54,15 @@ class UiTest {
     }
 
     @Test
+    void showTaskList_emptyTaskList_clearEmptyMessageShown() {
+        Ui ui = new Ui();
+
+        ui.showTaskList(List.of());
+
+        assertEquals("There are no study quests in the grove yet.", ui.buildResponse());
+    }
+
+    @Test
     void showFindResults_tasksSupplied_responseListsMatchingTasksInNumberedOrder() {
         Ui ui = new Ui();
 

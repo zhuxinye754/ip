@@ -54,21 +54,21 @@ public abstract class Command {
         return taskIndex;
     }
 
-    /** Saves the task list and reports an error without stopping the command loop. */
-    protected void saveTasks(TaskList tasks, Ui ui, Storage storage) {
+    /** Saves the task list or reports that the requested change was not saved. */
+    protected void saveTasks(TaskList tasks, Storage storage) throws CloverException {
         try {
             storage.save(tasks.asList());
         } catch (IOException | SecurityException exception) {
-            ui.showError("The grove could not save your study quests to the data file.");
+            throw new CloverException("The grove could not save your study quests; no change was made.");
         }
     }
 
-    /** Saves the tutoree list and reports an error without stopping the command loop. */
-    protected void saveTutorees(TutoreeList tutorees, Ui ui, Storage storage) {
+    /** Saves the tutoree list or reports that the requested change was not saved. */
+    protected void saveTutorees(TutoreeList tutorees, Storage storage) throws CloverException {
         try {
             storage.saveTutorees(tutorees.asList());
         } catch (IOException | SecurityException exception) {
-            ui.showError("The grove could not save your learning companions to the data file.");
+            throw new CloverException("The grove could not save your learning companions; no change was made.");
         }
     }
 

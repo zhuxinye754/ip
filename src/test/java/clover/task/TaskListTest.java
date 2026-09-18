@@ -1,8 +1,11 @@
 package clover.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,5 +51,16 @@ class TaskListTest {
         TaskList taskList = new TaskList();
 
         assertThrows(UnsupportedOperationException.class, () -> taskList.asList().add(new ToDo("read book")));
+    }
+
+    @Test
+    void containsEquivalent_sameTypeAndDetails_trueReturnedRegardlessOfCompletionStatus() {
+        TaskList taskList = new TaskList();
+        ToDo existingTask = new ToDo("read book", "Alice");
+        existingTask.markAsDone();
+        taskList.add(existingTask);
+
+        assertTrue(taskList.containsEquivalent(new ToDo("read book", "Alice")));
+        assertFalse(taskList.containsEquivalent(new Deadline("read book", LocalDate.of(2026, 9, 1), "Alice")));
     }
 }

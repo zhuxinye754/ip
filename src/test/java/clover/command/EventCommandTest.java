@@ -83,8 +83,7 @@ class EventCommandTest {
         CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(
                 taskList, new TutoreeList(), ui, storage));
 
-        assertEquals("The calendar leaves need a date in yyyy-MM-dd format. Optional: add /for TUTOREE NAME at the end "
-                + "of the command.", exception.getMessage());
+        assertEquals("Enter a date in yyyy-MM-dd format, for example 2026-02-28.", exception.getMessage());
         assertTrue(taskList.asList().isEmpty());
     }
 
@@ -98,8 +97,23 @@ class EventCommandTest {
         CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(
                 taskList, new TutoreeList(), ui, storage));
 
-        assertEquals("The calendar leaves need a date in yyyy-MM-dd format. Optional: add /for TUTOREE NAME at the end "
-                + "of the command.", exception.getMessage());
+        assertEquals("Enter a date in yyyy-MM-dd format, for example 2026-02-28.", exception.getMessage());
+        assertTrue(taskList.asList().isEmpty());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "event meeting /from 2021-12-21 /to 2021-12-21",
+        "event meeting /from 2021-12-22 /to 2021-12-21"
+    })
+    void execute_endDateNotAfterStartDate_exceptionThrownWithoutAddingTask(String command) throws CloverException {
+        Command cmd = Parser.parse(command);
+        TaskList taskList = new TaskList();
+
+        CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(
+                taskList, new TutoreeList(), new Ui(), new Storage(tempDir.resolve("clover.txt"))));
+
+        assertEquals("An event's end date must be after its start date.", exception.getMessage());
         assertTrue(taskList.asList().isEmpty());
     }
 }

@@ -73,6 +73,10 @@ public class Ui {
      * Displays every task currently in the list.
      */
     public void showTaskList(List<Task> tasks) {
+        if (tasks.isEmpty()) {
+            showMessage("There are no study quests in the grove yet.");
+            return;
+        }
         showMessage("The grove has gathered your study quests:");
         showNumberedTasks(tasks);
     }
@@ -113,6 +117,10 @@ public class Ui {
      * Displays all the tasks whose description contains a given keyword.
      */
     public void showFindResults(List<Task> result) {
+        if (result.isEmpty()) {
+            showMessage("No matching tasks found.");
+            return;
+        }
         showMessage("The grove found these matching quests:");
         showNumberedTasks(result);
     }
@@ -130,12 +138,20 @@ public class Ui {
 
     /** Displays every tutoree currently in the directory. */
     public void showTutoreeList(List<Tutoree> tutorees) {
+        if (tutorees.isEmpty()) {
+            showMessage("There are no learning companions in the grove yet.");
+            return;
+        }
         showMessage("Here are the learning companions in the grove:");
         showNumberedTutorees(tutorees);
     }
 
     /** Displays tutorees whose names match the user's search keyword. */
     public void showTutoreeFindResults(List<Tutoree> tutorees) {
+        if (tutorees.isEmpty()) {
+            showMessage("No matching learning companions found.");
+            return;
+        }
         showMessage("The grove found these matching learning companions:");
         showNumberedTutorees(tutorees);
     }

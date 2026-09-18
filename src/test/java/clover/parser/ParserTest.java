@@ -37,7 +37,7 @@ class ParserTest {
         assertInstanceOf(EventCommand.class, Parser.parse("event meeting /from 2026-09-01 /to 2026-09-02"));
         assertInstanceOf(DeleteCommand.class, Parser.parse("delete 1"));
         assertInstanceOf(FindCommand.class, Parser.parse("find book"));
-        assertInstanceOf(AddTutoreeCommand.class, Parser.parse("add-tutoree Alice /address Home /fee $50/hour"));
+        assertInstanceOf(AddTutoreeCommand.class, Parser.parse("add-tutoree Alice /address Home /fee 50"));
         assertInstanceOf(ListTutoreesCommand.class, Parser.parse("list-tutorees"));
         assertInstanceOf(FindTutoreeCommand.class, Parser.parse("find-tutoree Alice"));
         assertInstanceOf(ExitCommand.class, Parser.parse("bye"));
@@ -63,6 +63,18 @@ class ParserTest {
         CloverException exception = assertThrows(CloverException.class, () -> Parser.parse("   "));
 
         assertEquals("The grove needs a command or a quest description.", exception.getMessage());
+    }
+
+    @Test
+    void parse_noArgumentCommandWithArguments_exceptionThrown() {
+        CloverException exception = assertThrows(CloverException.class, () -> Parser.parse("list tasks"));
+
+        assertEquals("The list command does not take any additional text.", exception.getMessage());
+    }
+
+    @Test
+    void findSingleMarker_duplicateMarker_negativeOneReturned() {
+        assertEquals(-1, Parser.findSingleMarker("work /by 2026-09-01 /by 2026-09-02", "/by"));
     }
 
     @Test
@@ -108,11 +120,18 @@ class ParserTest {
     }
 
     @Test
-    void parseDate_invalidDate_exceptionThrown() {
+    void parseDate_nonexistentDate_specificExceptionThrown() {
         CloverException exception = assertThrows(CloverException.class, () -> Parser.parseDate("2024-02-30"));
 
-        assertEquals("The calendar leaves need a date in yyyy-MM-dd format. Optional: add /for TUTOREE NAME at the end "
-                + "of the command.", exception.getMessage());
+        assertEquals("\"2024-02-30\" is not a real calendar date. Please check the month and day.",
+                exception.getMessage());
+    }
+
+    @Test
+    void parseDate_wrongShape_formatGuidanceExceptionThrown() {
+        CloverException exception = assertThrows(CloverException.class, () -> Parser.parseDate("tomorrow"));
+
+        assertEquals("Enter a date in yyyy-MM-dd format, for example 2026-02-28.", exception.getMessage());
     }
 
     @Test

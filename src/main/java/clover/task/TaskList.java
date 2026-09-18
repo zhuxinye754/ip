@@ -32,6 +32,17 @@ public class TaskList {
         tasks.add(task);
     }
 
+    /** Inserts a task at the supplied zero-based index. */
+    public void add(int index, Task task) {
+        assert task != null : "A task list must not contain null tasks.";
+        tasks.add(index, task);
+    }
+
+    /** Returns whether a task with the same type and user-visible details is already stored. */
+    public boolean containsEquivalent(Task task) {
+        return tasks.stream().anyMatch(existingTask -> existingTask.hasSameDetails(task));
+    }
+
     /**
      * Removes and returns the task at the specified zero-based index.
      */

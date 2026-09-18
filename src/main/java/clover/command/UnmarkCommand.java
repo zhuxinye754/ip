@@ -27,8 +27,19 @@ public class UnmarkCommand extends Command {
     public void execute(TaskList tasks, TutoreeList tutorees, Ui ui, Storage storage) throws CloverException {
         int taskIndex = parseValidTaskIndex(taskNumber, tasks, "Choose a valid quest number to tend again.");
         Task task = tasks.get(taskIndex);
+        if (!task.isDone()) {
+            throw new CloverException("That study quest is already incomplete.");
+        }
+        boolean wasDone = task.isDone();
         task.markAsUndone();
-        saveTasks(tasks, ui, storage);
+        try {
+            saveTasks(tasks, storage);
+        } catch (CloverException exception) {
+            if (wasDone) {
+                task.markAsDone();
+            }
+            throw exception;
+        }
         ui.showTaskUnmarked(task);
     }
 }

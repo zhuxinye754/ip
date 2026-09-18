@@ -27,22 +27,22 @@ class TutoreeCommandTest {
     void addTutoree_validDetails_tutoreeAddedAndSaved() throws CloverException {
         TutoreeList tutorees = new TutoreeList();
 
-        new AddTutoreeCommand("Alice Tan /address 12 Example Road /fee $50/hour")
+        new AddTutoreeCommand("Alice Tan /address 12 Example Road /fee 50")
                 .execute(new TaskList(), tutorees, new Ui(), storage());
 
         Tutoree tutoree = tutorees.asList().getFirst();
         assertEquals("Alice Tan", tutoree.getName());
         assertEquals("12 Example Road", tutoree.getAddress());
-        assertEquals("$50/hour", tutoree.getFee());
+        assertEquals("50", tutoree.getFee());
     }
 
     @Test
     void addTutoree_duplicateNameIgnoringCase_exceptionThrown() throws CloverException {
         TutoreeList tutorees = new TutoreeList();
-        tutorees.add(new Tutoree("Alice Tan", "12 Example Road", "$50/hour"));
+        tutorees.add(new Tutoree("Alice Tan", "12 Example Road", "50"));
 
         CloverException exception = assertThrows(CloverException.class, () -> new AddTutoreeCommand(
-                "alice tan /address 8 Sample Avenue /fee $55/hour").execute(
+                "alice tan /address 8 Sample Avenue /fee 55").execute(
                         new TaskList(), tutorees, new Ui(), storage()));
 
         assertEquals("A learning companion named \"alice tan\" is already in the grove.", exception.getMessage());
@@ -51,7 +51,7 @@ class TutoreeCommandTest {
     @Test
     void findTutoree_partialNameIgnoringCase_matchingTutoreeDisplayed() throws CloverException {
         TutoreeList tutorees = new TutoreeList();
-        tutorees.add(new Tutoree("Alice Tan", "12 Example Road", "$50/hour"));
+        tutorees.add(new Tutoree("Alice Tan", "12 Example Road", "50"));
 
         String output = captureOutput(() -> new FindTutoreeCommand("ALI")
                 .execute(new TaskList(), tutorees, new Ui(), storage()));
@@ -59,7 +59,7 @@ class TutoreeCommandTest {
         assertEquals("The grove found these matching learning companions:" + System.lineSeparator()
                 + "1. Alice Tan" + System.lineSeparator()
                 + "   Address: 12 Example Road" + System.lineSeparator()
-                + "   Fee: $50/hour" + System.lineSeparator(), output);
+                + "   Fee: 50" + System.lineSeparator(), output);
     }
 
     @Test
@@ -70,6 +70,41 @@ class TutoreeCommandTest {
 
         assertEquals("To welcome a learning companion, use: add-tutoree NAME /address ADDRESS /fee FEE",
                 exception.getMessage());
+    }
+
+    @Test
+    void addTutoree_nameWithoutLetters_exceptionThrownWithoutAddingTutoree() {
+        TutoreeList tutorees = new TutoreeList();
+
+        CloverException exception = assertThrows(CloverException.class, () -> new AddTutoreeCommand(
+                "123-!? /address 12 Example Road /fee 50").execute(
+                        new TaskList(), tutorees, new Ui(), storage()));
+
+        assertEquals("Enter a learning companion name containing at least one letter.", exception.getMessage());
+        assertEquals(0, tutorees.size());
+    }
+
+    @Test
+    void addTutoree_nonNumericFee_exceptionThrownWithoutAddingTutoree() {
+        TutoreeList tutorees = new TutoreeList();
+
+        CloverException exception = assertThrows(CloverException.class, () -> new AddTutoreeCommand(
+                "Alice Tan /address 12 Example Road /fee $50/hour").execute(
+                        new TaskList(), tutorees, new Ui(), storage()));
+
+        assertEquals("Enter a positive fee amount, optionally followed by /hour, /session, /lesson, or /month; "
+                + "for example 50 or 50/hour.", exception.getMessage());
+        assertEquals(0, tutorees.size());
+    }
+
+    @Test
+    void addTutoree_hourlyFee_tutoreeAdded() throws CloverException {
+        TutoreeList tutorees = new TutoreeList();
+
+        new AddTutoreeCommand("Alice Tan /address 12 Example Road /fee 50/hour")
+                .execute(new TaskList(), tutorees, new Ui(), storage());
+
+        assertEquals("50/hour", tutorees.asList().getFirst().getFee());
     }
 
     private Storage storage() {

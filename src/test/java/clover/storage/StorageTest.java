@@ -53,20 +53,20 @@ class StorageTest {
                 new ToDo("prepare worksheet", "Alice Tan"),
                 new Deadline("collect fee", LocalDate.of(2026, 9, 30), "Alice Tan"),
                 new Event("lesson", LocalDate.of(2026, 9, 20), LocalDate.of(2026, 9, 20), "Alice Tan")));
-        storage.saveTutorees(List.of(new Tutoree("Alice Tan", "12 Example Road", "$50/hour")));
+        storage.saveTutorees(List.of(new Tutoree("Alice Tan", "12 Example Road", "50")));
 
         assertEquals(List.of(
                 "T | 0 | prepare worksheet | Alice Tan",
                 "D | 0 | collect fee | 2026-09-30 | Alice Tan",
                 "E | 0 | lesson | 2026-09-20 | 2026-09-20 | Alice Tan"), Files.readAllLines(taskFile));
-        assertEquals(List.of("S | Alice Tan | 12 Example Road | $50/hour"), Files.readAllLines(tutoreeFile));
+        assertEquals(List.of("S | Alice Tan | 12 Example Road | 50"), Files.readAllLines(tutoreeFile));
     }
 
     @Test
     void load_linkedTaskAndTutoree_recordsRecreatedWithTheirDetails() throws IOException {
         Path taskFile = writeSavedData("D | 0 | collect fee | 2026-09-30 | Alice Tan");
         Path tutoreeFile = tempDir.resolve("tutorees.txt");
-        Files.write(tutoreeFile, List.of("S | Alice Tan | 12 Example Road | $50/hour"));
+        Files.write(tutoreeFile, List.of("S | Alice Tan | 12 Example Road | 50"));
 
         Storage storage = new Storage(taskFile, tutoreeFile);
 
@@ -75,7 +75,7 @@ class StorageTest {
         assertEquals("Alice Tan", task.getTutoreeName());
         assertEquals("Alice Tan", tutoree.getName());
         assertEquals("12 Example Road", tutoree.getAddress());
-        assertEquals("$50/hour", tutoree.getFee());
+        assertEquals("50", tutoree.getFee());
     }
 
     @Test
@@ -83,13 +83,37 @@ class StorageTest {
         Path taskFile = tempDir.resolve("clover.txt");
         Path tutoreeFile = tempDir.resolve("tutorees.txt");
         Files.write(tutoreeFile, List.of(
-                "S | Alice Tan | 12 Example Road | $50/hour",
-                "S | alice tan | 8 Sample Avenue | $55/hour"));
+                "S | Alice Tan | 12 Example Road | 50",
+                "S | alice tan | 8 Sample Avenue | 55"));
 
         IOException exception = assertThrows(IOException.class, () ->
                 new Storage(taskFile, tutoreeFile).loadTutorees());
 
         assertEquals("Invalid tutoree data on line 2: duplicate tutoree name.", exception.getMessage());
+    }
+
+    @Test
+    void load_tutoreeDataWithNonNumericFee_exceptionIdentifiesLine() throws IOException {
+        Path taskFile = tempDir.resolve("clover.txt");
+        Path tutoreeFile = tempDir.resolve("tutorees.txt");
+        Files.write(tutoreeFile, List.of("S | Alice Tan | 12 Example Road | $50/hour"));
+
+        IOException exception = assertThrows(IOException.class, () ->
+                new Storage(taskFile, tutoreeFile).loadTutorees());
+
+        assertEquals("Invalid tutoree data on line 1: fee is not a positive number.", exception.getMessage());
+    }
+
+    @Test
+    void load_tutoreeDataWithNameWithoutLetters_exceptionIdentifiesLine() throws IOException {
+        Path taskFile = tempDir.resolve("clover.txt");
+        Path tutoreeFile = tempDir.resolve("tutorees.txt");
+        Files.write(tutoreeFile, List.of("S | 123-!? | 12 Example Road | 50"));
+
+        IOException exception = assertThrows(IOException.class, () ->
+                new Storage(taskFile, tutoreeFile).loadTutorees());
+
+        assertEquals("Invalid tutoree data on line 1: tutoree name contains no letters.", exception.getMessage());
     }
 
     @Test
@@ -190,6 +214,33 @@ class StorageTest {
         IOException exception = assertThrows(IOException.class, () -> new Storage(dataFile).load());
 
         assertEquals("Invalid task data on line 1: invalid date.", exception.getMessage());
+    }
+
+    @Test
+    void load_dataContainsBlankTaskDescription_exceptionIdentifiesLine() throws IOException {
+        Path dataFile = writeSavedData("T | 0 |   ");
+
+        IOException exception = assertThrows(IOException.class, () -> new Storage(dataFile).load());
+
+        assertEquals("Invalid task data on line 1: blank task description.", exception.getMessage());
+    }
+
+    @Test
+    void load_eventEndDateNotAfterStartDate_exceptionIdentifiesLine() throws IOException {
+        Path dataFile = writeSavedData("E | 0 | meeting | 2026-09-02 | 2026-09-02");
+
+        IOException exception = assertThrows(IOException.class, () -> new Storage(dataFile).load());
+
+        assertEquals("Invalid task data on line 1: event end date is not after start date.", exception.getMessage());
+    }
+
+    @Test
+    void load_duplicateTask_exceptionIdentifiesSecondLine() throws IOException {
+        Path dataFile = writeSavedData("T | 0 | read book", "T | 1 | read book");
+
+        IOException exception = assertThrows(IOException.class, () -> new Storage(dataFile).load());
+
+        assertEquals("Invalid task data on line 2: duplicate task.", exception.getMessage());
     }
 
     @Test

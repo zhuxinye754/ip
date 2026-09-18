@@ -70,8 +70,7 @@ public class DeadlineCommandTest {
         CloverException exception = assertThrows(CloverException.class, () -> cmd.execute(
                 taskList, new TutoreeList(), ui, storage));
 
-        assertEquals("The calendar leaves need a date in yyyy-MM-dd format. Optional: add /for TUTOREE NAME at the end "
-                + "of the command.", exception.getMessage());
+        assertEquals("Enter a date in yyyy-MM-dd format, for example 2026-02-28.", exception.getMessage());
 
     }
 }

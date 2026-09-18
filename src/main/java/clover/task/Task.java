@@ -1,5 +1,7 @@
 package clover.task;
 
+import java.util.Objects;
+
 /**
  * Represents the shared state and behavior of a task in the task list.
  */
@@ -59,6 +61,23 @@ public abstract class Task {
      */
     public boolean isDone() {
         return status == TaskStatus.DONE;
+    }
+
+    /**
+     * Returns whether another task represents the same user-entered task, excluding its completion status.
+     */
+    public boolean hasSameDetails(Task other) {
+        if (other == null || getClass() != other.getClass()
+                || !description.equals(other.description) || !Objects.equals(tutoreeName, other.tutoreeName)) {
+            return false;
+        }
+        if (this instanceof Deadline deadline && other instanceof Deadline otherDeadline) {
+            return deadline.getEndBy().equals(otherDeadline.getEndBy());
+        }
+        if (this instanceof Event event && other instanceof Event otherEvent) {
+            return event.getStart().equals(otherEvent.getStart()) && event.getEnd().equals(otherEvent.getEnd());
+        }
+        return this instanceof ToDo && other instanceof ToDo;
     }
 
     /** Returns the common status and description portion of a task display. */

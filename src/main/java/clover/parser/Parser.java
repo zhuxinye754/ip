@@ -42,7 +42,10 @@ public class Parser {
         String arguments = parts.length == 2 ? parts[1] : "";
 
         return switch (commandWord) {
-            case "list" -> new ListCommand();
+            case "list" -> {
+                requireNoArguments(commandWord, arguments);
+                yield new ListCommand();
+            }
             case "mark" -> new MarkCommand(arguments);
             case "unmark" -> new UnmarkCommand(arguments);
             case "todo" -> new ToDoCommand(arguments);
@@ -51,9 +54,15 @@ public class Parser {
             case "delete" -> new DeleteCommand(arguments);
             case "find" -> new FindCommand(arguments);
             case "add-tutoree" -> new AddTutoreeCommand(arguments);
-            case "list-tutorees" -> new ListTutoreesCommand();
+            case "list-tutorees" -> {
+                requireNoArguments(commandWord, arguments);
+                yield new ListTutoreesCommand();
+            }
             case "find-tutoree" -> new FindTutoreeCommand(arguments);
-            case "bye" -> new ExitCommand();
+            case "bye" -> {
+                requireNoArguments(commandWord, arguments);
+                yield new ExitCommand();
+            }
             default -> throw new CloverException(UNKNOWN_COMMAND_MESSAGE);
         };
     }
@@ -78,14 +87,29 @@ public class Parser {
     }
 
     /**
+     * Finds one whitespace-delimited marker, or returns {@code -1} when it is absent or repeated.
+     */
+    public static int findSingleMarker(String arguments, String marker) {
+        Pattern markerPattern = Pattern.compile("(?<!\\S)" + Pattern.quote(marker) + "(?=\\s|$)");
+        Matcher matcher = markerPattern.matcher(arguments);
+        if (!matcher.find()) {
+            return -1;
+        }
+        int markerIndex = matcher.start();
+        return matcher.find() ? -1 : markerIndex;
+    }
+
+    /**
      * Parses a date entered by the user in ISO yyyy-MM-dd format.
      */
     public static LocalDate parseDate(String text) throws CloverException {
+        if (!text.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            throw new CloverException("Enter a date in yyyy-MM-dd format, for example 2026-02-28.");
+        }
         try {
             return LocalDate.parse(text);
         } catch (DateTimeParseException exception) {
-            throw new CloverException("The calendar leaves need a date in yyyy-MM-dd format. Optional: add "
-                    + "/for TUTOREE NAME at the end of the command.");
+            throw new CloverException("\"" + text + "\" is not a real calendar date. Please check the month and day.");
         }
     }
 
@@ -107,5 +131,12 @@ public class Parser {
             throw new CloverException("Use /for only once, at the end of the task command.");
         }
         return new TaskArguments(taskArguments, tutoreeName);
+    }
+
+    /** Rejects unexpected text supplied to a command that takes no arguments. */
+    private static void requireNoArguments(String commandWord, String arguments) throws CloverException {
+        if (!arguments.isBlank()) {
+            throw new CloverException("The " + commandWord + " command does not take any additional text.");
+        }
     }
 }

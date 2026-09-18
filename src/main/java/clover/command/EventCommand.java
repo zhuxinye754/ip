@@ -34,8 +34,8 @@ public class EventCommand extends Command {
     public void execute(TaskList tasks, TutoreeList tutorees, Ui ui, Storage storage) throws CloverException {
         TaskArguments parsedArguments = Parser.parseTaskArguments(arguments);
         String taskArguments = parsedArguments.getTaskArguments();
-        int fromIndex = taskArguments.indexOf(FROM_MARKER);
-        int toIndex = taskArguments.indexOf(TO_MARKER);
+        int fromIndex = Parser.findSingleMarker(taskArguments, FROM_MARKER);
+        int toIndex = Parser.findSingleMarker(taskArguments, TO_MARKER);
         if (fromIndex <= 0 || toIndex <= fromIndex + FROM_MARKER.length()) {
             throw invalidFormat();
         }
@@ -49,10 +49,22 @@ public class EventCommand extends Command {
 
         LocalDate start = Parser.parseDate(startDate);
         LocalDate end = Parser.parseDate(endDate);
+        if (!end.isAfter(start)) {
+            throw new CloverException("An event's end date must be after its start date.");
+        }
         String tutoreeName = validateTutoreeName(parsedArguments.getTutoreeName(), tutorees);
-        tasks.add(new Event(description, start, end, tutoreeName));
-        saveTasks(tasks, ui, storage);
-        ui.showTaskAdded(tasks.getLast(), tasks.size());
+        Event task = new Event(description, start, end, tutoreeName);
+        if (tasks.containsEquivalent(task)) {
+            throw new CloverException("That study quest is already in the grove.");
+        }
+        tasks.add(task);
+        try {
+            saveTasks(tasks, storage);
+        } catch (CloverException exception) {
+            tasks.remove(tasks.size() - 1);
+            throw exception;
+        }
+        ui.showTaskAdded(task, tasks.size());
     }
 
     @Override

@@ -48,6 +48,16 @@ class FindCommandTest {
     }
 
     @Test
+    void execute_noMatchingTasks_displaysClearEmptyResultMessage() throws CloverException {
+        TaskList taskList = new TaskList();
+        taskList.add(new ToDo("read book"));
+
+        String output = captureExecutionOutput(new FindCommand("groceries"), taskList);
+
+        assertEquals("No matching tasks found." + System.lineSeparator(), output);
+    }
+
+    @Test
     void execute_turkishDefaultLocale_matchesCaseInsensitiveDescriptions() throws CloverException {
         Locale originalLocale = Locale.getDefault();
         Locale.setDefault(Locale.forLanguageTag("tr-TR"));
