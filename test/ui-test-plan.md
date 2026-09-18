@@ -24,7 +24,7 @@ Each case uses an isolated working directory. A case can include an optional **S
 10. Resize the window. Confirm that the input bar and chat log remain anchored, and message bubbles expand while retaining comfortable reading widths.
 11. Confirm that the background has a visible but gentle lavender, sage, and blue gradient and each avatar has a fixed-size circular coloured ring, even beside a long reply.
 12. Confirm that button hover/pressed states do not change the layout.
-13. Close the window.
+13. Enter `bye` and confirm that Clover displays its farewell, disables further input, then closes the application window after about 700 ms.
 
 **Expected output:** Clover opens an FXML-based JavaFX window with the Part 5 responsive, styled chat layout and exits cleanly when the window is closed.
 
