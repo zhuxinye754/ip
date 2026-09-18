@@ -21,6 +21,7 @@ public class Clover {
     private TaskList tasks;
     private TutoreeList tutorees;
     private CommandResponseStyle responseStyle;
+    private boolean isExitRequested;
 
     /**
      * Creates Clover and loads its previously saved task list.
@@ -98,10 +99,12 @@ public class Clover {
     public String getResponse(String input) {
         ui.clearResponse();
         responseStyle = CommandResponseStyle.STANDARD;
+        isExitRequested = false;
         try {
             Command command = Parser.parse(input);
             responseStyle = command.getResponseStyle();
             command.execute(tasks, tutorees, ui, storage);
+            isExitRequested = command.isExit();
         } catch (CloverException exception) {
             responseStyle = CommandResponseStyle.ERROR;
             ui.showError(exception.getMessage());
@@ -116,6 +119,15 @@ public class Clover {
      */
     public CommandResponseStyle getResponseStyle() {
         return responseStyle;
+    }
+
+    /**
+     * Returns whether the most recently processed GUI command requested that Clover close.
+     *
+     * @return true if the latest command was {@code bye}
+     */
+    public boolean isExitRequested() {
+        return isExitRequested;
     }
 
     /**

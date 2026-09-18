@@ -36,13 +36,15 @@ class CloverIntegrationTest {
     }
 
     @Test
-    void getResponse_byeAndSubsequentError_replacesPreviousResponse() {
+    void getResponse_byeRequestsExitAndSubsequentErrorClearsExitRequest() {
         Clover clover = clover();
 
         assertTrue(clover.getResponse("bye").startsWith("The grove closes for now."));
+        assertTrue(clover.isExitRequested());
         String errorResponse = clover.getResponse("unknown-command");
         assertTrue(errorResponse.startsWith("The forest path is unclear."));
         assertTrue(!errorResponse.contains("The grove closes for now."));
+        assertTrue(!clover.isExitRequested());
     }
 
     @Test
