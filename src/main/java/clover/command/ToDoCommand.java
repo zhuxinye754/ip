@@ -27,6 +27,7 @@ public class ToDoCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, TutoreeList tutorees, Ui ui, Storage storage) throws CloverException {
+        Parser.rejectUnknownParameters(description, "/for");
         TaskArguments parsedArguments = Parser.parseTaskArguments(description);
         String taskDescription = parsedArguments.getTaskArguments();
         if (taskDescription.isEmpty()) {

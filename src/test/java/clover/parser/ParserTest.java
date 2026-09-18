@@ -78,6 +78,14 @@ class ParserTest {
     }
 
     @Test
+    void rejectUnknownParameters_unknownParameter_exceptionIdentifiesParameter() {
+        CloverException exception = assertThrows(CloverException.class, () ->
+                Parser.rejectUnknownParameters("finish notes /due Friday", "/by", "/for"));
+
+        assertEquals("Unknown parameter \"/due\" for this command.", exception.getMessage());
+    }
+
+    @Test
     void isValidTaskNumber_firstAndLastTaskNumber_trueReturned() {
         assertTrue(Parser.isValidTaskNumber("1", 3));
         assertTrue(Parser.isValidTaskNumber("3", 3));

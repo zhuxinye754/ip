@@ -252,6 +252,44 @@ class StorageTest {
         assertEquals("Invalid task data on line 1: unfinished escape sequence.", exception.getMessage());
     }
 
+    @Test
+    void load_dataContainsUnsupportedEscapeSequence_exceptionIdentifiesLine() throws IOException {
+        Path dataFile = writeSavedData("T | 0 | unsupported escape\\x");
+
+        IOException exception = assertThrows(IOException.class, () -> new Storage(dataFile).load());
+
+        assertEquals("Invalid task data on line 1: invalid escape sequence.", exception.getMessage());
+    }
+
+    @Test
+    void backupTaskData_dataFileExists_backupHasOriginalContents() throws IOException {
+        Path dataFile = writeSavedData("Q | 0 | unknown task");
+        Storage storage = new Storage(dataFile);
+
+        storage.backupTaskData();
+
+        Path backupFile = tempDir.resolve("clover.txt.bak");
+        assertEquals(Files.readAllLines(dataFile), Files.readAllLines(backupFile));
+    }
+
+    @Test
+    void acquireApplicationLock_secondStorageCannotWriteUntilFirstReleasesLock() throws IOException {
+        Path dataFile = tempDir.resolve("data/clover.txt");
+        Storage firstStorage = new Storage(dataFile);
+        Storage secondStorage = new Storage(dataFile);
+
+        try {
+            assertTrue(firstStorage.acquireApplicationLock());
+            assertFalse(secondStorage.acquireApplicationLock());
+
+            IOException exception = assertThrows(IOException.class, () -> secondStorage.save(List.of()));
+            assertEquals("Another Clover instance is already using the data files.", exception.getMessage());
+        } finally {
+            firstStorage.releaseApplicationLock();
+            secondStorage.releaseApplicationLock();
+        }
+    }
+
     private Path writeSavedData(String... lines) throws IOException {
         Path dataFile = tempDir.resolve("clover.txt");
         Files.write(dataFile, java.util.List.of(lines));

@@ -28,6 +28,7 @@ public class Parser {
     private static final String UNKNOWN_COMMAND_MESSAGE = "That command is not a forest path I know. "
             + "Type \"help\" to view the supported commands.";
     private static final Pattern FOR_MARKER_PATTERN = Pattern.compile("(?<!\\S)/for(?:\\s|$)");
+    private static final Pattern PARAMETER_PATTERN = Pattern.compile("(?<!\\S)/(\\p{Alpha}+)(?=\\s|$)");
 
     /**
      * Creates the command represented by one complete line of user input.
@@ -101,6 +102,23 @@ public class Parser {
         }
         int markerIndex = matcher.start();
         return matcher.find() ? -1 : markerIndex;
+    }
+
+    /** Rejects slash-prefixed parameters that are not valid for the current command. */
+    public static void rejectUnknownParameters(String arguments, String... allowedParameters) throws CloverException {
+        Matcher matcher = PARAMETER_PATTERN.matcher(arguments);
+        while (matcher.find()) {
+            String parameter = "/" + matcher.group(1);
+            for (String allowedParameter : allowedParameters) {
+                if (parameter.equals(allowedParameter)) {
+                    parameter = null;
+                    break;
+                }
+            }
+            if (parameter != null) {
+                throw new CloverException("Unknown parameter \"" + parameter + "\" for this command.");
+            }
+        }
     }
 
     /**

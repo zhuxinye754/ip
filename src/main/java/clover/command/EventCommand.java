@@ -32,6 +32,7 @@ public class EventCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, TutoreeList tutorees, Ui ui, Storage storage) throws CloverException {
+        Parser.rejectUnknownParameters(arguments, "/from", "/to", "/for");
         TaskArguments parsedArguments = Parser.parseTaskArguments(arguments);
         String taskArguments = parsedArguments.getTaskArguments();
         int fromIndex = Parser.findSingleMarker(taskArguments, FROM_MARKER);

@@ -2,11 +2,15 @@ package clover.storage;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.nio.channels.OverlappingFileLockException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -44,6 +48,9 @@ public class Storage {
     private static final int TUTOREE_FEE_FIELD = 3;
     private final Path taskFilePath;
     private final Path tutoreeFilePath;
+    private FileChannel lockChannel;
+    private FileLock applicationLock;
+    private boolean writingAllowed = true;
 
     /**
      * Creates storage that uses Clover's default data-file location.
@@ -67,11 +74,64 @@ public class Storage {
         this.tutoreeFilePath = tutoreeFilePath;
     }
 
+    /** Acquires an exclusive application lock, returning false when another Clover instance owns it. */
+    public boolean acquireApplicationLock() throws IOException {
+        try {
+            Path lockPath = taskFilePath.resolveSibling(taskFilePath.getFileName() + ".lock");
+            Files.createDirectories(lockPath.getParent());
+            lockChannel = FileChannel.open(lockPath, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+            try {
+                applicationLock = lockChannel.tryLock();
+            } catch (OverlappingFileLockException exception) {
+                applicationLock = null;
+            }
+            writingAllowed = applicationLock != null;
+            if (!writingAllowed) {
+                lockChannel.close();
+                lockChannel = null;
+            }
+            return writingAllowed;
+        } catch (IOException | SecurityException exception) {
+            writingAllowed = false;
+            throw exception;
+        }
+    }
+
+    /** Releases the application lock when Clover closes. */
+    public void releaseApplicationLock() {
+        try {
+            if (applicationLock != null) {
+                applicationLock.release();
+            }
+            if (lockChannel != null) {
+                lockChannel.close();
+            }
+        } catch (IOException ignored) {
+            // Closing should not prevent the application from exiting.
+        }
+    }
+
+    /** Prevents writes when Clover cannot safely lock its data files. */
+    public void disableWriting() {
+        writingAllowed = false;
+    }
+
+    /** Copies the task data file to a recoverable backup after a failed load. */
+    public void backupTaskData() throws IOException {
+        backup(taskFilePath);
+    }
+
+    /** Copies the tutoree data file to a recoverable backup after a failed load. */
+    public void backupTutoreeData() throws IOException {
+        backup(tutoreeFilePath);
+    }
+
     /**
      * Writes the current task list to the data file.
      */
     public void save(List<Task> tasks) throws IOException {
         assert tasks != null : "Storage saves a task collection supplied by TaskList.";
+        ensureWritingAllowed();
         Files.createDirectories(taskFilePath.getParent());
         if (Files.isDirectory(taskFilePath)) {
             throw new IOException("The task data path is a directory.");
@@ -121,6 +181,7 @@ public class Storage {
     /** Writes the current tutoree list to the tutoree data file. */
     public void saveTutorees(List<Tutoree> tutorees) throws IOException {
         assert tutorees != null : "Storage saves a tutoree collection supplied by TutoreeList.";
+        ensureWritingAllowed();
         Files.createDirectories(tutoreeFilePath.getParent());
         if (Files.isDirectory(tutoreeFilePath)) {
             throw new IOException("The tutoree data path is a directory.");
@@ -295,6 +356,9 @@ public class Storage {
         boolean isEscaped = false;
         for (char character : line.toCharArray()) {
             if (isEscaped) {
+                if (character != '\\' && character != '|') {
+                    throw invalidData(lineNumber, "invalid escape sequence");
+                }
                 field.append(character);
                 isEscaped = false;
             } else if (character == '\\') {
@@ -316,6 +380,21 @@ public class Storage {
     /** Escapes characters that have a special meaning in the file format. */
     private String escape(String text) {
         return text.replace("\\", "\\\\").replace("|", "\\|");
+    }
+
+    /** Refuses writes when another running Clover instance owns the data lock. */
+    private void ensureWritingAllowed() throws IOException {
+        if (!writingAllowed) {
+            throw new IOException("Another Clover instance is already using the data files.");
+        }
+    }
+
+    /** Copies one existing data file to its adjacent {@code .bak} recovery file. */
+    private void backup(Path source) throws IOException {
+        if (Files.isRegularFile(source)) {
+            Files.copy(source, source.resolveSibling(source.getFileName() + ".bak"),
+                    StandardCopyOption.REPLACE_EXISTING);
+        }
     }
 
     /** Replaces the old data file only after the temporary file is fully written. */

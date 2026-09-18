@@ -134,6 +134,38 @@ The grove closes for now. Goodbye, and may your path through the grove be gentle
 ____________________________________________________________
 ```
 
+## Test case: Reject unknown parameters
+
+**Aim:** Verify that an unsupported slash parameter is identified directly instead of being treated as task text.
+
+**Input:**
+```text
+deadline submit report /due Friday
+bye
+```
+
+**Expected output:**
+```text
+____________________________________________________________
+  _____    _         ____    __      __   ______    _____
+ / ____|  | |       / __ \   \ \    / /  |  ____|  |  __ \
+| |       | |      | |  | |   \ \  / /   | |__     | |__) |
+| |       | |      | |  | |    \ \/ /    |  __|    |  _  /
+| |____   | |____  | |  | |     \  /     | |____   | | \ \
+ \_____|  |______|  \____/       \/      |______|  |_|  \_\
+
+Hello! I'm Clover.
+What can I do for you?
+
+____________________________________________________________
+____________________________________________________________
+The forest path is unclear. Unknown parameter "/due" for this command.
+____________________________________________________________
+____________________________________________________________
+The grove closes for now. Goodbye, and may your path through the grove be gentle.
+____________________________________________________________
+```
+
 ## Test case: Load saved tasks
 
 **Aim:** Verify that Clover restores saved tasks, including their task type and completion status, when it starts.
@@ -193,7 +225,7 @@ bye
 
 **Expected output:**
 ```text
-The forest path is unclear. The saved quest journal could not be opened. Starting with an empty grove.
+The forest path is unclear. The saved quest journal could not be opened. A backup was kept. Starting with an empty grove.
 ____________________________________________________________
   _____    _         ____    __      __   ______    _____
  / ____|  | |       / __ \   \ \    / /  |  ____|  |  __ \
@@ -491,11 +523,11 @@ ____________________________________________________________
 ____________________________________________________________
 How to use Clover
 Type lowercase words exactly. Replace <UPPERCASE> placeholders with your details.
-[Square brackets show optional parts; do not type the brackets.]
+[Square brackets show optional parts; do not type the brackets when writing the command.]
 
 TASKS
 • todo <DESCRIPTION> [/for <NAME>]
-  Add a task; /for links it to a tutoree.
+  Add a task. /for links it to a tutoree.
 • deadline <DESCRIPTION> /by <DATE> [/for <NAME>]
   Add a deadline. DATE uses yyyy-MM-dd.
 • event <DESCRIPTION> /from <DATE> /to <DATE> [/for <NAME>]

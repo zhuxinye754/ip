@@ -31,6 +31,7 @@ public class DeadlineCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, TutoreeList tutorees, Ui ui, Storage storage) throws CloverException {
+        Parser.rejectUnknownParameters(arguments, "/by", "/for");
         TaskArguments parsedArguments = Parser.parseTaskArguments(arguments);
         String taskArguments = parsedArguments.getTaskArguments();
         int markerIndex = Parser.findSingleMarker(taskArguments, DEADLINE_MARKER);

@@ -30,6 +30,7 @@ public class AddTutoreeCommand extends Command {
     /** Validates, adds, and saves a tutoree. */
     @Override
     public void execute(TaskList tasks, TutoreeList tutorees, Ui ui, Storage storage) throws CloverException {
+        Parser.rejectUnknownParameters(arguments, "/address", "/fee", "/hour", "/session", "/lesson", "/month");
         int addressIndex = Parser.findSingleMarker(arguments, ADDRESS_MARKER);
         int feeIndex = Parser.findSingleMarker(arguments, FEE_MARKER);
         if (addressIndex <= 0 || feeIndex <= addressIndex + ADDRESS_MARKER.length()) {

@@ -1,5 +1,6 @@
 package clover.task;
 
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -68,7 +69,8 @@ public abstract class Task {
      */
     public boolean hasSameDetails(Task other) {
         if (other == null || getClass() != other.getClass()
-                || !description.equals(other.description) || !Objects.equals(tutoreeName, other.tutoreeName)) {
+                || !normalise(description).equals(normalise(other.description))
+                || !Objects.equals(normalise(tutoreeName), normalise(other.tutoreeName))) {
             return false;
         }
         if (this instanceof Deadline deadline && other instanceof Deadline otherDeadline) {
@@ -78,6 +80,11 @@ public abstract class Task {
             return event.getStart().equals(otherEvent.getStart()) && event.getEnd().equals(otherEvent.getEnd());
         }
         return this instanceof ToDo && other instanceof ToDo;
+    }
+
+    /** Normalises text for duplicate comparison without changing its displayed form. */
+    private String normalise(String text) {
+        return text == null ? null : text.trim().replaceAll("\\s+", " ").toLowerCase(Locale.ROOT);
     }
 
     /** Returns the common status and description portion of a task display. */

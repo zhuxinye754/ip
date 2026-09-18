@@ -60,7 +60,7 @@ class TaskListTest {
         existingTask.markAsDone();
         taskList.add(existingTask);
 
-        assertTrue(taskList.containsEquivalent(new ToDo("read book", "Alice")));
+        assertTrue(taskList.containsEquivalent(new ToDo("  READ  BOOK  ", " alice ")));
         assertFalse(taskList.containsEquivalent(new Deadline("read book", LocalDate.of(2026, 9, 1), "Alice")));
     }
 }

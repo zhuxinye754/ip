@@ -80,6 +80,11 @@ E | 0 | lesson | 2026-09-20 | 2026-09-21 | Alice Tan
 
 Tutorees are saved separately in `data/tutorees.txt`.
 
+If either saved-data file is invalid, Clover preserves its current contents in an adjacent `.bak` file before
+starting with an empty list. Clover also rejects saved tasks linked to a tutoree that is absent from the tutoree
+directory. Only one Clover window can write to these files at a time; any additional window is read-only to prevent
+lost changes.
+
 ```text
 S | Alice Tan | 12 Example Road | 50
 ```

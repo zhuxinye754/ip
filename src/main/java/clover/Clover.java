@@ -7,6 +7,7 @@ import clover.command.CommandResponseStyle;
 import clover.exception.CloverException;
 import clover.parser.Parser;
 import clover.storage.Storage;
+import clover.task.Task;
 import clover.task.TaskList;
 import clover.tutoree.TutoreeList;
 import clover.ui.Ui;
@@ -29,17 +30,33 @@ public class Clover {
         ui = new Ui();
 
         try {
+            if (!storage.acquireApplicationLock()) {
+                ui.showError("Another Clover window is using these data files. "
+                        + "This window is read-only.");
+            }
+        } catch (IOException | SecurityException exception) {
+            storage.disableWriting();
+            ui.showError("Clover could not lock the data files. "
+                    + "This window is read-only.");
+        }
+
+        try {
             tasks = new TaskList(storage.load());
         } catch (IOException | SecurityException exception) {
-            ui.showError("The saved quest journal could not be opened. Starting with an empty grove.");
+            backupTaskData();
+            ui.showError("The saved quest journal could not be opened. "
+                    + "A backup was kept. Starting with an empty grove.");
             tasks = new TaskList();
         }
         try {
             tutorees = new TutoreeList(storage.loadTutorees());
         } catch (IOException | SecurityException exception) {
-            ui.showError("The learning companion journal could not be opened. Starting with an empty grove.");
+            backupTutoreeData();
+            ui.showError("The learning companion journal could not be opened. "
+                    + "A backup was kept. Starting with an empty grove.");
             tutorees = new TutoreeList();
         }
+        rejectOrphanedTaskLinks();
     }
 
     /**
@@ -62,6 +79,7 @@ public class Clover {
                 ui.showLine();
             }
         }
+        storage.releaseApplicationLock();
     }
 
     /**
@@ -98,5 +116,42 @@ public class Clover {
      */
     public static void main(String[] args) {
         new Clover().run();
+    }
+
+    /** Releases the storage lock when the graphical application closes. */
+    public void close() {
+        storage.releaseApplicationLock();
+    }
+
+    /** Rejects loaded tasks that reference a missing tutoree record. */
+    private void rejectOrphanedTaskLinks() {
+        boolean hasOrphanedLink = tasks.asList().stream()
+                .map(Task::getTutoreeName)
+                .filter(name -> name != null)
+                .anyMatch(name -> tutorees.findExactName(name).isEmpty());
+        if (hasOrphanedLink) {
+            backupTaskData();
+            ui.showError("The saved quest journal contains a link to a missing learning companion. "
+                    + "A backup was kept. Starting with an empty grove.");
+            tasks = new TaskList();
+        }
+    }
+
+    /** Creates a backup when possible without masking the original data-recovery message. */
+    private void backupTaskData() {
+        try {
+            storage.backupTaskData();
+        } catch (IOException | SecurityException exception) {
+            // Clover can still safely start with an empty in-memory task list.
+        }
+    }
+
+    /** Creates a backup when possible without masking the original data-recovery message. */
+    private void backupTutoreeData() {
+        try {
+            storage.backupTutoreeData();
+        } catch (IOException | SecurityException exception) {
+            // Clover can still safely start with an empty in-memory tutoree list.
+        }
     }
 }
