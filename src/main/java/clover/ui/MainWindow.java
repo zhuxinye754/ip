@@ -9,7 +9,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -32,30 +31,6 @@ public class MainWindow extends AnchorPane {
     private Clover clover;
     private Image userImage = new Image(getClass().getResourceAsStream("/images/curiousKitty.jpeg"));
     private Image cloverImage = new Image(getClass().getResourceAsStream("/images/clover-forest-sprite.png"));
-
-    /**
-     * Connects the scroll pane to the dialog container after FXML injection.
-     */
-    @FXML
-    public void initialize() {
-        scrollPane.addEventFilter(ScrollEvent.SCROLL, this::handleScroll);
-    }
-
-    /**
-     * Scrolls the chat log when the pointer is over it.
-     *
-     * @param event the mouse-wheel or trackpad scroll event
-     */
-    private void handleScroll(ScrollEvent event) {
-        double scrollableHeight = dialogContainer.getHeight() - scrollPane.getViewportBounds().getHeight();
-        if (scrollableHeight <= 0 || event.getDeltaY() == 0) {
-            return;
-        }
-
-        double newVerticalValue = scrollPane.getVvalue() - event.getDeltaY() / scrollableHeight;
-        scrollPane.setVvalue(Math.clamp(newVerticalValue, 0, 1));
-        event.consume();
-    }
 
     /**
      * Injects the Clover instance.
@@ -130,8 +105,12 @@ public class MainWindow extends AnchorPane {
         return response;
     }
 
-    /** Scrolls to the newest message after JavaFX updates the chat layout. */
+    /** Scrolls to the newest message after JavaFX calculates its final size. */
     private void scrollToLatestMessage() {
-        Platform.runLater(() -> scrollPane.setVvalue(1));
+        Platform.runLater(() -> {
+            scrollPane.applyCss();
+            scrollPane.layout();
+            scrollPane.setVvalue(scrollPane.getVmax());
+        });
     }
 }

@@ -16,15 +16,16 @@ Each case uses an isolated working directory. A case can include an optional **S
 2. Confirm that an FXML-based JavaFX window appears with **Clover** in both its operating-system title bar and its header, a gentle lavender, sage, and blue gradient, and a welcome card featuring Clover's original forest-sprite avatar.
 3. Press Enter with an empty input and with an input containing only spaces. Confirm that neither creates a user message or a Clover reply. Then enter `todo read book` and press Enter. Confirm that the command and reply use small circular avatars aligned with the bottom of their message bubbles, with the user message on the right and Clover's forest-sprite reply on the left. Confirm that Clover says the new study quest has "taken root."
 4. Enter `list` and select `Send`. Confirm that Clover says "The grove has gathered these for you," then lists `read book`, showing that chat commands use Clover's task list.
-5. Add enough messages to exceed the visible area and confirm that it scrolls to the latest response.
-6. Hover over the chat log and use the mouse wheel or trackpad. Confirm that it scrolls without dragging the side scrollbar, and that dragging the scrollbar can review earlier messages.
-7. Enter an invalid command and confirm that Clover's reply begins with "The forest path is unclear." and is styled as a distinct red error bubble.
-8. Enter `mark 1` and confirm that Clover's "The grove celebrates!" reply bubble uses the success style. Enter `delete 1` and confirm its "This trail has been cleared." reply uses the delete-task style.
-9. Enter `add-tutoree Alice Tan /address 12 Example Road /fee 50` and confirm that Clover's study-quest reply uses the distinct lavender tutoree-added style.
-10. Resize the window. Confirm that the input bar and chat log remain anchored, and message bubbles expand while retaining comfortable reading widths.
-11. Confirm that the background has a visible but gentle lavender, sage, and blue gradient and each avatar has a fixed-size circular coloured ring, even beside a long reply.
-12. Confirm that button hover/pressed states do not change the layout.
-13. Enter `bye` and confirm that Clover displays its farewell, disables further input, then closes the application window after about 700 ms.
+5. Enter an invalid command as the first non-blank command. Confirm that the command and Clover's red error reply have separate, non-overlapping bubbles.
+6. Add enough messages to exceed the visible area and confirm that it scrolls to the latest response.
+7. Hover over the chat log and use the mouse wheel or trackpad. Confirm that it scrolls without dragging the side scrollbar, that earlier messages remain inside the chat viewport rather than appearing over the header, and that dragging the scrollbar can review earlier messages.
+8. Enter an invalid command and confirm that Clover's reply begins with "The forest path is unclear." and is styled as a distinct red error bubble.
+9. Enter `mark 1` and confirm that Clover's "The grove celebrates!" reply bubble uses the success style. Enter `delete 1` and confirm its "This trail has been cleared." reply uses the delete-task style.
+10. Enter `add-tutoree Alice Tan /address 12 Example Road /fee 50` and confirm that Clover's study-quest reply uses the distinct lavender tutoree-added style.
+11. Resize the window. Confirm that the input bar and chat log remain anchored, and message bubbles expand while retaining comfortable reading widths.
+12. Confirm that the background has a visible but gentle lavender, sage, and blue gradient and each avatar has a fixed-size circular coloured ring, even beside a long reply.
+13. Confirm that button hover/pressed states do not change the layout.
+14. Enter `bye` and confirm that Clover displays its farewell, disables further input, then closes the application window after about 700 ms.
 
 **Expected output:** Clover opens an FXML-based JavaFX window with the Part 5 responsive, styled chat layout and exits cleanly when the window is closed.
 
